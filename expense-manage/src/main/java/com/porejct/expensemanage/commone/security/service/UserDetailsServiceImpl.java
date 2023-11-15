@@ -1,4 +1,4 @@
-package com.porejct.expensemanage.commone.security;
+package com.porejct.expensemanage.commone.security.service;
 
 import com.porejct.expensemanage.commone.security.vo.Principal;
 import com.porejct.expensemanage.domain.user.entity.User;
