@@ -4,7 +4,6 @@ import com.porejct.expensemanage.commone.security.dto.LoginDto;
 import com.porejct.expensemanage.commone.security.dto.UserInfo;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.user.enums.UserRole;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -33,15 +32,15 @@ public class UserMock {
     }
 
     public LoginDto loginMock() {
-        return new LoginDto(email,rawPassword);
+        return new LoginDto(email, rawPassword);
     }
 
     public LoginDto wrongLoginMock() {
-        return new LoginDto(email,wrongPassword);
+        return new LoginDto(email, wrongPassword);
     }
 
     public UserInfo userInfoMock() {
-        return new UserInfo(email,"ROLE_USER");
+        return new UserInfo(email, "ROLE_USER");
     }
 
     public String getEmail() {
