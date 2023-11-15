@@ -1,5 +1,7 @@
 package com.porejct.expensemanage.commone.utils.response;
 
+import com.porejct.expensemanage.commone.exception.BusinessLogicException;
+import com.porejct.expensemanage.commone.security.exception.AuthExceptionCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -11,10 +13,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CookieUtils {
     private final CookieProperties cookieProperties;
+
     public Cookie createCookie(String key) {
         Cookie cookie = new Cookie(cookieProperties.getCookieName(), key);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
+        cookie.setDomain(cookieProperties.getDomain());
         cookie.setPath(cookieProperties.getAcceptedUrl());
         cookie.setMaxAge(60 * cookieProperties.getLimitTime());
         return cookie;
@@ -32,11 +36,19 @@ public class CookieUtils {
 
     private Cookie searchCookieProperties(Cookie[] cookies) {
         return Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("Refresh"))
+                .filter(cookie -> cookie.getName().equals(cookieProperties.getCookieName()))
                 .findFirst()
-                .orElse(new Cookie("Refresh",""));
+                .orElse(new Cookie(cookieProperties.getCookieName(),""));
     }
 
+
+    public Cookie searchCookieProperties(HttpServletRequest request) {
+        return Arrays.stream(validCookiesExist(request))
+                .filter(cookie -> cookie.getName().equals(cookieProperties.getCookieName()))
+                .findFirst()
+                .orElseThrow(() -> new BusinessLogicException(
+                        AuthExceptionCode.REFRESH_TOKEN_EXPIRED));
+    }
 
 
 }

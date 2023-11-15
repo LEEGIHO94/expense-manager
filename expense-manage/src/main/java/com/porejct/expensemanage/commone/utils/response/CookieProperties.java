@@ -16,4 +16,5 @@ public class CookieProperties {
     private int limitTime;
     private String acceptedUrl;
     private String cookieName;
+    private String domain;
 }
