@@ -1,7 +1,10 @@
 package com.porejct.expensemanage.domain.budget.entity;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
+import com.porejct.expensemanage.domain.category.entity.Category;
+import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.vo.Price;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -9,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +30,16 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,name = "budget_id")
     private Long id;
-
     private LocalDate date;
+
     @Embedded
     private Price price;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
