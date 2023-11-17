@@ -7,4 +7,11 @@ import lombok.Getter;
 @Embeddable
 public class Phone {
     private String value;
+
+    public Phone(String value) {
+        this.value = value;
+    }
+
+    public Phone() {
+    }
 }

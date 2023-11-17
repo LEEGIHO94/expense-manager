@@ -1,13 +1,12 @@
 package com.porejct.expensemanage.domain.user.entity;
 
-import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.porejct.expensemanage.commone.auditing.BaseTime;
 import com.porejct.expensemanage.domain.user.enums.UserRole;
 import com.porejct.expensemanage.domain.vo.Phone;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +22,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class User extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(updatable = false,name = "user_id")
+    @Column(updatable = false, name = "user_id")
     private Long id;
     private String email;
     private String password;
