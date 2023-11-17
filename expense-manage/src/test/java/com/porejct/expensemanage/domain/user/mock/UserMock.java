@@ -31,6 +31,14 @@ public class UserMock {
                 .build();
     }
 
+    public User postMock() {
+        return User.builder()
+                .password(encoder.encode(rawPassword))
+                .userRole(userRole)
+                .email(email)
+                .build();
+    }
+
     public LoginDto loginMock() {
         return new LoginDto(email, rawPassword);
     }
