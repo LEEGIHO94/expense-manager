@@ -1,5 +1,6 @@
 package com.porejct.expensemanage.domain.category.mock;
 
+import com.porejct.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.enums.CategoryType;
 import java.util.List;
@@ -9,19 +10,20 @@ import org.springframework.stereotype.Component;
 public class CategoryMock {
     private final String name = "교통비";
     private final Long id = 100L;
+    private final String customName = "사용자 설정 카테고리";
 
-    public Category customEntityMock(String name){
+    public Category customEntityMock(){
         return Category.builder()
                 .categoryType(CategoryType.CUSTOM)
-                .name(name)
+                .name(customName)
                 .id(id)
                 .build();
     }
 
-    public Category customEntityPostMock(String name){
+    public Category customEntityPostMock(){
         return Category.builder()
                 .categoryType(CategoryType.CUSTOM)
-                .name(name)
+                .name(customName)
                 .build();
     }
 
@@ -40,5 +42,8 @@ public class CategoryMock {
                 .build();
     }
 
+    public PostCustomCategoryRequest customCategoryPostDto() {
+        return new PostCustomCategoryRequest(customName,null);
+    }
 
 }
