@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 public enum UserResponseStatus {
     USER_CREATE(HttpStatus.CREATED,"회원 가입 완료");
 
-    private HttpStatus httpStatus;
-    private String message;
+    private final HttpStatus httpStatus;
+    private final String message;
 
     public int getCode() {
         return httpStatus.value();
