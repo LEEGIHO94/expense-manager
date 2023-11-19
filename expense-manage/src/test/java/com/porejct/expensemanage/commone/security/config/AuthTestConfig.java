@@ -1,6 +1,7 @@
 package com.porejct.expensemanage.commone.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.porejct.expensemanage.commone.config.JwtFilterDsl;
 import com.porejct.expensemanage.commone.redis.repository.RedisRepository;
 import com.porejct.expensemanage.commone.security.handler.AuthenticationEntryPointHandler;
 import com.porejct.expensemanage.commone.security.handler.AuthenticationFailureCustomHandler;
@@ -103,5 +104,10 @@ public class AuthTestConfig {
     @Bean
     public RedisRepository redisRepository() {
         return Mockito.mock(RedisRepository.class);
+    }
+
+    @Bean
+    public JwtFilterDsl jwtFilterDsl() {
+        return new JwtFilterDsl(jwtProvider(),jwtProperties(),objectMapperUtils(),redisRepository(),cookieUtils(),authenticationFailureCustomHandler());
     }
 }

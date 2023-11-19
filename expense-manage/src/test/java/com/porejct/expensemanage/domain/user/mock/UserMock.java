@@ -2,6 +2,7 @@ package com.porejct.expensemanage.domain.user.mock;
 
 import com.porejct.expensemanage.commone.security.dto.LoginDto;
 import com.porejct.expensemanage.commone.security.dto.UserInfo;
+import com.porejct.expensemanage.domain.user.dto.request.UserPostRequest;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.user.enums.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,7 +15,10 @@ public class UserMock {
     private final Long userId = 1L;
     private final String email = "test@gmail.com";
     private final String rawPassword = "test131!$@2";
-    private final String wrongPassword = "test131!$@2!32!23";
+    private final String wrongPassword = "wefwfe12312";
+    private final String notTwoTypePassword = "test";
+    private final String lineWrongPassword = "a";
+    private final String phone = "010-1234-1234";
     private final UserRole userRole = UserRole.USER;
 
     public UserMock(PasswordEncoder passwordEncoder) {
@@ -28,6 +32,41 @@ public class UserMock {
                 .password(encoder.encode(rawPassword))
                 .userRole(userRole)
                 .email(email)
+                .build();
+    }
+
+    public User postMock() {
+        return User.builder()
+                .password(encoder.encode(rawPassword))
+                .userRole(userRole)
+                .email(email)
+                .build();
+    }
+
+    public UserPostRequest postDtoMock() {
+        return UserPostRequest
+                .builder()
+                .phone(phone)
+                .email(email)
+                .password(rawPassword)
+                .build();
+    }
+
+    public UserPostRequest postDtoPasswordLineWrongMock(){
+        return UserPostRequest
+                .builder()
+                .phone(phone)
+                .email(email)
+                .password(lineWrongPassword)
+                .build();
+    }
+
+    public UserPostRequest postDtoPasswordNoTwoTypeMock(){
+        return UserPostRequest
+                .builder()
+                .phone(phone)
+                .email(email)
+                .password(notTwoTypePassword)
                 .build();
     }
 
