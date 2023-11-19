@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum UserResponseStatus {
-    USER_CREATE(HttpStatus.CREATED,"회원 가입 완료");
+public enum ResponseStatus {
+    CREATE(HttpStatus.CREATED,"생성 완료");
 
     private final HttpStatus httpStatus;
     private final String message;

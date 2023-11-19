@@ -1,6 +1,6 @@
 package com.porejct.expensemanage.domain.user.controller;
 
-import static com.porejct.expensemanage.commone.dto.UserResponseStatus.USER_CREATE;
+import static com.porejct.expensemanage.commone.dto.ResponseStatus.CREATE;
 
 import com.porejct.expensemanage.commone.dto.ResponseDto;
 import com.porejct.expensemanage.commone.utils.response.UrlCreator;
@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ResponseDto<UserIdResponse>> postUser(@RequestBody @Valid UserPostRequest dto) {
         User result = service.postUser(mapper.toEntity(dto));
-        ResponseDto<UserIdResponse> response = mapper.toDto(result, USER_CREATE);
+        ResponseDto<UserIdResponse> response = mapper.toDto(result, CREATE);
         URI location = UrlCreator.createUri(DEFAULT, result.getId());
 
         return ResponseEntity.created(location).body(response);

@@ -1,7 +1,7 @@
 package com.porejct.expensemanage.domain.user.mapper;
 
 import com.porejct.expensemanage.commone.dto.ResponseDto;
-import com.porejct.expensemanage.commone.dto.UserResponseStatus;
+import com.porejct.expensemanage.commone.dto.ResponseStatus;
 import com.porejct.expensemanage.domain.user.dto.request.UserPostRequest;
 import com.porejct.expensemanage.domain.user.dto.response.UserIdResponse;
 import com.porejct.expensemanage.domain.user.entity.User;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public ResponseDto<UserIdResponse> toDto(User user, UserResponseStatus status) {
+    public ResponseDto<UserIdResponse> toDto(User user, ResponseStatus status) {
         return ResponseDto.<UserIdResponse>builder()
                 .data(toIdDto(user))
                 .status(status)
