@@ -3,6 +3,7 @@ package com.porejct.expensemanage.domain.category.controller;
 import com.porejct.expensemanage.commone.dto.ResponseDto;
 import com.porejct.expensemanage.commone.utils.response.UrlCreator;
 import com.porejct.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
+import com.porejct.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.porejct.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.mapper.CategoryMapper;
@@ -26,6 +27,14 @@ public class CategoryController {
 
     @PostMapping("/client")
     public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody PostCustomCategoryRequest post) {
+        Category result = service.postCategory(mapper.toEntity(post));
+        ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
+        URI location = UrlCreator.createUri(DEFAULT, result.getId());
+        return ResponseEntity.created(location).body(responseDto);
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody PostStandardCategoryRequest post) {
         Category result = service.postCategory(mapper.toEntity(post));
         ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
         URI location = UrlCreator.createUri(DEFAULT, result.getId());
