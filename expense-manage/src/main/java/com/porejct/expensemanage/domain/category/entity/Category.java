@@ -2,6 +2,7 @@ package com.porejct.expensemanage.domain.category.entity;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import com.porejct.expensemanage.domain.category.enums.CategoryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,4 +24,5 @@ public class Category {
     @Column(updatable = false,name = "category_id")
     private Long id;
     private String name;
+    private CategoryType categoryType;
 }
