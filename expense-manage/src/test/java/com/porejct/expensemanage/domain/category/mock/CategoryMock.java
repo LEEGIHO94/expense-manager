@@ -1,6 +1,7 @@
 package com.porejct.expensemanage.domain.category.mock;
 
 import com.porejct.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
+import com.porejct.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.enums.CategoryType;
 import java.util.List;
@@ -44,6 +45,9 @@ public class CategoryMock {
 
     public PostCustomCategoryRequest customCategoryPostDto() {
         return new PostCustomCategoryRequest(customName,null);
+    }
+    public PostStandardCategoryRequest standardCategoryPostDto() {
+        return new PostStandardCategoryRequest(name,null);
     }
 
 }

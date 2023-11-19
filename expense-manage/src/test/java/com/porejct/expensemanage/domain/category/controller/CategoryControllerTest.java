@@ -55,4 +55,24 @@ class CategoryControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
     }
+
+    @Test
+    @DisplayName("카테고리 관리자 등록 : 성공")
+    void post_standard_category_test() throws Exception {
+        // given
+        String content = objectMapper.writeValueAsString(mock.standardCategoryPostDto());
+
+        BDDMockito.given(service.postCategory(any(Category.class)))
+                .willReturn(mock.customEntityMock());
+
+        // when
+        ResultActions perform = mvc.perform(
+                MockMvcRequestBuilders.post("/api/categories/admin").content(content).contentType(
+                        MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
+    }
 }
