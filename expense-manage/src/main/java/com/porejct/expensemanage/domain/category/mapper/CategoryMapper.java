@@ -53,7 +53,7 @@ public class CategoryMapper {
 
     private GetCategoryResponse toGetDto(Category category) {
         return GetCategoryResponse.builder()
-                .id(category.getId())
+                .categoryId(category.getId())
                 .name(category.getName())
                 .build();
     }
