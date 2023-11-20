@@ -2,6 +2,7 @@ package com.porejct.expensemanage.domain.category.controller;
 
 import com.porejct.expensemanage.commone.dto.ResponseDto;
 import com.porejct.expensemanage.commone.utils.response.UrlCreator;
+import com.porejct.expensemanage.domain.category.dto.GetCategoryResponse;
 import com.porejct.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.porejct.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.porejct.expensemanage.domain.category.dto.response.CategoryIdResponse;
@@ -9,8 +10,10 @@ import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.mapper.CategoryMapper;
 import com.porejct.expensemanage.domain.category.service.CategoryService;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,5 +42,12 @@ public class CategoryController {
         ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
         URI location = UrlCreator.createUri(DEFAULT, result.getId());
         return ResponseEntity.created(location).body(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponseDto<List<GetCategoryResponse>>> getCategoryList() {
+        List<Category> result = service.getCategoryList();
+
+        return ResponseEntity.ok(mapper.toDto(result));
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ResponseStatus {
-    CREATE(HttpStatus.CREATED,"생성 완료");
+    CREATE(HttpStatus.CREATED,"생성 완료"), GET(HttpStatus.OK, "조회 성공");
 
     private final HttpStatus httpStatus;
     private final String message;
