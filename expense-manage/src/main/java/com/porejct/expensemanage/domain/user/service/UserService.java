@@ -1,10 +1,14 @@
 package com.porejct.expensemanage.domain.user.service;
 
 import com.porejct.expensemanage.commone.exception.BusinessLogicException;
+import com.porejct.expensemanage.domain.user.dto.request.UserPostRequest;
+import com.porejct.expensemanage.domain.user.dto.response.UserIdResponse;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.user.exception.UserExceptionCode;
+import com.porejct.expensemanage.domain.user.mapper.UserMapper;
 import com.porejct.expensemanage.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,10 +16,13 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder encoder;
+    private final UserMapper mapper;
 
-    public User postUser(User request) {
-        validUserExist(request.getEmail());
-        return repository.save(request);
+    public UserIdResponse postUser(UserPostRequest post) {
+        validUserExist(post.email());
+        User savedEntity = repository.save(mapper.toEntity(post, encoder.encode(post.password())));
+        return mapper.toIdDto(savedEntity);
     }
 
     private void validUserExist(String email) {

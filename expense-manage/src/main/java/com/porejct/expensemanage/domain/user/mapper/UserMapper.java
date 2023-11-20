@@ -1,10 +1,9 @@
 package com.porejct.expensemanage.domain.user.mapper;
 
-import com.porejct.expensemanage.commone.dto.ResponseDto;
-import com.porejct.expensemanage.commone.dto.ResponseStatus;
 import com.porejct.expensemanage.domain.user.dto.request.UserPostRequest;
 import com.porejct.expensemanage.domain.user.dto.response.UserIdResponse;
 import com.porejct.expensemanage.domain.user.entity.User;
+import com.porejct.expensemanage.domain.user.enums.UserRole;
 import com.porejct.expensemanage.domain.vo.Phone;
 import org.springframework.stereotype.Component;
 
@@ -15,23 +14,17 @@ public class UserMapper {
         return User.builder().id(userId).build();
     }
 
-    public ResponseDto<UserIdResponse> toDto(User user, ResponseStatus status) {
-        return ResponseDto.<UserIdResponse>builder()
-                .data(toIdDto(user))
-                .status(status)
-                .build();
-    }
-
     public UserIdResponse toIdDto(User user) {
         return UserIdResponse.builder()
                 .userId(user.getId())
                 .build();
     }
 
-    public User toEntity(UserPostRequest dto) {
+    public User toEntity(UserPostRequest dto, String password) {
         return User.builder()
-                .password(dto.password())
+                .password(password)
                 .phone(new Phone(dto.phone()))
+                .userRole(UserRole.USER)
                 .email(dto.email())
                 .build();
     }
