@@ -85,5 +85,9 @@ public class UserMock {
     public String getEmail() {
         return email;
     }
+
+    public Long getUserId() {
+        return userId;
+    }
 }
 
