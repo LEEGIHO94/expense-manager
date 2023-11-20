@@ -24,7 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(CategoryController.class)
-@Import({SecurityConfig.class, AuthTestConfig.class, CategoryService.class, CategoryMock.class, CategoryMapper.class})
+@Import({SecurityConfig.class, AuthTestConfig.class, CategoryService.class, CategoryMock.class,
+        CategoryMapper.class})
 class CategoryControllerTest {
 
     @Autowired
@@ -74,5 +75,22 @@ class CategoryControllerTest {
                 .andDo(MockMvcResultHandlers.log())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
+    }
+
+
+    @Test
+    @DisplayName("카테고리 조회 : 성공")
+    void get_category_list_test() throws Exception {
+        // given
+        BDDMockito.given(service.getCategoryList()).willReturn(mock.EntityListMock());
+        // when
+        ResultActions perform = mvc.perform(MockMvcRequestBuilders.get("/api/categories"));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryId").isNumber())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").isString());
     }
 }
