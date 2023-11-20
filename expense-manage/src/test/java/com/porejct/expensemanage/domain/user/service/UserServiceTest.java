@@ -9,8 +9,10 @@ import static org.mockito.Mockito.verify;
 
 import com.porejct.expensemanage.commone.config.PasswordEncoderConfig;
 import com.porejct.expensemanage.commone.exception.BusinessLogicException;
+import com.porejct.expensemanage.domain.user.dto.response.UserIdResponse;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.user.exception.UserExceptionCode;
+import com.porejct.expensemanage.domain.user.mapper.UserMapper;
 import com.porejct.expensemanage.domain.user.mock.UserMock;
 import com.porejct.expensemanage.domain.user.repository.UserRepository;
 import java.util.Optional;
@@ -21,16 +23,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@Import({PasswordEncoderConfig.class, UserMock.class})
+@Import({PasswordEncoderConfig.class, UserMock.class, UserMapper.class,UserService.class})
 class UserServiceTest {
-
-    @InjectMocks
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     UserService service;
-    @Mock
+    @MockBean
     UserRepository repository;
     @Autowired
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -45,11 +48,12 @@ class UserServiceTest {
         given(repository.findByEmail(anyString())).willReturn(Optional.empty());
         given(repository.save(any(User.class))).willReturn(saveMock);
         // when
-        User result = service.postUser(mock.postMock());
+        UserIdResponse result = service.postUser(mock.postDtoMock());
         // then
         verify(repository, times(1)).findByEmail(anyString());
         verify(repository, times(1)).save(any(User.class));
-        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(saveMock);
+        Assertions.assertThat(result.userId()).usingRecursiveComparison()
+                .isEqualTo(mock.getUserId());
     }
 
     @Test
@@ -59,7 +63,7 @@ class UserServiceTest {
         given(repository.findByEmail(anyString())).willReturn(Optional.of(mock.entityMock()));
         // when
         // then
-        Assertions.assertThatThrownBy(() -> service.postUser(mock.postMock())).isInstanceOf(
+        Assertions.assertThatThrownBy(() -> service.postUser(mock.postDtoMock())).isInstanceOf(
                 BusinessLogicException.class).hasMessage(UserExceptionCode.USER_EXIST.getMessage());
     }
 

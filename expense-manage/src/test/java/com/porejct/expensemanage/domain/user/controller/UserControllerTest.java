@@ -25,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(UserController.class)
-@Import({AuthTestConfig.class, UserMapper.class, SecurityConfig.class})
+@Import({AuthTestConfig.class, SecurityConfig.class})
 class UserControllerTest {
 
     @Autowired
@@ -44,8 +44,8 @@ class UserControllerTest {
         UserPostRequest post = userMock.postDtoMock();
         String content = objectMapper.writeValueAsString(post);
 
-        BDDMockito.given(service.postUser(any(User.class)))
-                .willReturn(userMock.entityMock());
+        BDDMockito.given(service.postUser(any(UserPostRequest.class)))
+                .willReturn(userMock.idDtoMock());
         // when
         ResultActions perform = mvc.perform(
                 MockMvcRequestBuilders.post("/api/users").content(content)

@@ -3,6 +3,7 @@ package com.porejct.expensemanage.domain.user.mock;
 import com.porejct.expensemanage.commone.security.dto.LoginDto;
 import com.porejct.expensemanage.commone.security.dto.UserInfo;
 import com.porejct.expensemanage.domain.user.dto.request.UserPostRequest;
+import com.porejct.expensemanage.domain.user.dto.response.UserIdResponse;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.user.enums.UserRole;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,6 +68,12 @@ public class UserMock {
                 .phone(phone)
                 .email(email)
                 .password(notTwoTypePassword)
+                .build();
+    }
+
+    public UserIdResponse idDtoMock() {
+        return UserIdResponse.builder()
+                .userId(userId)
                 .build();
     }
 
