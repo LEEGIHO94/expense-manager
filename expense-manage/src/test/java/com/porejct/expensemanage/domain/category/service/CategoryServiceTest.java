@@ -1,6 +1,7 @@
 package com.porejct.expensemanage.domain.category.service;
 
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -12,6 +13,7 @@ import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.exception.CategoryExceptionCode;
 import com.porejct.expensemanage.domain.category.mock.CategoryMock;
 import com.porejct.expensemanage.domain.category.repository.CategoryRepository;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -65,4 +67,14 @@ class CategoryServiceTest {
     }
 
 
+    @Test
+    @DisplayName("카테고리 전체 조회 : 성공")
+    void get_category_success_test() throws Exception{
+        // given
+        given(repository.findAllByType()).willReturn(mock.EntityListMock());
+        // when
+        List<Category> result = service.getCategoryList();
+        // then
+        Assertions.assertThat(result.stream().map((Category::getName)).toList()).containsExactlyElementsOf(mock.getNameList());
+    }
 }

@@ -4,6 +4,7 @@ import com.porejct.expensemanage.domain.category.dto.request.PostCustomCategoryR
 import com.porejct.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.enums.CategoryType;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ public class CategoryMock {
     private final String name = "교통비";
     private final Long id = 100L;
     private final String customName = "사용자 설정 카테고리";
+    private final List<String> nameList = List.of("교통비","식비","관광비","경조사비","취미생활비");
 
     public Category customEntityMock(){
         return Category.builder()
@@ -21,11 +23,17 @@ public class CategoryMock {
                 .build();
     }
 
-    public Category customEntityPostMock(){
-        return Category.builder()
-                .categoryType(CategoryType.CUSTOM)
-                .name(customName)
-                .build();
+    public List<Category> EntityListMock() {
+        List<Category> result = new ArrayList<>();
+        for (int i = 1; i <= nameList.size(); i++) {
+            Category category = Category.builder()
+                    .categoryType(CategoryType.CUSTOM)
+                    .name(nameList.get(i - 1))
+                    .id((long) i)
+                    .build();
+            result.add(category);
+        }
+        return result;
     }
 
     public Category standardEntityMock(){
@@ -50,4 +58,7 @@ public class CategoryMock {
         return new PostStandardCategoryRequest(name,null);
     }
 
+    public List<String> getNameList() {
+        return nameList;
+    }
 }
