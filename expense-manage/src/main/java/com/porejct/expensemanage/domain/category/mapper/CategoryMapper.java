@@ -14,12 +14,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class CategoryMapper {
 
+    public static Category toIdEntity(Long categoryId) {
+        return Category.builder()
+                .id(categoryId)
+                .build();
+    }
+
     public Category toEntity(PostCustomCategoryRequest post) {
         return Category.builder()
                 .categoryType(post.categoryType())
                 .name(post.name())
                 .build();
     }
+
     public Category toEntity(PostStandardCategoryRequest post) {
         return Category.builder()
                 .categoryType(post.categoryType())

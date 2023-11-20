@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
+    public static User toIdEntity(Long userId) {
+        return User.builder().id(userId).build();
+    }
+
     public ResponseDto<UserIdResponse> toDto(User user, ResponseStatus status) {
         return ResponseDto.<UserIdResponse>builder()
                 .data(toIdDto(user))
