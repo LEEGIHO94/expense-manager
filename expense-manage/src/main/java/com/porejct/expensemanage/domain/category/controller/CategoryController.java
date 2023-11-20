@@ -9,6 +9,7 @@ import com.porejct.expensemanage.domain.category.dto.response.CategoryIdResponse
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.mapper.CategoryMapper;
 import com.porejct.expensemanage.domain.category.service.CategoryService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class CategoryController {
     private final CategoryMapper mapper;
 
     @PostMapping("/client")
-    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody PostCustomCategoryRequest post) {
+    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody @Valid PostCustomCategoryRequest post) {
         Category result = service.postCategory(mapper.toEntity(post));
         ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
         URI location = UrlCreator.createUri(DEFAULT, result.getId());
@@ -37,7 +38,7 @@ public class CategoryController {
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody PostStandardCategoryRequest post) {
+    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody @Valid PostStandardCategoryRequest post) {
         Category result = service.postCategory(mapper.toEntity(post));
         ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
         URI location = UrlCreator.createUri(DEFAULT, result.getId());
