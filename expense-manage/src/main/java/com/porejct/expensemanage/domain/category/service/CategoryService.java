@@ -4,6 +4,7 @@ import com.porejct.expensemanage.commone.exception.BusinessLogicException;
 import com.porejct.expensemanage.domain.category.entity.Category;
 import com.porejct.expensemanage.domain.category.exception.CategoryExceptionCode;
 import com.porejct.expensemanage.domain.category.repository.CategoryRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,5 +24,9 @@ public class CategoryService {
     private void validCategoryExist(String name){
        repository.findByName(name).ifPresent(d -> {throw new BusinessLogicException(
                CategoryExceptionCode.CATEGORY_EXIST);});
+    }
+
+    public List<Category> getCategoryList() {
+        return repository.findAllByType();
     }
 }
