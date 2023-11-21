@@ -1,6 +1,6 @@
 package com.porejct.expensemanage.domain.budget.config;
 
-import com.porejct.expensemanage.domain.budget.dto.BudgetMapper;
+import com.porejct.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.porejct.expensemanage.domain.budget.mock.BudgetMock;
 import com.porejct.expensemanage.domain.budget.repository.BudgetRepository;
 import com.porejct.expensemanage.domain.budget.service.BudgetService;
@@ -8,8 +8,6 @@ import com.porejct.expensemanage.domain.category.mock.CategoryMock;
 import com.porejct.expensemanage.domain.category.repository.CategoryRepository;
 import com.porejct.expensemanage.domain.category.service.CategoryValidService;
 import com.porejct.expensemanage.domain.user.mock.UserMock;
-import com.porejct.expensemanage.domain.user.repository.UserRepository;
-import com.porejct.expensemanage.domain.user.service.UserValidService;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

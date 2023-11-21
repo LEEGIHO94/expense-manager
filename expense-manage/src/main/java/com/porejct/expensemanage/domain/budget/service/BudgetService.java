@@ -3,7 +3,7 @@ package com.porejct.expensemanage.domain.budget.service;
 import static com.porejct.expensemanage.domain.budget.exception.BudgetExceptionCode.BUDGET_EXIST;
 
 import com.porejct.expensemanage.commone.exception.BusinessLogicException;
-import com.porejct.expensemanage.domain.budget.dto.BudgetMapper;
+import com.porejct.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.porejct.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.porejct.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.porejct.expensemanage.domain.budget.entity.Budget;

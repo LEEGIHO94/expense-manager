@@ -1,4 +1,4 @@
-package com.porejct.expensemanage.domain.budget.dto;
+package com.porejct.expensemanage.domain.budget.mapper;
 
 import com.porejct.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.porejct.expensemanage.domain.budget.entity.Budget;
