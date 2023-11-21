@@ -2,7 +2,7 @@ package com.porejct.expensemanage.domain.budget.mock;
 
 import com.porejct.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.porejct.expensemanage.domain.budget.entity.Budget;
-import com.porejct.expensemanage.domain.budget.service.PostBudgetRequest;
+import com.porejct.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.porejct.expensemanage.domain.user.entity.User;
 import com.porejct.expensemanage.domain.vo.Phone;
 import com.porejct.expensemanage.domain.vo.Price;

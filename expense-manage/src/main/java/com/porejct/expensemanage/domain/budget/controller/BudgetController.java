@@ -6,7 +6,7 @@ import com.porejct.expensemanage.commone.dto.ResponseStatus;
 import com.porejct.expensemanage.commone.utils.response.UrlCreator;
 import com.porejct.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.porejct.expensemanage.domain.budget.service.BudgetService;
-import com.porejct.expensemanage.domain.budget.service.PostBudgetRequest;
+import com.porejct.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;

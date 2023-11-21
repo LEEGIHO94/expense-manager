@@ -2,7 +2,7 @@ package com.porejct.expensemanage.domain.budget.dto;
 
 import com.porejct.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.porejct.expensemanage.domain.budget.entity.Budget;
-import com.porejct.expensemanage.domain.budget.service.PostBudgetRequest;
+import com.porejct.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.porejct.expensemanage.domain.category.mapper.CategoryMapper;
 import com.porejct.expensemanage.domain.user.mapper.UserMapper;
 import com.porejct.expensemanage.domain.vo.Price;

@@ -1,4 +1,4 @@
-package com.porejct.expensemanage.domain.budget.service;
+package com.porejct.expensemanage.domain.budget.dto.request;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
