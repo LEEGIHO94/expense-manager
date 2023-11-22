@@ -1,14 +1,14 @@
 package com.project.expensemanage.domain.budget.repository.dto;
 
-import com.project.expensemanage.domain.vo.Price;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class RecommendedBudgetData {
+    private Long categoryId;
     private String name;
-    private Price amount;
+    private Long amount;
 }
 
 /*

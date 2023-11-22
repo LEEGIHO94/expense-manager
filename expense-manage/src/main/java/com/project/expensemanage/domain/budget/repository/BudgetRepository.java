@@ -19,4 +19,13 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
     Optional<Budget> findByDateAndUserIdAndCategoryId(@Param("inputDate") LocalDate inputDate,
             @Param("categoryId") Long categoryId, @Param("userId") Long userId);
 
+    @Query("""
+             select new com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData
+             (b.category.id,b.category.name,sum(b.price.value))
+             from Budget b
+             where b.category.categoryType = com.project.expensemanage.domain.category.enums.CategoryType.STANDARD
+             group by b.category.id
+             
+        """)
+    List<RecommendedBudgetData> findTotalAmountByCategory();
 }
