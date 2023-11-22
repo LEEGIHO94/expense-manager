@@ -9,6 +9,8 @@ import com.project.expensemanage.domain.vo.Phone;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,7 @@ public class User extends BaseTime {
     private Long id;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @Embedded
     private Phone phone;
