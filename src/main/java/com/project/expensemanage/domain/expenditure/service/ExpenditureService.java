@@ -2,8 +2,10 @@ package com.project.expensemanage.domain.expenditure.service;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
+import com.project.expensemanage.domain.expenditure.controller.dto.request.GetExpenditureList;
 import com.project.expensemanage.domain.expenditure.controller.dto.request.PostExpenditureRequest;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.exception.ExpenditureExceptionCode;
 import com.project.expensemanage.domain.expenditure.mapper.ExpenditureMapper;
@@ -36,6 +38,7 @@ public class ExpenditureService {
         });
     }
 
+    //리팩토링 findById 대신 user까지 한번에 가져오는 패치조인 필수
     public ExpenditureResponse getExpenditureDetails(Long userId, Long expenditureId) {
         Expenditure entity = validExpenditure(expenditureId);
         if (!entity.getUser().getId().equals(userId)) {
@@ -43,6 +46,20 @@ public class ExpenditureService {
         }
         return mapper.toDto(entity);
     }
+
+    /*
+     * 1. 카테고리가 존재하면 해당 카테고리의 데이터만 조회
+     * 2. 최대, 최소 금액 설정 시 해당 금액 범위만 조회
+     * 3. 특정 기간 조회 (필수) 즉 특정 기간 조회는 필수로 하되 최대 최소 금액, 카테고리가 존재하면 해당 데이터를 받아와라
+     * */
+    public ExpenditureListResponse getExpenditureListByCondition(GetExpenditureList dto,
+            Long userId) {
+
+        return mapper.toDto(
+                repository.findAllExpenditureByCondition(mapper.toRepositoryDto(dto, userId)),
+                repository.findTotalExpenditureByCategory(mapper.toRepositoryDto(dto, userId)));
+    }
+
 
     private Expenditure validExpenditure(Long expenditureId) {
         return repository.findById(expenditureId)
