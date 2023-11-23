@@ -36,7 +36,6 @@ public class Expenditure {
     private Long id;
     private LocalDate expendedDate;
     private String memo;
-    private LocalDate expenditureDate;
 
     @Embedded
     private Price price;
