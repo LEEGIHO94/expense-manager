@@ -3,12 +3,16 @@ package com.project.expensemanage.domain.budget.service;
 import static com.project.expensemanage.domain.budget.exception.BudgetExceptionCode.BUDGET_EXIST;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
-import com.project.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
+import com.project.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.project.expensemanage.domain.budget.repository.BudgetRepository;
+import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +41,12 @@ public class BudgetService {
         categoryValid.validCategory(post.categoryId());
         validBudgetExist(userId, post);
     }
+
+
+    public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
+        return new RecommendBudgetHelper(repository.findTotalAmountByCategory(),totalAmount).getRecommendedData();
+    }
+
 
     //예산이 이미 존재한다면 예외 발생
     private void validBudgetExist(Long userId, PostBudgetRequest post) {
