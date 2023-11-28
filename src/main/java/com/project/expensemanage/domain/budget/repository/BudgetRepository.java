@@ -28,4 +28,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
              
         """)
     List<RecommendedBudgetData> findTotalAmountByCategory();
+
+    @Query("select b from Budget b where b.id = :budgetId and b.user.id = :userId")
+    Optional<Budget> findByBudgetIdAndUserId(@Param("budgetId") Long budgetId, @Param("userId")Long userId);
 }

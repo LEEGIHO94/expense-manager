@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.expensemanage.commone.config.SecurityConfig;
+import com.project.expensemanage.commone.security.annotation.WithMockCustomUser;
 import com.project.expensemanage.commone.security.config.AuthTestConfig;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.mapper.CategoryMapper;
@@ -39,6 +40,7 @@ class CategoryControllerTest {
 
     @Test
     @DisplayName("카테고리 사용자 등록 : 성공")
+    @WithMockCustomUser
     void post_custom_category_test() throws Exception {
         // given
         String content = objectMapper.writeValueAsString(mock.customCategoryPostDto());
@@ -59,6 +61,7 @@ class CategoryControllerTest {
 
     @Test
     @DisplayName("카테고리 관리자 등록 : 성공")
+    @WithMockCustomUser
     void post_standard_category_test() throws Exception {
         // given
         String content = objectMapper.writeValueAsString(mock.standardCategoryPostDto());
@@ -80,6 +83,7 @@ class CategoryControllerTest {
 
     @Test
     @DisplayName("카테고리 조회 : 성공")
+    @WithMockCustomUser
     void get_category_list_test() throws Exception {
         // given
         BDDMockito.given(service.getCategoryList()).willReturn(mock.EntityListMock());
