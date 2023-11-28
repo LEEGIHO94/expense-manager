@@ -1,6 +1,7 @@
 package com.project.expensemanage.domain.budget.repository;
 
 
+import com.project.expensemanage.commone.config.QueryDslConfig;
 import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
 import java.util.HashMap;
@@ -13,9 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
+@Import(QueryDslConfig.class)
 class BudgetRepositoryTest {
 
     @Autowired
@@ -36,4 +39,6 @@ class BudgetRepositoryTest {
         result.forEach(data -> Assertions.assertThat(data.getAmount())
                 .isEqualTo(validMap.get(data.getCategoryId())));
     }
+
+
 }
