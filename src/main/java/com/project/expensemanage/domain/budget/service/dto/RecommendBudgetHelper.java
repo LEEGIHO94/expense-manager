@@ -47,6 +47,7 @@ public class RecommendBudgetHelper {
             etc.setCategoryId(data.getCategoryId());
             return;
         }
+
         if (getRate(data.getAmount()) < RATE_UNDER_LIMIT_PER) {
             return;
         }
@@ -78,7 +79,6 @@ public class RecommendBudgetHelper {
 
     //비율 구하기
     private int getRate(Long amount) {
-        return (int) (amount / getTotalAmount()) * 100;
+        return (int) (amount * 100/ getTotalAmount());
     }
-
 }

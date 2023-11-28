@@ -1,5 +1,6 @@
 package com.project.expensemanage.domain.budget.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -11,11 +12,13 @@ import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.exception.BudgetExceptionCode;
 import com.project.expensemanage.domain.budget.mock.BudgetMock;
 import com.project.expensemanage.domain.budget.repository.BudgetRepository;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.category.exception.CategoryExceptionCode;
 import com.project.expensemanage.domain.category.mock.CategoryMock;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
 import com.project.expensemanage.domain.user.mock.UserMock;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -63,7 +66,7 @@ class BudgetServiceTest {
         BudgetIdResponse result = service.postBudget(userMock.getUserId(),
                 mock.postDtoMock());
         // then
-        Assertions.assertThat(result.budgetId()).isNotNull();
+        assertThat(result.budgetId()).isNotNull();
     }
 
     @Test
@@ -80,7 +83,7 @@ class BudgetServiceTest {
 
         // when
         // then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(BudgetExceptionCode.BUDGET_EXIST.getMessage());
@@ -96,9 +99,28 @@ class BudgetServiceTest {
 
         // when
         // then
-        Assertions.assertThatThrownBy(
+        assertThatThrownBy(
                         () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(CategoryExceptionCode.CATEGORY_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("카테고리 별 추천 금액 서비스 테스트")
+    void get_recommended_amount_for_category_test() throws Exception {
+        // given
+        Long totalAmount = 1000000L;
+        given(budgetRepository.findTotalAmountByCategory()).willReturn(mock.dbDtoMock());
+        // when
+        List<RecommendBudget> result = service.getRecommendedAmountForCategory(
+                totalAmount);
+        // then
+        for (int i = 0; i < result.size(); i++) {
+            assertThat(result.get(i).getCategoryId()).isNotNull();
+            assertThat(result.get(i).getAmount()).isNotZero();
+            assertThat(result.get(i).getCategoryName()).isInstanceOf(String.class);
+        }
+        long resultSum = result.stream().mapToLong(RecommendBudget::getAmount).sum();
+        assertThat(resultSum).isEqualTo(totalAmount);
     }
 }
