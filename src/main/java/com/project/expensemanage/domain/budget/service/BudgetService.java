@@ -45,8 +45,8 @@ public class BudgetService {
         validBudgetExist(userId, post);
     }
 
-    public BudgetIdResponse patchBudget(Long userId, PatchBudgetRequest patch) {
-        Budget result = patch(findBudget(userId, patch.budgetDate(), patch.categoryId()), patch);
+    public BudgetIdResponse patchBudget(Long userId,Long budgetId, PatchBudgetRequest patch) {
+        Budget result = patch(findBudget(userId, budgetId), patch);
         return mapper.toDto(result);
     }
 
@@ -55,8 +55,8 @@ public class BudgetService {
         return entity;
     }
 
-    private Budget findBudget(Long userId, LocalDate budgetedDate, Long categoryId) {
-        return repository.findByDateAndUserIdAndCategoryId(budgetedDate, categoryId, userId)
+    private Budget findBudget(Long userId, Long budgetId) {
+        return repository.findByBudgetIdAndUserId(budgetId,userId)
                 .orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
     }
 

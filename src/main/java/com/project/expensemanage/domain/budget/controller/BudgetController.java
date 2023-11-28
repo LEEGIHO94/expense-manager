@@ -56,7 +56,7 @@ public class BudgetController {
     public ResponseEntity<ResponseDto<BudgetIdResponse>> patchBudget(@PathVariable Long budgetId,
             @RequestBody @Valid PatchBudgetRequest patch, @CurrentUser Long userId) {
         ResponseDto<BudgetIdResponse> response = ResponseDto.<BudgetIdResponse>builder()
-                .data(service.patchBudget(userId, patch))
+                .data(service.patchBudget(userId, budgetId, patch))
                 .status(ResponseStatus.CREATE)
                 .build();
         return ResponseEntity.ok(response);

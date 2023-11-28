@@ -86,13 +86,12 @@ public class BudgetMock {
 
     public PatchBudgetRequest patchDtoMock() {
         return PatchBudgetRequest.builder()
-                .budgetDate(date)
                 .amount(patchedAmount)
                 .categoryId(categoryId)
                 .build();
     }
 
-    public Long getId() {
+    public Long getBudgetId() {
         return id;
     }
 }
