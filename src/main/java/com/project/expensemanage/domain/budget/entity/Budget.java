@@ -42,4 +42,8 @@ public class Budget {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    public void updatePrice(Long amount) {
+        this.price = new Price(amount);
+    }
 }
