@@ -1,5 +1,6 @@
 package com.project.expensemanage.domain.budget.mock;
 
+import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
@@ -17,6 +18,7 @@ public class BudgetMock {
 
     private final Long id = 1L;
     private final Long amount = 100000L;
+    private final Long patchedAmount = 200000L;
     private final Price price = new Price(amount);
     private final LocalDate date = LocalDate.of(2024, 1, 1);
     private final User serviceUser = entity();
@@ -80,5 +82,17 @@ public class BudgetMock {
         }
         result.add(new RecommendedBudgetData(5L,"기타",10000L));
         return result;
+    }
+
+    public PatchBudgetRequest patchDtoMock() {
+        return PatchBudgetRequest.builder()
+                .budgetDate(date)
+                .amount(patchedAmount)
+                .categoryId(categoryId)
+                .build();
+    }
+
+    public Long getId() {
+        return id;
     }
 }

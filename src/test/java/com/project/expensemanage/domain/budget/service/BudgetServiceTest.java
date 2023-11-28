@@ -1,9 +1,12 @@
 package com.project.expensemanage.domain.budget.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
 import com.project.expensemanage.domain.budget.config.BudgetTestConfig;
@@ -20,7 +23,6 @@ import com.project.expensemanage.domain.user.mock.UserMock;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,7 +86,7 @@ class BudgetServiceTest {
         // when
         // then
         assertThatThrownBy(
-                        () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
+                () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(BudgetExceptionCode.BUDGET_EXIST.getMessage());
     }
@@ -100,7 +102,7 @@ class BudgetServiceTest {
         // when
         // then
         assertThatThrownBy(
-                        () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
+                () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(CategoryExceptionCode.CATEGORY_NOT_FOUND.getMessage());
     }
@@ -122,5 +124,33 @@ class BudgetServiceTest {
         }
         long resultSum = result.stream().mapToLong(RecommendBudget::getAmount).sum();
         assertThat(resultSum).isEqualTo(totalAmount);
+    }
+
+    @Test
+    @DisplayName("예산 수정 테스트 : 성공")
+    void update_budget_success_test() throws Exception {
+        // given
+        given(budgetRepository.findByDateAndUserIdAndCategoryId(any(LocalDate.class), anyLong(),
+                anyLong())).willReturn(Optional.of(mock.entityMock()));
+        // when
+        BudgetIdResponse result = service.patchBudget(userMock.getUserId(), mock.patchDtoMock());
+        // then
+        assertThat(result.budgetId()).isNotNull().isEqualTo(mock.getId());
+        verify(budgetRepository, times(1)).findByDateAndUserIdAndCategoryId(any(LocalDate.class),
+                anyLong(), anyLong());
+    }
+
+    @Test
+    @DisplayName("예산 수정 테스트 : 실패[예산 조회 실패]")
+    void update_budget_failure_test() throws Exception {
+        // given
+        given(budgetRepository.findByDateAndUserIdAndCategoryId(any(LocalDate.class), anyLong(),
+                anyLong())).willReturn(Optional.empty());
+        // when
+        // then
+        assertThatThrownBy(
+                () -> service.patchBudget(userMock.getUserId(), mock.patchDtoMock())).isInstanceOf(
+                        BusinessLogicException.class)
+                .hasMessage(BudgetExceptionCode.BUDGET_NOT_FOUND.getMessage());
     }
 }
