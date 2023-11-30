@@ -14,7 +14,6 @@ create table category (
 ) ;
 create table expenditure (
                              expended_date date,
-                             expenditure_date date,
                              category_id bigint,
                              expenditure_id bigint not null auto_increment,
                              user_id bigint,
