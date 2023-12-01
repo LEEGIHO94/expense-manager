@@ -5,6 +5,7 @@ import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.expenditure.repoistory.ExpenditureRepository;
 import com.project.expensemanage.recommendation.config.TestSQLUtils;
 import com.project.expensemanage.recommendation.dto.RecommendationExpenditure;
+import com.project.expensemanage.recommendation.dto.RecommendationExpenditureAllUser;
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -35,7 +36,7 @@ class RecommendationRepositoryTest {
     LocalDate startDate = LocalDate.of(2020, 01, 01);
     LocalDate endDate = LocalDate.of(2020, 01, 31);
     long userId = 1L;
-    List<RecommendationExpenditure> result = repository.find(startDate, endDate, userId);
+    List<RecommendationExpenditure> result = repository.findTotalExpenditureByCategoryAndDateAndId(startDate, endDate, userId);
 
     result.forEach(
         data ->
@@ -43,5 +44,20 @@ class RecommendationRepositoryTest {
                 .isEqualTo(
                     sql.getTotalExpenditureByCategoryAndUser(
                         userId, data.categoryId(), startDate, endDate)));
+  }
+  @Test
+  @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
+  void recommend_date_all_user_test() throws Exception {
+    LocalDate startDate = LocalDate.of(2020, 01, 01);
+    LocalDate endDate = LocalDate.of(2020, 01, 31);
+    long userId = 1L;
+    List<RecommendationExpenditureAllUser> result = repository.findTotalExpenditureByCategoryAndDate(startDate, endDate);
+
+    result.forEach(
+        data ->
+            Assertions.assertThat(data.totalExpenditure())
+                .isEqualTo(
+                    sql.getTotalExpenditureByCategoryAndUser(
+                        data.userId(), data.categoryId(), startDate, endDate)));
   }
 }
