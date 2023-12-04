@@ -1,9 +1,9 @@
 insert into
-    user(user_role, created_at, updated_at, email, password)
+    user(user_role, created_at, updated_at, email, password,service_subscriber)
 VALUES
-    ('USER',now(),now(),'test001@gmail.com','password001!@#'),
-    ('USER',now(),now(),'test002@gmail.com','password001!@#!'),
-    ('USER',now(),now(),'test003@gmail.com','password001!@#!');
+    ('USER',now(),now(),'test001@gmail.com','password001!@#','RECOMMENDATION'),
+    ('USER',now(),now(),'test002@gmail.com','password001!@#!','RECOMMENDATION'),
+    ('USER',now(),now(),'test003@gmail.com','password001!@#!','RECOMMENDATION');
 
 insert into
     category(category_type, name)
