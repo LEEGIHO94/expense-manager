@@ -85,7 +85,7 @@ public class DiscordMapper {
     StringBuilder sb = new StringBuilder();
     sb.append(getPhrase(expenditure, restDay, endOfMonth))
         .append("\n")
-        .append("설정한 : ")
+        .append("설정한 예산 : ")
         .append(expenditure.budget())
         .append("\n")
         .append("지출 : ")
@@ -102,11 +102,33 @@ public class DiscordMapper {
   * 로직 수정 필요
   * 1. 최소 금액을 설정은 사용자가 설정한 예산을 해당월로 나눈 값, 즉 1일 사용 예상 량으로 한다.
   * */
-  private long createRecommendedExpenditure(RecommendationExpenditure expenditure, int restDay,int endOfMonth) {
-    long amount =  (expenditure.budget() - expenditure.totalExpenditure() / restDay * 1000) * 1000L;
-    long amountOfReference = (expenditure.budget() / (endOfMonth * 1000)) * 1000L;
-    return Math.min(amountOfReference,amount);
+  private String createRecommendedExpenditure(RecommendationExpenditure expenditure, int restDay,int endOfMonth) {
+    long amount =  Math.max(expenditure.budget() - expenditure.totalExpenditure(),0) / restDay;
+    long amountOfReference = expenditure.budget() / endOfMonth;
+    return getMaxRecommendExpenditure(amount,amountOfReference);
   }
+
+  private String getMaxRecommendExpenditure(Long amount, Long amountOfReference){
+    return roundAmount(amount) >= roundAmount(amountOfReference)
+        ? roundAmount(amount) + " (**설정 예산 만족**)"
+        : roundAmount(amountOfReference) + " (**!!예산 초과 1일 사용 권장량 제공!!**)";
+}
+
+  private Long roundAmount(Long num){
+    if(num / 1000 != 0){
+      return num / 1000 * 1000;
+    }
+
+    if(num / 100 != 0){
+      return num / 100 * 100;
+    }
+
+    if(num / 10 != 0){
+      return num / 10 * 10;
+    }
+
+    return num;
+}
 
   private String getPhrase(RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
     return checkWaring(expenditure, restDay, endOfMonth) ? properties.getPhraseSafe() : properties.getPhraseWaring();
