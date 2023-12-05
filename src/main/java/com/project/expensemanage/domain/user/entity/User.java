@@ -4,6 +4,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 import com.project.expensemanage.commone.auditing.BaseTime;
+import com.project.expensemanage.domain.user.enums.ServiceSubscriber;
 import com.project.expensemanage.domain.user.enums.UserRole;
 import com.project.expensemanage.domain.vo.Phone;
 import jakarta.persistence.Column;
@@ -33,6 +34,8 @@ public class User extends BaseTime {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    @Enumerated(EnumType.STRING)
+    private ServiceSubscriber serviceSubscriber;
     @Embedded
     private Phone phone;
 }

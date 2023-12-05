@@ -13,7 +13,6 @@ import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +44,7 @@ public class BudgetService {
         validBudgetExist(userId, post);
     }
 
-    public BudgetIdResponse patchBudget(Long userId,Long budgetId, PatchBudgetRequest patch) {
+    public BudgetIdResponse patchBudget(Long userId, Long budgetId, PatchBudgetRequest patch) {
         Budget result = patch(findBudget(userId, budgetId), patch);
         return mapper.toDto(result);
     }
@@ -56,7 +55,7 @@ public class BudgetService {
     }
 
     private Budget findBudget(Long userId, Long budgetId) {
-        return repository.findByBudgetIdAndUserId(budgetId,userId)
+        return repository.findByBudgetIdAndUserId(budgetId, userId)
                 .orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
     }
 

@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.1.5'
     id 'io.spring.dependency-management' version '1.1.3'
     id 'jacoco'
-}
+    id 'com.diffplug.spotless' version '6.22.0'}
 
 group = 'com.project'
 version = '0.0.1-SNAPSHOT'
@@ -42,10 +42,16 @@ dependencies {
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+
     //jwt 의존성
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+
+    // mockWebServer
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
 }
 
 tasks.named('bootBuildImage') {
@@ -96,5 +102,16 @@ jacocoTestReport {
 //                minimum = 0.10
 //            }
 //        }
+//    }
+//}
+
+//spotless {
+//    java {
+//        target 'src/*/java/**/*.java'
+//        importOrder()
+//        removeUnusedImports()
+//        cleanthat()
+//        googleJavaFormat()
+//        formatAnnotations()
 //    }
 //}
