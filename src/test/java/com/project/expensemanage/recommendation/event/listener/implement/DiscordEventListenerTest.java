@@ -1,16 +1,15 @@
 package com.project.expensemanage.recommendation.event.listener.implement;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.project.expensemanage.commone.utils.date.DateUtils;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.user.enums.ServiceSubscriber;
 import com.project.expensemanage.domain.user.repository.UserRepository;
-import com.project.expensemanage.recommendation.dto.RecommendationExpenditure;
-import com.project.expensemanage.recommendation.event.event.DailyRecommendationExpenditureEvent;
-import com.project.expensemanage.recommendation.event.publisher.DailyExpenditureRecommendationPublisher;
-import com.project.expensemanage.recommendation.repository.RecommendationRepository;
+import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure;
+import com.project.expensemanage.notification.recommendation.event.event.DailyRecommendationExpenditureEvent;
+import com.project.expensemanage.notification.recommendation.event.publisher.DailyExpenditureRecommendationPublisher;
+import com.project.expensemanage.notification.recommendation.repository.RecommendationRepository;
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;

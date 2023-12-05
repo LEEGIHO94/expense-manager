@@ -1,4 +1,4 @@
-package com.project.expensemanage.recommendation.discord.body.embedObject;
+package com.project.expensemanage.notification.recommendation.discord.body.embedObject;
 
 /*
 * name : name of provider

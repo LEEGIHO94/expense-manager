@@ -1,8 +1,8 @@
-package com.project.expensemanage.recommendation.repository;
+package com.project.expensemanage.notification.recommendation.repository;
 
 import com.project.expensemanage.domain.category.entity.Category;
-import com.project.expensemanage.recommendation.dto.RecommendationExpenditure;
-import com.project.expensemanage.recommendation.dto.RecommendationExpenditureAllUser;
+import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditureAllUser;
+import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

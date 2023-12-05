@@ -1,4 +1,4 @@
-package com.project.expensemanage.recommendation.discord.body;
+package com.project.expensemanage.notification.recommendation.discord.body;
 
 import java.util.List;
 import lombok.Builder;

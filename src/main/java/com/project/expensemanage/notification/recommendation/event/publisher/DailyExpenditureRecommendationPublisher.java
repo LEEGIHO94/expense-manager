@@ -1,12 +1,12 @@
-package com.project.expensemanage.recommendation.event.publisher;
+package com.project.expensemanage.notification.recommendation.event.publisher;
 
 import com.project.expensemanage.commone.utils.date.DateUtils;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.user.enums.ServiceSubscriber;
 import com.project.expensemanage.domain.user.repository.UserRepository;
-import com.project.expensemanage.recommendation.dto.RecommendationExpenditure;
-import com.project.expensemanage.recommendation.event.event.DailyRecommendationExpenditureEvent;
-import com.project.expensemanage.recommendation.repository.RecommendationRepository;
+import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure;
+import com.project.expensemanage.notification.recommendation.event.event.DailyRecommendationExpenditureEvent;
+import com.project.expensemanage.notification.recommendation.repository.RecommendationRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

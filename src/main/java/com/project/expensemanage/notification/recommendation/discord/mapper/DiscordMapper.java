@@ -1,12 +1,12 @@
-package com.project.expensemanage.recommendation.discord.mapper;
+package com.project.expensemanage.notification.recommendation.discord.mapper;
 
-import com.project.expensemanage.recommendation.discord.body.DiscordBody;
-import com.project.expensemanage.recommendation.discord.body.DiscordEmbed;
-import com.project.expensemanage.recommendation.discord.body.embedObject.DiscordEmbedAuthor;
-import com.project.expensemanage.recommendation.discord.body.embedObject.DiscordEmbedField;
-import com.project.expensemanage.recommendation.discord.body.embedObject.DiscordEmbedFooter;
-import com.project.expensemanage.recommendation.discord.body.embedObject.DiscordEmbedThumbnail;
-import com.project.expensemanage.recommendation.dto.RecommendationExpenditure;
+import com.project.expensemanage.notification.recommendation.discord.body.DiscordEmbed;
+import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedFooter;
+import com.project.expensemanage.notification.recommendation.discord.body.DiscordBody;
+import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedAuthor;
+import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedField;
+import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedThumbnail;
+import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
