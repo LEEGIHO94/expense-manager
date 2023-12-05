@@ -1,10 +1,10 @@
-package com.project.expensemanage.notification.recommendation.discord.body;
+package com.project.expensemanage.notification.discord.body;
 
-import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedFooter;
-import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedImage;
-import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedAuthor;
-import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedField;
-import com.project.expensemanage.notification.recommendation.discord.body.embedObject.DiscordEmbedThumbnail;
+import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedFooter;
+import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedImage;
+import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedAuthor;
+import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedField;
+import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedThumbnail;
 import java.util.List;
 import lombok.Builder;
 

@@ -1,4 +1,4 @@
-package com.project.expensemanage.notification.recommendation.discord.enums;
+package com.project.expensemanage.notification.discord.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

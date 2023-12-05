@@ -1,4 +1,4 @@
-package com.project.expensemanage.notification.recommendation.discord.mapper;
+package com.project.expensemanage.notification.discord.mapper;
 
 import com.project.expensemanage.commone.config.property.YamlPropertySourceFactory;
 import lombok.Getter;

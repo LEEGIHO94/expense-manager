@@ -1,7 +1,7 @@
 package com.project.expensemanage.notification.recommendation.event.listener.implement;
 
-import com.project.expensemanage.notification.recommendation.discord.body.DiscordBody;
-import com.project.expensemanage.notification.recommendation.discord.mapper.DiscordMapper;
+import com.project.expensemanage.notification.discord.body.DiscordBody;
+import com.project.expensemanage.notification.discord.mapper.DiscordMapper;
 import com.project.expensemanage.notification.recommendation.event.event.DailyRecommendationExpenditureEvent;
 import com.project.expensemanage.notification.recommendation.event.listener.ExpenditureRecommendationEventListener;
 import lombok.RequiredArgsConstructor;
