@@ -11,6 +11,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +23,7 @@ public class DailyExpenditureRecommendationPublisher {
   private final RecommendationRepository recommendationRepository;
   private final DateUtils dateUtils;
 
+  @Scheduled(cron = "0 0 8 * * *")
   public void sendDailyRecommendation() {
     findSubscriber().forEach(this::publishEvent);
   }
