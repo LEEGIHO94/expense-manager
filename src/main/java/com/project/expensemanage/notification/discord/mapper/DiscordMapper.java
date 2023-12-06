@@ -1,5 +1,6 @@
 package com.project.expensemanage.notification.discord.mapper;
 
+import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
 import com.project.expensemanage.notification.discord.body.DiscordBody;
 import com.project.expensemanage.notification.discord.body.DiscordEmbed;
 import com.project.expensemanage.notification.discord.body.embedObject.DiscordEmbedFooter;
@@ -31,7 +32,26 @@ public class DiscordMapper {
         .username(properties.getUsername())
         .build();
   }
+  public DiscordBody toDiscordTodayTotalExpenditureBody(List<TotalExpenditureByCategory> expenditureList) {
+    return DiscordBody.builder()
+        .content(properties.getContent())
+        .embeds(List.of(createExpenditureDiscordEmbed(expenditureList)))
+        .avatar_url(properties.getAvatarUrl())
+        .username(properties.getUsername())
+        .build();
+  }
 
+  private DiscordEmbed createExpenditureDiscordEmbed(List<TotalExpenditureByCategory> expenditureList) {
+    return DiscordEmbed.builder()
+        .color(properties.getColor())
+        .description("Embded 설명")
+        .title(properties.getEmbedTitle())
+        .footer(createFooter())
+        .fields(discordExpenditureEmbedFieldList(expenditureList))
+        .thumbnail(createThumbnail())
+        .author(createAuthor())
+        .build();
+  }
   private DiscordEmbed createDiscordEmbed(List<RecommendationExpenditure> totalExpenditureList) {
     return DiscordEmbed.builder()
         .color(properties.getColor())
@@ -52,7 +72,22 @@ public class DiscordMapper {
     }
     return result;
   }
+  private List<DiscordEmbedField> discordExpenditureEmbedFieldList(
+      List<TotalExpenditureByCategory> expenditureList) {
+    List<DiscordEmbedField> result = new ArrayList<>();
+    for (TotalExpenditureByCategory expenditureByCategory : expenditureList) {
+      result.add(createExpenditureField(expenditureByCategory));
+    }
+    return result;
+  }
 
+  private DiscordEmbedField createExpenditureField(TotalExpenditureByCategory expenditureByCategory) {
+    return DiscordEmbedField.builder()
+        .inline(false)
+        .name(expenditureByCategory.categoryName())
+        .value(createExpenditureValue(expenditureByCategory))
+        .build();
+  }
   private DiscordEmbedField createField(RecommendationExpenditure expenditure) {
     return DiscordEmbedField.builder()
         .inline(false)
@@ -96,12 +131,21 @@ public class DiscordMapper {
 
     return sb.toString();
   }
-
+  private String createExpenditureValue(TotalExpenditureByCategory expenditureByCategory){
+    StringBuilder sb = new StringBuilder();
+    sb
+        .append(expenditureByCategory.categoryName())
+        .append("\n")
+        .append("금일 지출 : ")
+        .append(expenditureByCategory.amount());
+    return sb.toString();
+  }
 
   /*
   * 로직 수정 필요
   * 1. 최소 금액을 설정은 사용자가 설정한 예산을 해당월로 나눈 값, 즉 1일 사용 예상 량으로 한다.
   * */
+
   private String createRecommendedExpenditure(RecommendationExpenditure expenditure, int restDay,int endOfMonth) {
     long amount =  Math.max(expenditure.budget() - expenditure.totalExpenditure(),0) / restDay;
     long amountOfReference = expenditure.budget() / endOfMonth;
@@ -133,11 +177,11 @@ public class DiscordMapper {
   private String getPhrase(RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
     return checkWaring(expenditure, restDay, endOfMonth) ? properties.getPhraseSafe() : properties.getPhraseWaring();
   }
-
   /*
   * true : 지출이 남은 날보다 짧다
   * false : 지출이 남은 날 보다 많다.
   * */
+
   private boolean checkWaring(RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
     return (restDay / endOfMonth) <= (expenditure.budget() - expenditure.totalExpenditure());
   }
