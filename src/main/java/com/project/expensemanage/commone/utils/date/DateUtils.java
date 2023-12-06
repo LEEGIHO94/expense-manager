@@ -13,4 +13,8 @@ public class DateUtils {
   public LocalDate endOfMonth() {
     return YearMonth.now().atEndOfMonth();
   }
+
+  public LocalDate getLocalDate() {
+    return LocalDate.now();
+  }
 }
