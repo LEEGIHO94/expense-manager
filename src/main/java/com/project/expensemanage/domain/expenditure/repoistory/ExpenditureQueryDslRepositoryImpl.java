@@ -53,7 +53,22 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                         )
                 .groupBy(expenditure.category.id)
                 .fetch();
+    }
 
+    @Override
+    public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(Long userId,LocalDate date){
+        return query
+            .select(Projections.constructor(TotalExpenditureByCategory.class,
+                expenditure.category.id.as("categoryId"),
+                expenditure.category.name.as("categoryName"),
+                expenditure.price.value.sum().as("amount")))
+            .from(expenditure)
+            .where(
+                dailyExpendEq(date),
+                userIdEq(userId)
+            )
+            .groupBy()
+            .fetch();
     }
 
     private static BooleanExpression expenditureSumIncludeCondition() {
@@ -63,6 +78,10 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
     //필수 값
     private BooleanExpression expendDateRange(LocalDate startDate, LocalDate endDate) {
         return expenditure.expendedDate.between(startDate, endDate);
+    }
+
+    private BooleanExpression dailyExpendEq(LocalDate date){
+        return expenditure.expendedDate.eq(date);
     }
 
     private BooleanExpression userIdEq(Long userId) {
