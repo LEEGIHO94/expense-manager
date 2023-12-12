@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public class AnalysisRepository {
   private final JPAQueryFactory query;
 
-  public List<ExpenditureDiff> getRateOfExpenditureDiff(Long userId, LocalDate date) {
+  public List<ExpenditureDiff> getRateOfExpenditureDiff(Long userId, LocalDate startDate, LocalDate endDate) {
     return query
         .select(
             Projections.constructor(
@@ -26,7 +26,7 @@ public class AnalysisRepository {
         .from(expenditure)
         .where(
             userIdEq(userId),
-            expendDateRange(date)
+            expendDateRange(startDate,endDate)
             )
         .groupBy(
             expenditure.category.id
@@ -39,7 +39,7 @@ public class AnalysisRepository {
   }
 
   //LocalDate를 기준으로 현재 시간과 이전 시간
-  private BooleanExpression expendDateRange(LocalDate date) {
-    return expenditure.expendedDate.between(date, date.minusMonths(1));
+  private BooleanExpression expendDateRange(LocalDate startDate, LocalDate endDate) {
+    return expenditure.expendedDate.between(startDate, endDate);
   }
 }
