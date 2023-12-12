@@ -27,5 +27,13 @@ public class AnalysisController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping("/weekly")
+  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> tempNameWeek(@CurrentUser Long userId){
+    ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
+        .data(service.getWeeklyExpenditureComparison(userId))
+        .status(ResponseStatus.GET)
+        .build();
+    return ResponseEntity.ok(response);
+  }
 
 }
