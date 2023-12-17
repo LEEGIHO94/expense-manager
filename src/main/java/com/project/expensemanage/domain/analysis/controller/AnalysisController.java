@@ -3,6 +3,7 @@ package com.project.expensemanage.domain.analysis.controller;
 import com.project.expensemanage.commone.annotation.CurrentUser;
 import com.project.expensemanage.commone.dto.ResponseDto;
 import com.project.expensemanage.commone.dto.ResponseStatus;
+import com.project.expensemanage.domain.analysis.controller.dto.ExpenditureAnalysisResponse;
 import com.project.expensemanage.domain.analysis.controller.dto.ExpenditureDiffResponse;
 import com.project.expensemanage.domain.analysis.service.AnalysisService;
 import java.util.List;
@@ -36,4 +37,12 @@ public class AnalysisController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping()
+  public ResponseEntity<ResponseDto<ExpenditureAnalysisResponse>> getExpenditureAnalysisByUser(@CurrentUser Long userId){
+    ResponseDto<ExpenditureAnalysisResponse> response = ResponseDto.<ExpenditureAnalysisResponse>builder()
+        .data(service.getExpenditureAnalysisByUser(userId))
+        .status(ResponseStatus.GET)
+        .build();
+    return ResponseEntity.ok(response);
+  }
 }
