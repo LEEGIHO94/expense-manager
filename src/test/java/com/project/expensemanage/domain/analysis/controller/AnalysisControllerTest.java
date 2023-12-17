@@ -1,7 +1,5 @@
 package com.project.expensemanage.domain.analysis.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.expensemanage.commone.config.JacksonConfig;
@@ -12,7 +10,6 @@ import com.project.expensemanage.domain.analysis.controller.dto.ExpenditureAnaly
 import com.project.expensemanage.domain.analysis.controller.dto.ExpenditureDiffResponse;
 import com.project.expensemanage.domain.analysis.service.AnalysisService;
 import com.project.expensemanage.domain.budget.mock.BudgetMock;
-import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -48,10 +45,11 @@ class AnalysisControllerTest {
   @Test
   @DisplayName("지난 주 대비 이번 주 지출 비율 테스트")
   @WithMockCustomUser
-  void get_weekly_expenditure_comparison_test() throws Exception{
-      // given
-    BDDMockito.given(service.getWeeklyExpenditureComparison(Mockito.anyLong())).willReturn(expenditureDiffResponseList());
-      // when
+  void get_weekly_expenditure_comparison_test() throws Exception {
+    // given
+    BDDMockito.given(service.getWeeklyExpenditureComparison(Mockito.anyLong()))
+        .willReturn(expenditureDiffResponseList());
+    // when
     ResultActions perform = mvc.perform(MockMvcRequestBuilders.get(DEFAULT + "/weekly"));
     // then
     perform
@@ -69,10 +67,11 @@ class AnalysisControllerTest {
   @Test
   @DisplayName("지난 달 대비 이번 달 지출 비율 테스트")
   @WithMockCustomUser
-  void get_monthly_expenditure_comparison_test() throws Exception{
-      // given
-    BDDMockito.given(service.getMonthlyExpenditureComparison(Mockito.anyLong())).willReturn(expenditureDiffResponseList());
-      // when
+  void get_monthly_expenditure_comparison_test() throws Exception {
+    // given
+    BDDMockito.given(service.getMonthlyExpenditureComparison(Mockito.anyLong()))
+        .willReturn(expenditureDiffResponseList());
+    // when
     ResultActions perform = mvc.perform(MockMvcRequestBuilders.get(DEFAULT + "/monthly"));
     // then
     perform
@@ -86,13 +85,15 @@ class AnalysisControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryName").isString())
         .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].rate").isNumber());
   }
+
   @Test
   @DisplayName("전체 사용자 대비 사용자 지출 비율 테스트")
   @WithMockCustomUser
-  void get_total_expenditure_comparison_test() throws Exception{
-      // given
-    BDDMockito.given(service.getExpenditureAnalysisByUser(Mockito.anyLong())).willReturn(expenditureAnalysisResponse());
-      // when
+  void get_total_expenditure_comparison_test() throws Exception {
+    // given
+    BDDMockito.given(service.getExpenditureAnalysisByUser(Mockito.anyLong()))
+        .willReturn(expenditureAnalysisResponse());
+    // when
     ResultActions perform = mvc.perform(MockMvcRequestBuilders.get(DEFAULT));
     // then
     perform
@@ -106,18 +107,17 @@ class AnalysisControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.data.expenditureRate").isNumber());
   }
 
-
-  List<ExpenditureDiffResponse> expenditureDiffResponseList(){
+  List<ExpenditureDiffResponse> expenditureDiffResponseList() {
     return List.of(
         ExpenditureDiffResponse.builder().categoryId(1L).categoryName("카테고리이름1").rate(10L).build(),
         ExpenditureDiffResponse.builder().categoryId(2L).categoryName("카테고리이름2").rate(20L).build(),
-        ExpenditureDiffResponse.builder().categoryId(3L).categoryName("카테고리이름3").rate(30L).build()
-    );
+        ExpenditureDiffResponse.builder().categoryId(3L).categoryName("카테고리이름3").rate(30L).build());
   }
-  ExpenditureAnalysisResponse expenditureAnalysisResponse(){
+
+  ExpenditureAnalysisResponse expenditureAnalysisResponse() {
     return ExpenditureAnalysisResponse.builder()
         .analysisDate(LocalDate.now())
         .expenditureRate(90L)
         .build();
-}
+  }
 }

@@ -1,7 +1,6 @@
 package com.project.expensemanage.domain.analysis.service;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.Mockito.*;
 
 import com.project.expensemanage.domain.analysis.config.AnalysisConfig;
@@ -34,7 +33,7 @@ class AnalysisServiceTest {
 
   @Test
   @DisplayName("저번 주 대비 이번 주 지출 내역 조회")
-  void weekly_expenditure_comparison_test() throws Exception {
+  void weekly_expenditure_comparison_test() {
     // given
     Long userId = 1L;
     BDDMockito.given(
@@ -57,7 +56,7 @@ class AnalysisServiceTest {
 
   @Test
   @DisplayName("저번 달 대비 이번 달 지출 내역 조회")
-  void monthly_expenditure_comparison_test() throws Exception {
+  void monthly_expenditure_comparison_test() {
     // given
     Long userId = 1L;
     BDDMockito.given(
@@ -81,7 +80,7 @@ class AnalysisServiceTest {
 
   @Test
   @DisplayName("당일 전체 사용자 지출 대비 지출 양 [전체 사용자가 더 클때, 개인의 비용 제외 시 더 작을때]")
-  void total_user_expenditure_comparison_lager_total_test() throws Exception {
+  void total_user_expenditure_comparison_lager_total_test() {
     // given
     Long userId = 1L;
 
@@ -93,9 +92,10 @@ class AnalysisServiceTest {
     Assertions.assertThat(result.expenditureRate()).isEqualTo(9L);
     Mockito.verify(repository, times(1)).getTotalExpenditureAllUserAndUser(userId, LocalDate.now());
   }
+
   @Test
   @DisplayName("당일 전체 사용자 지출 대비 지출 양 [전체 사용자가 더 클때, 개인의 비용 제외 시 더 클 때]")
-  void total_user_expenditure_comparison_lager_total_lager_test() throws Exception {
+  void total_user_expenditure_comparison_lager_total_lager_test() {
     // given
     Long userId = 1L;
 
@@ -108,10 +108,10 @@ class AnalysisServiceTest {
     Mockito.verify(repository, times(1)).getTotalExpenditureAllUserAndUser(userId, LocalDate.now());
   }
 
-  //당일 사용한 전체 사용자의 지출 보다 한사람이 더 큰 경우 어마무시한 과한 숫자가 나온다.
+  // 당일 사용한 전체 사용자의 지출 보다 한사람이 더 큰 경우 어마무시한 과한 숫자가 나온다.
   @Test
   @DisplayName("당일 전체 사용자 지출 대비 지출 양 [전체 사용자가 더 클때]")
-  void total_user_expenditure_comparison_lager_user_test() throws Exception {
+  void total_user_expenditure_comparison_lager_user_test() {
     // given
     Long userId = 1L;
 
@@ -126,7 +126,7 @@ class AnalysisServiceTest {
 
   @Test
   @DisplayName("당일 전체 사용자 지출 대비 지출 양 [전체 사용자가 지출 0]")
-  void total_user_expenditure_comparison_zero_total_test() throws Exception {
+  void total_user_expenditure_comparison_zero_total_test() {
     // given
     Long userId = 1L;
 
@@ -141,7 +141,7 @@ class AnalysisServiceTest {
 
   @Test
   @DisplayName("당일 전체 사용자 지출 대비 지출 양 [사용자가 지출 0]")
-  void total_user_expenditure_comparison_zero_user_test() throws Exception {
+  void total_user_expenditure_comparison_zero_user_test() {
     // given
     Long userId = 1L;
 
