@@ -6,9 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ExcludeSpendingTotal {
-    EXCLUDE(false),
-    INCLUDE(true)
-    ;
+  EXCLUDE(false),
+  INCLUDE(true);
 
-    private final boolean flag;
+  private final boolean flag;
 }

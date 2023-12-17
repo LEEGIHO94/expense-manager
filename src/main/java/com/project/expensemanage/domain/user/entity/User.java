@@ -26,16 +26,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User extends BaseTime {
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(updatable = false, name = "user_id")
-    private Long id;
-    private String email;
-    private String password;
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-    @Enumerated(EnumType.STRING)
-    private ServiceSubscriber serviceSubscriber;
-    @Embedded
-    private Phone phone;
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
+  @Column(updatable = false, name = "user_id")
+  private Long id;
+
+  private String email;
+  private String password;
+
+  @Enumerated(EnumType.STRING)
+  private UserRole userRole;
+
+  @Enumerated(EnumType.STRING)
+  private ServiceSubscriber serviceSubscriber;
+
+  @Embedded private Phone phone;
 }

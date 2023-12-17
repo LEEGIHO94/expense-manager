@@ -30,25 +30,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Expenditure {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, name = "expenditure_id")
-    private Long id;
-    private LocalDate expendedDate;
-    private String memo;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(updatable = false, name = "expenditure_id")
+  private Long id;
 
-    @Embedded
-    private Price price;
+  private LocalDate expendedDate;
+  private String memo;
 
-    @Enumerated(STRING)
-    private ExcludeSpendingTotal excludeSpendingTotal;
+  @Embedded private Price price;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+  @Enumerated(STRING)
+  private ExcludeSpendingTotal excludeSpendingTotal;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
 
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 }

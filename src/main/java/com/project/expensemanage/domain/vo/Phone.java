@@ -6,12 +6,11 @@ import lombok.Getter;
 @Getter
 @Embeddable
 public class Phone {
-    private String value;
+  private String value;
 
-    public Phone(String value) {
-        this.value = value;
-    }
+  public Phone(String value) {
+    this.value = value;
+  }
 
-    public Phone() {
-    }
+  public Phone() {}
 }
