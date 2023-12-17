@@ -13,20 +13,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class CategoryService {
-    private final CategoryRepository repository;
+  private final CategoryRepository repository;
 
-    public Category postCategory(Category category){
-        validCategoryExist(category.getName());
+  public Category postCategory(Category category) {
+    validCategoryExist(category.getName());
 
-        return repository.save(category);
-    }
+    return repository.save(category);
+  }
 
-    private void validCategoryExist(String name){
-       repository.findByName(name).ifPresent(d -> {throw new BusinessLogicException(
-               CategoryExceptionCode.CATEGORY_EXIST);});
-    }
+  private void validCategoryExist(String name) {
+    repository
+        .findByName(name)
+        .ifPresent(
+            d -> {
+              throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_EXIST);
+            });
+  }
 
-    public List<Category> getCategoryList() {
-        return repository.findAllByType();
-    }
+  public List<Category> getCategoryList() {
+    return repository.findAllByType();
+  }
 }

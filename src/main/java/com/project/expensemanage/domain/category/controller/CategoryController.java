@@ -25,30 +25,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    private static final String DEFAULT = "/api/categories";
-    private final CategoryService service;
-    private final CategoryMapper mapper;
+  private static final String DEFAULT = "/api/categories";
+  private final CategoryService service;
+  private final CategoryMapper mapper;
 
-    @PostMapping("/client")
-    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody @Valid PostCustomCategoryRequest post) {
-        Category result = service.postCategory(mapper.toEntity(post));
-        ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
-        URI location = UrlCreator.createUri(DEFAULT, result.getId());
-        return ResponseEntity.created(location).body(responseDto);
-    }
+  @PostMapping("/client")
+  public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(
+      @RequestBody @Valid PostCustomCategoryRequest post) {
+    Category result = service.postCategory(mapper.toEntity(post));
+    ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
+    URI location = UrlCreator.createUri(DEFAULT, result.getId());
+    return ResponseEntity.created(location).body(responseDto);
+  }
 
-    @PostMapping("/admin")
-    public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(@RequestBody @Valid PostStandardCategoryRequest post) {
-        Category result = service.postCategory(mapper.toEntity(post));
-        ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
-        URI location = UrlCreator.createUri(DEFAULT, result.getId());
-        return ResponseEntity.created(location).body(responseDto);
-    }
+  @PostMapping("/admin")
+  public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(
+      @RequestBody @Valid PostStandardCategoryRequest post) {
+    Category result = service.postCategory(mapper.toEntity(post));
+    ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
+    URI location = UrlCreator.createUri(DEFAULT, result.getId());
+    return ResponseEntity.created(location).body(responseDto);
+  }
 
-    @GetMapping
-    public ResponseEntity<ResponseDto<List<GetCategoryResponse>>> getCategoryList() {
-        List<Category> result = service.getCategoryList();
+  @GetMapping
+  public ResponseEntity<ResponseDto<List<GetCategoryResponse>>> getCategoryList() {
+    List<Category> result = service.getCategoryList();
 
-        return ResponseEntity.ok(mapper.toDto(result));
-    }
+    return ResponseEntity.ok(mapper.toDto(result));
+  }
 }
