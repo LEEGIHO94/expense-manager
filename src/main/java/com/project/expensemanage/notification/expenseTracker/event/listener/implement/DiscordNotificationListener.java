@@ -10,10 +10,10 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class DiscordNotificationListener implements TotalExpenditureNotificationEventListener {
   private final DiscordMapper mapper;
+
   @Override
   public void handle(TodayExpenditureEvent event) {
-    DiscordBody discordBody = mapper.toDiscordTodayTotalExpenditureBody(
-        event.expenditureList());
+    DiscordBody discordBody = mapper.toDiscordTodayTotalExpenditureBody(event.expenditureList());
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForEntity(

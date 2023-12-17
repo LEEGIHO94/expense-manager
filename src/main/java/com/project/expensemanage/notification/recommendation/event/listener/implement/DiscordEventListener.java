@@ -21,17 +21,6 @@ public class DiscordEventListener implements ExpenditureRecommendationEventListe
   public void handle(DailyRecommendationExpenditureEvent event) {
     DiscordBody discordBody = mapper.toDiscordBody(event.recommendationList());
 
-//        WebClient.create(mapper.getBaseUrl())
-//            .post()
-//            .uri(
-//
-//     "/1179944667001917450/NqrHqNpt0RjWH-RRLryMVZ_JuWe2jlJryW9K2KVvs5nIYp6NboIL3iPDo1Mthdg-0aXN")
-//            .contentType(MediaType.APPLICATION_JSON)
-//            .bodyValue(discordBody)
-//            .retrieve()
-//            .bodyToMono(String.class)
-//            .subscribe();
-
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForEntity(
         mapper.getBaseUrl()
