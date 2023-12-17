@@ -13,19 +13,16 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BudgetMapper {
 
-    public Budget toEntity(Long userId, PostBudgetRequest post) {
-        return Budget.builder()
-                .date(post.budgetDate())
-                .price(new Price(post.amount()))
-                .user(UserMapper.toIdEntity(userId))
-                .category(CategoryMapper.toIdEntity(post.categoryId()))
-                .build();
-    }
+  public Budget toEntity(Long userId, PostBudgetRequest post) {
+    return Budget.builder()
+        .date(post.budgetDate())
+        .price(new Price(post.amount()))
+        .user(UserMapper.toIdEntity(userId))
+        .category(CategoryMapper.toIdEntity(post.categoryId()))
+        .build();
+  }
 
-
-    public BudgetIdResponse toDto(Budget budget) {
-        return BudgetIdResponse.builder()
-                .budgetId(budget.getId())
-                .build();
-    }
+  public BudgetIdResponse toDto(Budget budget) {
+    return BudgetIdResponse.builder().budgetId(budget.getId()).build();
+  }
 }

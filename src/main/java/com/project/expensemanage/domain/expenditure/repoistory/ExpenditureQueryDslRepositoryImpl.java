@@ -20,90 +20,88 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRepository {
 
-    private final JPAQueryFactory query;
+  private final JPAQueryFactory query;
 
-    private static BooleanExpression expenditureSumIncludeCondition() {
-        return expenditure.excludeSpendingTotal.eq(INCLUDE);
-    }
+  private static BooleanExpression expenditureSumIncludeCondition() {
+    return expenditure.excludeSpendingTotal.eq(INCLUDE);
+  }
 
-    @Override
-    public List<Expenditure> findAllExpenditureByCondition(
-            GetExpenditureDetailsCondition condition) {
-        return query
-                .selectFrom(expenditure)
-                .join(
-                        category)
-                .where(
-                        expendDateRange(condition.startDate(), condition.endDate()),
-                        userIdEq(condition.userId()),
-                        categoryIdEq(condition.categoryId()),
-                        amountBetweenRequest(condition.minAmount(), condition.maxAmount())
-                ).fetch();
-    }
+  @Override
+  public List<Expenditure> findAllExpenditureByCondition(GetExpenditureDetailsCondition condition) {
+    return query
+        .selectFrom(expenditure)
+        .join(category)
+        .where(
+            expendDateRange(condition.startDate(), condition.endDate()),
+            userIdEq(condition.userId()),
+            categoryIdEq(condition.categoryId()),
+            amountBetweenRequest(condition.minAmount(), condition.maxAmount()))
+        .fetch();
+  }
 
-    @Override
-    public List<TotalExpenditureByCategory> findTotalExpenditureByCategory(
-            GetExpenditureDetailsCondition condition) {
-        return query
-                .select(Projections.constructor(TotalExpenditureByCategory.class,
-                        expenditure.category.id.as("categoryId"),
-                        expenditure.category.name.as("categoryName"),
-                        expenditure.price.value.sum().as("amount")
-                        ))
-                .where(
-                        expenditureSumIncludeCondition(),
-                        userIdEq(condition.userId()),
-                        categoryIdEq(condition.categoryId())
-                        )
-                .groupBy(expenditure.category.id)
-                .fetch();
-    }
-
-    @Override
-    public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(Long userId,LocalDate date){
-        return query
-            .select(Projections.constructor(TotalExpenditureByCategory.class,
+  @Override
+  public List<TotalExpenditureByCategory> findTotalExpenditureByCategory(
+      GetExpenditureDetailsCondition condition) {
+    return query
+        .select(
+            Projections.constructor(
+                TotalExpenditureByCategory.class,
                 expenditure.category.id.as("categoryId"),
                 expenditure.category.name.as("categoryName"),
                 expenditure.price.value.sum().as("amount")))
-            .from(expenditure)
-            .where(
-                dailyExpendEq(date),
-                userIdEq(userId)
-            )
-            .groupBy()
-            .fetch();
-    }
+        .where(
+            expenditureSumIncludeCondition(),
+            userIdEq(condition.userId()),
+            categoryIdEq(condition.categoryId()))
+        .groupBy(expenditure.category.id)
+        .fetch();
+  }
 
-    //필수 값
-    private BooleanExpression expendDateRange(LocalDate startDate, LocalDate endDate) {
-        return expenditure.expendedDate.between(startDate, endDate);
-    }
+  @Override
+  public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(
+      Long userId, LocalDate date) {
+    return query
+        .select(
+            Projections.constructor(
+                TotalExpenditureByCategory.class,
+                expenditure.category.id.as("categoryId"),
+                expenditure.category.name.as("categoryName"),
+                expenditure.price.value.sum().as("amount")))
+        .from(expenditure)
+        .where(dailyExpendEq(date), userIdEq(userId))
+        .groupBy()
+        .fetch();
+  }
 
-    private BooleanExpression dailyExpendEq(LocalDate date){
-        return expenditure.expendedDate.eq(date);
-    }
+  // 필수 값
+  private BooleanExpression expendDateRange(LocalDate startDate, LocalDate endDate) {
+    return expenditure.expendedDate.between(startDate, endDate);
+  }
 
-    private BooleanExpression userIdEq(Long userId) {
-        return expenditure.user.id.eq(userId);
-    }
+  private BooleanExpression dailyExpendEq(LocalDate date) {
+    return expenditure.expendedDate.eq(date);
+  }
 
-    private BooleanExpression categoryIdEq(Long categoryId) {
-        return isEmpty(categoryId) ? null : expenditure.category.id.eq(categoryId);
-    }
+  private BooleanExpression userIdEq(Long userId) {
+    return expenditure.user.id.eq(userId);
+  }
 
-    private BooleanExpression amountBetweenRequest(Long min, Long max) {
-        if (isEmpty(min) && isEmpty(max)) {
-            return null;
-        }
-        if (isEmpty(min) && !isEmpty(max)) {
-            expenditure.price.value.loe(max);
-        }
-        if (!isEmpty(min) && isEmpty(max)) {
-            expenditure.price.value.goe(min);
-        }
-        return expenditure.price.value.between(min, max);
+  private BooleanExpression categoryIdEq(Long categoryId) {
+    return isEmpty(categoryId) ? null : expenditure.category.id.eq(categoryId);
+  }
+
+  private BooleanExpression amountBetweenRequest(Long min, Long max) {
+    if (isEmpty(min) && isEmpty(max)) {
+      return null;
     }
+    if (isEmpty(min) && !isEmpty(max)) {
+      expenditure.price.value.loe(max);
+    }
+    if (!isEmpty(min) && isEmpty(max)) {
+      expenditure.price.value.goe(min);
+    }
+    return expenditure.price.value.between(min, max);
+  }
 }
 
 /*
