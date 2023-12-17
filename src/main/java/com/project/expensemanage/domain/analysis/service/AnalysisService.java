@@ -25,7 +25,7 @@ public class AnalysisService {
       List<ExpenditureDiff> lastMonthExpenditures) {
     Map<Long, Long> lastMonthExpenditureMap = new HashMap<>();
     lastMonthExpenditures.forEach(
-        data -> lastMonthExpenditureMap.put(data.categoryId(), data.rate()));
+        data -> lastMonthExpenditureMap.put(data.categoryId(), data.expenditure()));
     return lastMonthExpenditureMap;
   }
 
@@ -44,9 +44,9 @@ public class AnalysisService {
                 new ExpenditureDiffResponse(
                     data.categoryId(),
                     data.categoryName(),
-                    (data.rate()
+                    (data.expenditure()
                         * 100
-                        / lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L))))
+                        / getLasMonthExpenditure(data, lastMonthExpenditureMap))))
         .toList();
   }
 
@@ -65,10 +65,14 @@ public class AnalysisService {
                 new ExpenditureDiffResponse(
                     data.categoryId(),
                     data.categoryName(),
-                    (data.rate()
+                    (data.expenditure()
                         * 100
-                        / lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L))))
+                        / getLasMonthExpenditure(data, lastMonthExpenditureMap))))
         .toList();
+  }
+
+  private Long getLasMonthExpenditure(ExpenditureDiff data, Map<Long, Long> lastMonthExpenditureMap) {
+    return lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L) == 0 ? 1L : lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L);
   }
 
   public ExpenditureAnalysisResponse getExpenditureAnalysisByUser(Long userId) {
