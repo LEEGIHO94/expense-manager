@@ -22,6 +22,10 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
 
     private final JPAQueryFactory query;
 
+    private static BooleanExpression expenditureSumIncludeCondition() {
+        return expenditure.excludeSpendingTotal.eq(INCLUDE);
+    }
+
     @Override
     public List<Expenditure> findAllExpenditureByCondition(
             GetExpenditureDetailsCondition condition) {
@@ -69,10 +73,6 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
             )
             .groupBy()
             .fetch();
-    }
-
-    private static BooleanExpression expenditureSumIncludeCondition() {
-        return expenditure.excludeSpendingTotal.eq(INCLUDE);
     }
 
     //필수 값
