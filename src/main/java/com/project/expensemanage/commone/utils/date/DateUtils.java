@@ -18,7 +18,7 @@ public class DateUtils {
     return LocalDate.now();
   }
 
-  public LocalDate getLastMonthDate(){
+  public LocalDate getLastMonthDate() {
     return LocalDate.now().minusMonths(1);
   }
 
@@ -26,4 +26,3 @@ public class DateUtils {
     return LocalDate.now().minusWeeks(1);
   }
 }
-

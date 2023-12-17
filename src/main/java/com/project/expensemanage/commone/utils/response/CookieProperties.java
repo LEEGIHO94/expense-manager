@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("cookie")
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 public class CookieProperties {
-    private int limitTime;
-    private String acceptedUrl;
-    private String cookieName;
-    private String domain;
+  private int limitTime;
+  private String acceptedUrl;
+  private String cookieName;
+  private String domain;
 }

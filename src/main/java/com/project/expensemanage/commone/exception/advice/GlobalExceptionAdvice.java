@@ -19,66 +19,66 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 @RestControllerAdvice
 public class GlobalExceptionAdvice {
 
-    /*
-    * 로직에러
-    * */
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessLogicException e) {
-        log.error("BusinessLogic Exception Error : {}", e.getMessage());
-        final ErrorResponse errorResponse = ErrorResponse.of(e.getExceptionCode());
-        return new ResponseEntity<>(errorResponse, e.getExceptionCode().getHttpStatus());
-    }
+  /*
+   * 로직에러
+   * */
+  @ExceptionHandler
+  public ResponseEntity<ErrorResponse> handleBusinessException(BusinessLogicException e) {
+    log.error("BusinessLogic Exception Error : {}", e.getMessage());
+    final ErrorResponse errorResponse = ErrorResponse.of(e.getExceptionCode());
+    return new ResponseEntity<>(errorResponse, e.getExceptionCode().getHttpStatus());
+  }
 
-    /*
-    * Dto 검증오류
-    * */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException : {}", e.getMessage());
-        return ErrorResponse.of(e.getBindingResult());
-    }
+  /*
+   * Dto 검증오류
+   * */
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    log.error("MethodArgumentNotValidException : {}", e.getMessage());
+    return ErrorResponse.of(e.getBindingResult());
+  }
 
-    /*
-    * Controller 검증 오류
-    * */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
-        log.error("ConstraintViolationException : {}", e.getMessage());
-        return ErrorResponse.of(e.getConstraintViolations());
-    }
+  /*
+   * Controller 검증 오류
+   * */
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleConstraintViolationException(ConstraintViolationException e) {
+    log.error("ConstraintViolationException : {}", e.getMessage());
+    return ErrorResponse.of(e.getConstraintViolations());
+  }
 
-    /*
-    * HTTP 메서드 오류
-    * */
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ErrorResponse handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
-        log.error("HttpRequestMethodNotSupportedException : {}", e.getMessage());
-        return ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
-    }
+  /*
+   * HTTP 메서드 오류
+   * */
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+  public ErrorResponse handleHttpRequestMethodNotSupportedException(
+      HttpRequestMethodNotSupportedException e) {
+    log.error("HttpRequestMethodNotSupportedException : {}", e.getMessage());
+    return ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED, e.getMessage());
+  }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(MethodArgumentTypeMismatchException e) {
-        log.error("MethodArgumentTypeMismatchException : ", e);
-        log.error("MethodArgumentTypeMismatchException : {}", e.getMessage());
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleException(MethodArgumentTypeMismatchException e) {
+    log.error("MethodArgumentTypeMismatchException : ", e);
+    log.error("MethodArgumentTypeMismatchException : {}", e.getMessage());
+    return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+  }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleException(MissingServletRequestPartException e) {
-        log.error("MissingServletRequestPartException : {}", e.getMessage());
-        return ErrorResponse.of(HttpStatus.NOT_FOUND, e.getMessage());
-    }
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ErrorResponse handleException(MissingServletRequestPartException e) {
+    log.error("MissingServletRequestPartException : {}", e.getMessage());
+    return ErrorResponse.of(HttpStatus.NOT_FOUND, e.getMessage());
+  }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleException(MissingServletRequestParameterException e) {
-        log.error("MissingServletRequestParameterException : {}", e.getMessage());
-        return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
-    }
-
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorResponse handleException(MissingServletRequestParameterException e) {
+    log.error("MissingServletRequestParameterException : {}", e.getMessage());
+    return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+  }
 }

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CustomPage<T> {
-    private List<T> content;
-    private PageInfo pageable;
+  private List<T> content;
+  private PageInfo pageable;
 
-    public CustomPage(List<T> content, PageInfo pageable) {
-        this.content = content;
-        this.pageable = pageable;
-    }
+  public CustomPage(List<T> content, PageInfo pageable) {
+    this.content = content;
+    this.pageable = pageable;
+  }
 }
