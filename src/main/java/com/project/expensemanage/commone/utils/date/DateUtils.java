@@ -17,4 +17,13 @@ public class DateUtils {
   public LocalDate getLocalDate() {
     return LocalDate.now();
   }
+
+  public LocalDate getLastMonthDate(){
+    return LocalDate.now().minusMonths(1);
+  }
+
+  public LocalDate getLastWeekDate() {
+    return LocalDate.now().minusWeeks(1);
+  }
 }
+
