@@ -1,6 +1,5 @@
 package com.project.expensemanage.commone.utils.response;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -18,19 +17,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 class CookiePropertiesTest {
 
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    private CookieProperties cookieProperties;
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  private CookieProperties cookieProperties;
 
-    @Test
-    @DisplayName("yml 설정 파일 읽어 오기")
-    void jwtPropertiesCheck() {
-        // given
-        // when
-        // then
-        assertAll(
-                () -> assertThat(cookieProperties.getCookieName()).isEqualTo("Refresh")
-                , () -> assertThat(cookieProperties.getAcceptedUrl()).isEqualTo("/api/auth/reissue")
-                , () -> assertThat(cookieProperties.getLimitTime()).isNotZero());
-    }
+  @Test
+  @DisplayName("yml 설정 파일 읽어 오기")
+  void jwtPropertiesCheck() {
+    // given
+    // when
+    // then
+    assertAll(
+        () -> assertThat(cookieProperties.getCookieName()).isEqualTo("Refresh"),
+        () -> assertThat(cookieProperties.getAcceptedUrl()).isEqualTo("/api/auth/reissue"),
+        () -> assertThat(cookieProperties.getLimitTime()).isNotZero());
+  }
 }

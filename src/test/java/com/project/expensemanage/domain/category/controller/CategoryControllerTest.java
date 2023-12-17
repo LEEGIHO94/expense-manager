@@ -25,76 +25,80 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(CategoryController.class)
-@Import({SecurityConfig.class, AuthTestConfig.class, CategoryService.class, CategoryMock.class,
-        CategoryMapper.class})
+@Import({
+  SecurityConfig.class,
+  AuthTestConfig.class,
+  CategoryService.class,
+  CategoryMock.class,
+  CategoryMapper.class
+})
 class CategoryControllerTest {
 
-    @Autowired
-    MockMvc mvc;
-    @Autowired
-    CategoryMock mock;
-    @Autowired
-    ObjectMapper objectMapper;
-    @MockBean
-    CategoryService service;
+  @Autowired MockMvc mvc;
+  @Autowired CategoryMock mock;
+  @Autowired ObjectMapper objectMapper;
+  @MockBean CategoryService service;
 
-    @Test
-    @DisplayName("카테고리 사용자 등록 : 성공")
-    @WithMockCustomUser
-    void post_custom_category_test() throws Exception {
-        // given
-        String content = objectMapper.writeValueAsString(mock.customCategoryPostDto());
+  @Test
+  @DisplayName("카테고리 사용자 등록 : 성공")
+  @WithMockCustomUser
+  void post_custom_category_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.customCategoryPostDto());
 
-        BDDMockito.given(service.postCategory(any(Category.class)))
-                .willReturn(mock.customEntityMock());
+    BDDMockito.given(service.postCategory(any(Category.class))).willReturn(mock.customEntityMock());
 
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/categories/client").content(content).contentType(
-                        MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
-        // then
-        perform
-                .andDo(MockMvcResultHandlers.log())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
-    }
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.post("/api/categories/client")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
+  }
 
-    @Test
-    @DisplayName("카테고리 관리자 등록 : 성공")
-    @WithMockCustomUser
-    void post_standard_category_test() throws Exception {
-        // given
-        String content = objectMapper.writeValueAsString(mock.standardCategoryPostDto());
+  @Test
+  @DisplayName("카테고리 관리자 등록 : 성공")
+  @WithMockCustomUser
+  void post_standard_category_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.standardCategoryPostDto());
 
-        BDDMockito.given(service.postCategory(any(Category.class)))
-                .willReturn(mock.customEntityMock());
+    BDDMockito.given(service.postCategory(any(Category.class))).willReturn(mock.customEntityMock());
 
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/categories/admin").content(content).contentType(
-                        MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON));
-        // then
-        perform
-                .andDo(MockMvcResultHandlers.log())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
-    }
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.post("/api/categories/admin")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.categoryId").isNumber());
+  }
 
-
-    @Test
-    @DisplayName("카테고리 조회 : 성공")
-    @WithMockCustomUser
-    void get_category_list_test() throws Exception {
-        // given
-        BDDMockito.given(service.getCategoryList()).willReturn(mock.EntityListMock());
-        // when
-        ResultActions perform = mvc.perform(MockMvcRequestBuilders.get("/api/categories"));
-        // then
-        perform
-                .andDo(MockMvcResultHandlers.log())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryId").isNumber())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").isString());
-    }
+  @Test
+  @DisplayName("카테고리 조회 : 성공")
+  @WithMockCustomUser
+  void get_category_list_test() throws Exception {
+    // given
+    BDDMockito.given(service.getCategoryList()).willReturn(mock.EntityListMock());
+    // when
+    ResultActions perform = mvc.perform(MockMvcRequestBuilders.get("/api/categories"));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryId").isNumber())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].name").isString());
+  }
 }

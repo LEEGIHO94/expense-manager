@@ -36,115 +36,109 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @MockBean(JpaMetamodelMappingContext.class)
 class AuthControllerTest {
 
-    @Autowired
-    MockMvc mvc;
-    @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    UserMock userMock;
-    @Autowired
-    JwtProvider jwtProvider;
-    @MockBean
-    UserRepository repository;
-    @MockBean
-    RedisRepository redis;
+  @Autowired MockMvc mvc;
+  @Autowired ObjectMapper objectMapper;
+  @Autowired UserMock userMock;
+  @Autowired JwtProvider jwtProvider;
+  @MockBean UserRepository repository;
+  @MockBean RedisRepository redis;
 
-    @Test
-    @DisplayName("로그인 테스트 : 성공")
-    void login_success_test() throws Exception {
-        // given
-        LoginDto login = userMock.loginMock();
-        User mockEntity = userMock.entityMock();
-        String content = objectMapper.writeValueAsString(login);
+  @Test
+  @DisplayName("로그인 테스트 : 성공")
+  void login_success_test() throws Exception {
+    // given
+    LoginDto login = userMock.loginMock();
+    User mockEntity = userMock.entityMock();
+    String content = objectMapper.writeValueAsString(login);
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
 
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/login").content(content)
-                        .contentType(MediaType.APPLICATION_JSON));
-        // then
-        perform
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
-                .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
-    }
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.post("/api/login")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
+        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
+  }
 
-    @Test
-    @DisplayName("로그인 테스트 : 실패")
-    void login_failure_test() throws Exception {
-        // given
-        LoginDto login = userMock.wrongLoginMock();
-        User mockEntity = userMock.entityMock();
-        String content = objectMapper.writeValueAsString(login);
+  @Test
+  @DisplayName("로그인 테스트 : 실패")
+  void login_failure_test() throws Exception {
+    // given
+    LoginDto login = userMock.wrongLoginMock();
+    User mockEntity = userMock.entityMock();
+    String content = objectMapper.writeValueAsString(login);
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
 
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/login").content(content)
-                        .contentType(MediaType.APPLICATION_JSON));
-        // then
-        perform
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.post("/api/login")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON));
+    // then
+    perform.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
 
-    @Test
-    @DisplayName("토큰 갱신 테스트 : 성공")
-    void reissue_success_test() throws Exception {
-        // given
-        User mockEntity = userMock.entityMock();
-        String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
+  @Test
+  @DisplayName("토큰 갱신 테스트 : 성공")
+  void reissue_success_test() throws Exception {
+    // given
+    User mockEntity = userMock.entityMock();
+    String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
-        given(redis.findByKey(anyString())).willReturn(mockString);
-        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
-        // then
-        perform
-                .andExpect(MockMvcResultMatchers.status().isNoContent())
-                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
-                .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
-    }
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
+    given(redis.findByKey(anyString())).willReturn(mockString);
+    willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
+    // when
+    ResultActions perform =
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
+    // then
+    perform
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
+        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
+  }
 
-    @Test
-    @DisplayName("토큰 갱신 테스트 : 실패 [저장된 데이터가 없을 때]")
-    void reissue_failure_data_not_exist_test() throws Exception {
-        // given
-        User mockEntity = userMock.entityMock();
+  @Test
+  @DisplayName("토큰 갱신 테스트 : 실패 [저장된 데이터가 없을 때]")
+  void reissue_failure_data_not_exist_test() throws Exception {
+    // given
+    User mockEntity = userMock.entityMock();
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
-        given(redis.findByKey(anyString())).willReturn(null);
-        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
-        // then
-        perform
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
+    given(redis.findByKey(anyString())).willReturn(null);
+    willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
+    // when
+    ResultActions perform =
+        mvc.perform(MockMvcRequestBuilders.post("/api/auth/reissue").cookie(createCookie()));
+    // then
+    perform.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
 
-    @Test
-    @DisplayName("토큰 갱신 테스트 : 실패 [쿠키가 없을 때]")
-    void reissue_failure_cookie_not_exist_test() throws Exception {
-        // given
-        User mockEntity = userMock.entityMock();
-        String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
+  @Test
+  @DisplayName("토큰 갱신 테스트 : 실패 [쿠키가 없을 때]")
+  void reissue_failure_cookie_not_exist_test() throws Exception {
+    // given
+    User mockEntity = userMock.entityMock();
+    String mockString = objectMapper.writeValueAsString(userMock.userInfoMock());
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
-        given(redis.findByKey(anyString())).willReturn(mockString);
-        willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/auth/reissue"));
-        // then
-        perform
-                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
-    }
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mockEntity));
+    given(redis.findByKey(anyString())).willReturn(mockString);
+    willDoNothing().given(redis).save(anyString(), anyString(), anyInt());
+    // when
+    ResultActions perform = mvc.perform(MockMvcRequestBuilders.post("/api/auth/reissue"));
+    // then
+    perform.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
 
-    private Cookie createCookie() {
-        return new Cookie("Refresh", jwtProvider.generateRefreshToken(userMock.getEmail()));
-    }
+  private Cookie createCookie() {
+    return new Cookie("Refresh", jwtProvider.generateRefreshToken(userMock.getEmail()));
+  }
 }

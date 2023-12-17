@@ -17,20 +17,20 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @PropertySource(value = "classpath:application.yml", factory = YamlPropertySourceFactory.class)
 class JwtPropertiesTest {
 
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    private JwtProperties jwtProperties;
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  private JwtProperties jwtProperties;
 
-    @Test
-    @DisplayName("yml 설정 파일 읽어 오기")
-    void jwtPropertiesCheck() {
-        // given
-        // when
-        // then
-        assertAll(
-                  () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer ")
-                , () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isNotZero()
-                , () -> assertThat(jwtProperties.getRefreshTokenValidityInSeconds()).isNotZero()
-                , () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());
-    }
+  @Test
+  @DisplayName("yml 설정 파일 읽어 오기")
+  void jwtPropertiesCheck() {
+    // given
+    // when
+    // then
+    assertAll(
+        () -> assertThat(jwtProperties.getPrefix()).isEqualTo("Bearer "),
+        () -> assertThat(jwtProperties.getAccessTokenValidityInSeconds()).isNotZero(),
+        () -> assertThat(jwtProperties.getRefreshTokenValidityInSeconds()).isNotZero(),
+        () -> assertThat(jwtProperties.getSecretKey()).isNotEmpty());
+  }
 }

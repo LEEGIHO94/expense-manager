@@ -17,48 +17,48 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @TestConfiguration
 public class BudgetTestConfig {
 
-    @Bean
-    public BudgetMock budgetMock() {
-        return new BudgetMock();
-    }
+  @Bean
+  public BudgetMock budgetMock() {
+    return new BudgetMock();
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
 
-    @Bean
-    public UserMock userMock() {
-        return new UserMock(passwordEncoder());
-    }
+  @Bean
+  public UserMock userMock() {
+    return new UserMock(passwordEncoder());
+  }
 
-    @Bean
-    public BudgetRepository budgetRepository() {
-        return Mockito.mock(BudgetRepository.class);
-    }
+  @Bean
+  public BudgetRepository budgetRepository() {
+    return Mockito.mock(BudgetRepository.class);
+  }
 
-    @Bean
-    public BudgetService budgetService() {
-        return  new BudgetService(budgetRepository(),categoryValidService(),budgetMapper());
-    }
+  @Bean
+  public BudgetService budgetService() {
+    return new BudgetService(budgetRepository(), categoryValidService(), budgetMapper());
+  }
 
-    @Bean
-    public CategoryValidService categoryValidService() {
-        return new CategoryValidService(categoryRepository());
-    }
+  @Bean
+  public CategoryValidService categoryValidService() {
+    return new CategoryValidService(categoryRepository());
+  }
 
-    @Bean
-    public CategoryRepository categoryRepository() {
-        return Mockito.mock(CategoryRepository.class);
-    }
+  @Bean
+  public CategoryRepository categoryRepository() {
+    return Mockito.mock(CategoryRepository.class);
+  }
 
-    @Bean
-    public BudgetMapper budgetMapper() {
-        return new BudgetMapper();
-    }
+  @Bean
+  public BudgetMapper budgetMapper() {
+    return new BudgetMapper();
+  }
 
-    @Bean
-    public CategoryMock categoryMock() {
-        return new CategoryMock();
-    }
+  @Bean
+  public CategoryMock categoryMock() {
+    return new CategoryMock();
+  }
 }

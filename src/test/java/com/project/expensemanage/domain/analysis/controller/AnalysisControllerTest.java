@@ -1,6 +1,5 @@
 package com.project.expensemanage.domain.analysis.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.expensemanage.commone.config.JacksonConfig;
 import com.project.expensemanage.commone.config.SecurityConfig;

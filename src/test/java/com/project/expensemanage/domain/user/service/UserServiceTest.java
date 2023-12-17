@@ -1,6 +1,5 @@
 package com.project.expensemanage.domain.user.service;
 
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -26,43 +25,43 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@Import({PasswordEncoderConfig.class, UserMock.class, UserMapper.class,UserService.class})
+@Import({PasswordEncoderConfig.class, UserMock.class, UserMapper.class, UserService.class})
 class UserServiceTest {
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    UserService service;
-    @MockBean
-    UserRepository repository;
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    UserMock mock;
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  UserService service;
 
-    @Test
-    @DisplayName("사용자 등록 테스트 : 성공")
-    void post_user_success_test() {
-        // given
-        User saveMock = mock.entityMock();
+  @MockBean UserRepository repository;
 
-        given(repository.findByEmail(anyString())).willReturn(Optional.empty());
-        given(repository.save(any(User.class))).willReturn(saveMock);
-        // when
-        UserIdResponse result = service.postUser(mock.postDtoMock());
-        // then
-        verify(repository, times(1)).findByEmail(anyString());
-        verify(repository, times(1)).save(any(User.class));
-        Assertions.assertThat(result.userId()).usingRecursiveComparison()
-                .isEqualTo(mock.getUserId());
-    }
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  UserMock mock;
 
-    @Test
-    @DisplayName("사용자 등록 테스트 : 성공")
-    void post_user_failure_test() {
-        // given
-        given(repository.findByEmail(anyString())).willReturn(Optional.of(mock.entityMock()));
-        // when
-        // then
-        Assertions.assertThatThrownBy(() -> service.postUser(mock.postDtoMock())).isInstanceOf(
-                BusinessLogicException.class).hasMessage(UserExceptionCode.USER_EXIST.getMessage());
-    }
+  @Test
+  @DisplayName("사용자 등록 테스트 : 성공")
+  void post_user_success_test() {
+    // given
+    User saveMock = mock.entityMock();
 
+    given(repository.findByEmail(anyString())).willReturn(Optional.empty());
+    given(repository.save(any(User.class))).willReturn(saveMock);
+    // when
+    UserIdResponse result = service.postUser(mock.postDtoMock());
+    // then
+    verify(repository, times(1)).findByEmail(anyString());
+    verify(repository, times(1)).save(any(User.class));
+    Assertions.assertThat(result.userId()).usingRecursiveComparison().isEqualTo(mock.getUserId());
+  }
+
+  @Test
+  @DisplayName("사용자 등록 테스트 : 성공")
+  void post_user_failure_test() {
+    // given
+    given(repository.findByEmail(anyString())).willReturn(Optional.of(mock.entityMock()));
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> service.postUser(mock.postDtoMock()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(UserExceptionCode.USER_EXIST.getMessage());
+  }
 }

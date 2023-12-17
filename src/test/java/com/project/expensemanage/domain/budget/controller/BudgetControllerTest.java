@@ -26,37 +26,39 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(BudgetController.class)
-@Import({AuthTestConfig.class, BudgetController.class, BudgetMock.class, JacksonConfig.class,
-        SecurityConfig.class})
+@Import({
+  AuthTestConfig.class,
+  BudgetController.class,
+  BudgetMock.class,
+  JacksonConfig.class,
+  SecurityConfig.class
+})
 class BudgetControllerTest {
 
-    @Autowired
-    MockMvc mvc;
+  @Autowired MockMvc mvc;
 
-    @MockBean
-    BudgetService service;
-    @Autowired
-    BudgetMock mock;
-    @Autowired
-    ObjectMapper objectMapper;
+  @MockBean BudgetService service;
+  @Autowired BudgetMock mock;
+  @Autowired ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("예산 등록 테스트 : 성공")
-    @WithMockCustomUser
-    void post_budget_success_test
-            () throws Exception {
-        String content = objectMapper.writeValueAsString(mock.postDtoMock());
-        // given
-        BDDMockito.given(service.postBudget(anyLong(), any(PostBudgetRequest.class)))
-                .willReturn(mock.idDtoMock());
-        // when
-        ResultActions perform = mvc.perform(
-                MockMvcRequestBuilders.post("/api/budgets").content(content)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON));
-        // then
-        perform
-                .andDo(MockMvcResultHandlers.log())
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-    }
+  @Test
+  @DisplayName("예산 등록 테스트 : 성공")
+  @WithMockCustomUser
+  void post_budget_success_test() throws Exception {
+    String content = objectMapper.writeValueAsString(mock.postDtoMock());
+    // given
+    BDDMockito.given(service.postBudget(anyLong(), any(PostBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.post("/api/budgets")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isCreated());
+  }
 }

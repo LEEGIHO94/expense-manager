@@ -26,88 +26,100 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @TestConfiguration
 public class AuthTestConfig {
 
-    @Bean
-    public JwtProvider jwtProvider() {
-        return new JwtProvider(jwtProperties());
-    }
+  @Bean
+  public JwtProvider jwtProvider() {
+    return new JwtProvider(jwtProperties());
+  }
 
-    @Bean
-    public JwtProperties jwtProperties() {
-        return new JwtProperties();
-    }
+  @Bean
+  public JwtProperties jwtProperties() {
+    return new JwtProperties();
+  }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 
-    @Bean
-    public CookieProperties cookieProperties() {
-        return new CookieProperties();
-    }
+  @Bean
+  public CookieProperties cookieProperties() {
+    return new CookieProperties();
+  }
 
-    @Bean
-    public CookieUtils cookieUtils() {
-        return new CookieUtils(cookieProperties());
-    }
+  @Bean
+  public CookieUtils cookieUtils() {
+    return new CookieUtils(cookieProperties());
+  }
 
-    @Bean
-    public ErrorResponseUtils errorResponseUtils() {
-        return new ErrorResponseUtils(objectMapperUtils());
-    }
-    @Bean
-    public AuthenticationFailureCustomHandler authenticationFailureCustomHandler() {
-        return new AuthenticationFailureCustomHandler(errorResponseUtils());
-    }
+  @Bean
+  public ErrorResponseUtils errorResponseUtils() {
+    return new ErrorResponseUtils(objectMapperUtils());
+  }
 
-    @Bean
-    public AuthenticationEntryPointHandler authenticationEntryPointHandler() {
-        return new AuthenticationEntryPointHandler(objectMapperUtils());
-    }
+  @Bean
+  public AuthenticationFailureCustomHandler authenticationFailureCustomHandler() {
+    return new AuthenticationFailureCustomHandler(errorResponseUtils());
+  }
 
-    @Bean
-    public LogoutSuccessCustomHandler logoutSuccessCustomHandler() {
-        return new LogoutSuccessCustomHandler(redisRepository(),cookieUtils());
-    }
+  @Bean
+  public AuthenticationEntryPointHandler authenticationEntryPointHandler() {
+    return new AuthenticationEntryPointHandler(objectMapperUtils());
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+  @Bean
+  public LogoutSuccessCustomHandler logoutSuccessCustomHandler() {
+    return new LogoutSuccessCustomHandler(redisRepository(), cookieUtils());
+  }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl(userRepository());
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+  }
 
-    @Bean
-    public AuthService authService() {
-        return new AuthService(redisRepository(), jwtProvider(),jwtProperties(),userRepository(), objectMapperUtils(),cookieUtils());
-    }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    return new UserDetailsServiceImpl(userRepository());
+  }
 
-    @Bean
-    public ObjectMapperUtils objectMapperUtils() {
-        return new ObjectMapperUtils(objectMapper());
-    }
+  @Bean
+  public AuthService authService() {
+    return new AuthService(
+        redisRepository(),
+        jwtProvider(),
+        jwtProperties(),
+        userRepository(),
+        objectMapperUtils(),
+        cookieUtils());
+  }
 
+  @Bean
+  public ObjectMapperUtils objectMapperUtils() {
+    return new ObjectMapperUtils(objectMapper());
+  }
 
-    @Bean
-    public UserRepository userRepository() {
-        return Mockito.mock(UserRepository.class);
-    }
+  @Bean
+  public UserRepository userRepository() {
+    return Mockito.mock(UserRepository.class);
+  }
 
-    @Bean
-    public UserMock userMock() {
-        return new UserMock(passwordEncoder());
-    }
+  @Bean
+  public UserMock userMock() {
+    return new UserMock(passwordEncoder());
+  }
 
-    @Bean
-    public RedisRepository redisRepository() {
-        return Mockito.mock(RedisRepository.class);
-    }
+  @Bean
+  public RedisRepository redisRepository() {
+    return Mockito.mock(RedisRepository.class);
+  }
 
-    @Bean
-    public JwtFilterDsl jwtFilterDsl() {
-        return new JwtFilterDsl(jwtProvider(),jwtProperties(),objectMapperUtils(),redisRepository(),cookieUtils(),authenticationFailureCustomHandler());
-    }
+  @Bean
+  public JwtFilterDsl jwtFilterDsl() {
+    return new JwtFilterDsl(
+        jwtProvider(),
+        jwtProperties(),
+        objectMapperUtils(),
+        redisRepository(),
+        cookieUtils(),
+        authenticationFailureCustomHandler());
+  }
 }
