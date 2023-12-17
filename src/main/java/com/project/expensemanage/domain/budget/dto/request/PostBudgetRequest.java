@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import lombok.Builder;
 
 @Builder
-public record PostBudgetRequest(@NotNull @FutureOrPresent LocalDate budgetDate,
-                                @NotNull @Positive Long amount,
-                                @NotNull @Positive Long categoryId) {
-
-}
+public record PostBudgetRequest(
+    @NotNull @FutureOrPresent LocalDate budgetDate,
+    @NotNull @Positive Long amount,
+    @NotNull @Positive Long categoryId) {}

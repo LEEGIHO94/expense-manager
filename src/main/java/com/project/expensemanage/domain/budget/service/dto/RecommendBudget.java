@@ -9,12 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RecommendBudget{
-    private Long categoryId;
-    private String categoryName;
-    private Long amount;
+public class RecommendBudget {
+  private Long categoryId;
+  private String categoryName;
+  private Long amount;
 
-    public RecommendBudget(String categoryName) {
-        this.categoryName = categoryName;
-    }
+  public RecommendBudget(String categoryName) {
+    this.categoryName = categoryName;
+  }
 }
