@@ -20,29 +20,35 @@ public class AnalysisController {
   private final AnalysisService service;
 
   @GetMapping("/monthly")
-  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getMonthlyExpenditureComparison(@CurrentUser Long userId){
-    ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
-        .data(service.getMonthlyExpenditureComparison(userId))
-        .status(ResponseStatus.GET)
-        .build();
+  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getMonthlyExpenditureComparison(
+      @CurrentUser Long userId) {
+    ResponseDto<List<ExpenditureDiffResponse>> response =
+        ResponseDto.<List<ExpenditureDiffResponse>>builder()
+            .data(service.getMonthlyExpenditureComparison(userId))
+            .status(ResponseStatus.GET)
+            .build();
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/weekly")
-  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getWeeklyExpenditureComparison(@CurrentUser Long userId){
-    ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
-        .data(service.getWeeklyExpenditureComparison(userId))
-        .status(ResponseStatus.GET)
-        .build();
+  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getWeeklyExpenditureComparison(
+      @CurrentUser Long userId) {
+    ResponseDto<List<ExpenditureDiffResponse>> response =
+        ResponseDto.<List<ExpenditureDiffResponse>>builder()
+            .data(service.getWeeklyExpenditureComparison(userId))
+            .status(ResponseStatus.GET)
+            .build();
     return ResponseEntity.ok(response);
   }
 
   @GetMapping()
-  public ResponseEntity<ResponseDto<ExpenditureAnalysisResponse>> getExpenditureAnalysisByUser(@CurrentUser Long userId){
-    ResponseDto<ExpenditureAnalysisResponse> response = ResponseDto.<ExpenditureAnalysisResponse>builder()
-        .data(service.getExpenditureAnalysisByUser(userId))
-        .status(ResponseStatus.GET)
-        .build();
+  public ResponseEntity<ResponseDto<ExpenditureAnalysisResponse>> getExpenditureAnalysisByUser(
+      @CurrentUser Long userId) {
+    ResponseDto<ExpenditureAnalysisResponse> response =
+        ResponseDto.<ExpenditureAnalysisResponse>builder()
+            .data(service.getExpenditureAnalysisByUser(userId))
+            .status(ResponseStatus.GET)
+            .build();
     return ResponseEntity.ok(response);
   }
 }

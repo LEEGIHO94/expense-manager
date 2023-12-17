@@ -13,25 +13,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class AnalysisQueryDslRepositoryImpl implements AnalysisQueryDslRepository{
+public class AnalysisQueryDslRepositoryImpl implements AnalysisQueryDslRepository {
   private final JPAQueryFactory query;
 
   @Override
-  public List<ExpenditureDiff> getRateOfExpenditureDiff(Long userId, LocalDate startDate, LocalDate endDate) {
+  public List<ExpenditureDiff> getRateOfExpenditureDiff(
+      Long userId, LocalDate startDate, LocalDate endDate) {
     return query
         .select(
             Projections.constructor(
-                ExpenditureDiff.class, expenditure.category.id, expenditure.category.name,
-                expenditure.price.value.sum()
-                ))
+                ExpenditureDiff.class,
+                expenditure.category.id,
+                expenditure.category.name,
+                expenditure.price.value.sum()))
         .from(expenditure)
-        .where(
-            userIdEq(userId),
-            expendDateRange(startDate,endDate)
-            )
-        .groupBy(
-            expenditure.category.id
-        )
+        .where(userIdEq(userId), expendDateRange(startDate, endDate))
+        .groupBy(expenditure.category.id)
         .fetch();
   }
 
@@ -39,7 +36,7 @@ public class AnalysisQueryDslRepositoryImpl implements AnalysisQueryDslRepositor
     return expenditure.user.id.eq(userId);
   }
 
-  //LocalDate를 기준으로 현재 시간과 이전 시간
+  // LocalDate를 기준으로 현재 시간과 이전 시간
   private BooleanExpression expendDateRange(LocalDate startDate, LocalDate endDate) {
     return expenditure.expendedDate.between(startDate, endDate);
   }
