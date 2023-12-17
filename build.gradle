@@ -105,13 +105,13 @@ jacocoTestReport {
 //    }
 //}
 
-//spotless {
-//    java {
-//        target 'src/*/java/**/*.java'
-//        importOrder()
-//        removeUnusedImports()
-//        cleanthat()
-//        googleJavaFormat()
-//        formatAnnotations()
-//    }
-//}
+spotless {
+    java {
+        target 'src/*/java/**/*.java'
+        importOrder()
+        removeUnusedImports()
+        cleanthat()
+        googleJavaFormat()
+        formatAnnotations()
+    }
+}
