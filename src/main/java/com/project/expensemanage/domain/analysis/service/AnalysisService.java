@@ -71,8 +71,11 @@ public class AnalysisService {
         .toList();
   }
 
-  private Long getLasMonthExpenditure(ExpenditureDiff data, Map<Long, Long> lastMonthExpenditureMap) {
-    return lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L) == 0 ? 1L : lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L);
+  private Long getLasMonthExpenditure(
+      ExpenditureDiff data, Map<Long, Long> lastMonthExpenditureMap) {
+    return lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L) == 0
+        ? 1L
+        : lastMonthExpenditureMap.getOrDefault(data.categoryId(), 1L);
   }
 
   public ExpenditureAnalysisResponse getExpenditureAnalysisByUser(Long userId) {
@@ -83,7 +86,7 @@ public class AnalysisService {
         .expenditureRate(
             totalExpenditureAllUserAndUser.userExpenditure()
                 * 100
-                / totalExpenditureAllUserAndUser.totalExpenditure())
+                / getTotalExpenditureExcludeUser(totalExpenditureAllUserAndUser))
         .analysisDate(dateUtils.getLocalDate())
         .build();
   }
@@ -91,5 +94,14 @@ public class AnalysisService {
   private List<ExpenditureDiff> getExpenditureDateRange(
       Long userId, LocalDate startDate, LocalDate endDate) {
     return repository.getRateOfExpenditureDiff(userId, startDate, endDate);
+  }
+
+  private long getTotalExpenditureExcludeUser(ExpenditureTotalUser totalExpenditureAllUserAndUser) {
+    return totalExpenditureAllUserAndUser.totalExpenditure()
+                - totalExpenditureAllUserAndUser.userExpenditure()
+            <= 0
+        ? 1
+        : totalExpenditureAllUserAndUser.totalExpenditure()
+            - totalExpenditureAllUserAndUser.userExpenditure();
   }
 }
