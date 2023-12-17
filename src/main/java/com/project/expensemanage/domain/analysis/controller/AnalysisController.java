@@ -21,7 +21,7 @@ public class AnalysisController {
   @GetMapping("/monthly")
   public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> tempName(@CurrentUser Long userId){
     ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
-        .data(service.tempName(userId))
+        .data(service.getMonthlyExpenditureComparison(userId))
         .status(ResponseStatus.GET)
         .build();
     return ResponseEntity.ok(response);

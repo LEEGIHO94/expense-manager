@@ -2,7 +2,7 @@ package com.project.expensemanage.domain.analysis.service;
 
 import com.project.expensemanage.commone.utils.date.DateUtils;
 import com.project.expensemanage.domain.analysis.controller.dto.ExpenditureDiffResponse;
-import com.project.expensemanage.domain.analysis.repository.AnalysisRepository;
+import com.project.expensemanage.domain.analysis.repository.AnalysisQueryDslRepositoryImpl;
 import com.project.expensemanage.domain.analysis.repository.dto.ExpenditureDiff;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AnalysisService {
-  private final AnalysisRepository repository;
+  private final AnalysisQueryDslRepositoryImpl repository;
   private final DateUtils dateUtils;
 
-  public List<ExpenditureDiffResponse> tempName(Long userId) {
+  public List<ExpenditureDiffResponse> getMonthlyExpenditureComparison(Long userId) {
     List<ExpenditureDiff> currentMonthExpenditures = getExpenditureDateRange(userId,dateUtils.getLocalDate(),dateUtils.getLastMonthDate());
     List<ExpenditureDiff> lastMonthExpenditures = getExpenditureDateRange(userId,dateUtils.getLastMonthDate(),dateUtils.getLastMonthDate().minusMonths(1));
 
