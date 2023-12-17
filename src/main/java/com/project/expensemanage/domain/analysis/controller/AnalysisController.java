@@ -20,7 +20,7 @@ public class AnalysisController {
   private final AnalysisService service;
 
   @GetMapping("/monthly")
-  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> tempName(@CurrentUser Long userId){
+  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getMonthlyExpenditureComparison(@CurrentUser Long userId){
     ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
         .data(service.getMonthlyExpenditureComparison(userId))
         .status(ResponseStatus.GET)
@@ -29,7 +29,7 @@ public class AnalysisController {
   }
 
   @GetMapping("/weekly")
-  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> tempNameWeek(@CurrentUser Long userId){
+  public ResponseEntity<ResponseDto<List<ExpenditureDiffResponse>>> getWeeklyExpenditureComparison(@CurrentUser Long userId){
     ResponseDto<List<ExpenditureDiffResponse>> response = ResponseDto.<List<ExpenditureDiffResponse>>builder()
         .data(service.getWeeklyExpenditureComparison(userId))
         .status(ResponseStatus.GET)
