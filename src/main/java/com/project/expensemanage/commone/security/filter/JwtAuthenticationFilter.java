@@ -26,56 +26,57 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private final JwtProvider jwtProvider;
-    private final CookieUtils cookieUtils;
-    private final ObjectMapperUtils objectMapper;
-    private final RedisRepository repository;
-    private final JwtProperties jwtProperties;
+  private final JwtProvider jwtProvider;
+  private final CookieUtils cookieUtils;
+  private final ObjectMapperUtils objectMapper;
+  private final RedisRepository repository;
+  private final JwtProperties jwtProperties;
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-            HttpServletResponse response) throws AuthenticationException {
-        LoginDto requestData = objectMapper.toEntity(request, LoginDto.class);
-        var authenticationToken = createAuthenticationToken(requestData);
-        return getAuthenticationManager().authenticate(authenticationToken);
-    }
+  @Override
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    LoginDto requestData = objectMapper.toEntity(request, LoginDto.class);
+    var authenticationToken = createAuthenticationToken(requestData);
+    return getAuthenticationManager().authenticate(authenticationToken);
+  }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain,
-            Authentication authResult) {
-        Principal principal = (Principal) authResult.getPrincipal();
+  @Override
+  protected void successfulAuthentication(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain chain,
+      Authentication authResult) {
+    Principal principal = (Principal) authResult.getPrincipal();
 
-        String accessToken = createAccessToken(principal);
-        String refreshToken = createRefreshToken(principal);
+    String accessToken = createAccessToken(principal);
+    String refreshToken = createRefreshToken(principal);
 
-        repository.save(refreshToken, objectMapper.toStringValue(createUserInfo(principal)),
-                jwtProperties.getRefreshTokenValidityInSeconds());
-        response.setHeader(HttpHeaders.AUTHORIZATION,
-                jwtProperties.getPrefix() + accessToken);
-        response.addCookie(cookieUtils.createCookie(refreshToken));
-    }
+    repository.save(
+        refreshToken,
+        objectMapper.toStringValue(createUserInfo(principal)),
+        jwtProperties.getRefreshTokenValidityInSeconds());
+    response.setHeader(HttpHeaders.AUTHORIZATION, jwtProperties.getPrefix() + accessToken);
+    response.addCookie(cookieUtils.createCookie(refreshToken));
+  }
 
-    private String createRefreshToken(Principal principal) {
-        return jwtProvider.generateRefreshToken(principal.getUsername());
-    }
+  private String createRefreshToken(Principal principal) {
+    return jwtProvider.generateRefreshToken(principal.getUsername());
+  }
 
-    private String createAccessToken(Principal principal) {
-        return jwtProvider.generateAccessToken(principal.getUsername(), principal.getId(),
-                toTrans(principal.getAuthorities()));
-    }
+  private String createAccessToken(Principal principal) {
+    return jwtProvider.generateAccessToken(
+        principal.getUsername(), principal.getId(), toTrans(principal.getAuthorities()));
+  }
 
-    private UserInfo createUserInfo(Principal principal) {
-        return new UserInfo(principal.getUsername(), toTrans(principal.getAuthorities()));
-    }
+  private UserInfo createUserInfo(Principal principal) {
+    return new UserInfo(principal.getUsername(), toTrans(principal.getAuthorities()));
+  }
 
-    private UsernamePasswordAuthenticationToken createAuthenticationToken(LoginDto login) {
-        return new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
-    }
+  private UsernamePasswordAuthenticationToken createAuthenticationToken(LoginDto login) {
+    return new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
+  }
 
-    private String toTrans(Collection<GrantedAuthority> list) {
-        return StringUtils.collectionToCommaDelimitedString(list);
-    }
-
+  private String toTrans(Collection<GrantedAuthority> list) {
+    return StringUtils.collectionToCommaDelimitedString(list);
+  }
 }

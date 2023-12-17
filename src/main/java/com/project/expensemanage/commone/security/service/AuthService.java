@@ -23,67 +23,68 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final RedisRepository redis;
-    private final JwtProvider provider;
-    private final JwtProperties properties;
-    private final UserRepository userRepository;
-    private final ObjectMapperUtils objectMapperUtils;
-    private final CookieUtils cookieUtils;
+  private final RedisRepository redis;
+  private final JwtProvider provider;
+  private final JwtProperties properties;
+  private final UserRepository userRepository;
+  private final ObjectMapperUtils objectMapperUtils;
+  private final CookieUtils cookieUtils;
 
+  public void reissue(HttpServletRequest request, HttpServletResponse response) {
+    User findUser = validRefreshTokenSubject(findUserInfoData(request));
 
-    public void reissue(HttpServletRequest request, HttpServletResponse response) {
-        User findUser = validRefreshTokenSubject(findUserInfoData(request));
+    String refresh = getRefreshToken(findUser);
+    String access = getAccessToken(findUser, findUserInfoData(request));
 
-        String refresh = getRefreshToken(findUser);
-        String access = getAccessToken(findUser, findUserInfoData(request));
+    saveUserInfoToRedis(refresh, findUserInfoData(request));
 
-        saveUserInfoToRedis(refresh, findUserInfoData(request));
+    response.setHeader(HttpHeaders.AUTHORIZATION, access);
+    response.addCookie(cookieUtils.createCookie(refresh));
+  }
 
-        response.setHeader(HttpHeaders.AUTHORIZATION, access);
-        response.addCookie(cookieUtils.createCookie(refresh));
-    }
+  private UserInfo findUserInfoData(HttpServletRequest request) {
+    return findUserInfo(cookieUtils.searchCookieProperties(request));
+  }
 
-    private UserInfo findUserInfoData(HttpServletRequest request) {
-        return findUserInfo(cookieUtils.searchCookieProperties(request));
-    }
+  private String getRefreshToken(User findUser) {
+    return provider.generateRefreshToken(findUser.getEmail());
+  }
 
-    private String getRefreshToken(User findUser) {
-        return provider.generateRefreshToken(findUser.getEmail());
-    }
+  private String getAccessToken(User findUser, UserInfo info) {
+    return properties.getPrefix()
+        + provider.generateAccessToken(
+            findUser.getEmail(), findUser.getId(), info.getAuthorities());
+  }
 
-    private String getAccessToken(User findUser, UserInfo info) {
-        return properties.getPrefix() + provider.generateAccessToken(findUser.getEmail(),
-                findUser.getId(), info.getAuthorities());
-    }
+  private void saveUserInfoToRedis(String refresh, UserInfo info) {
+    redis.save(
+        refresh,
+        objectMapperUtils.toStringValue(info),
+        provider.getRefreshTokenValidityInSeconds());
+  }
 
-    private void saveUserInfoToRedis(String refresh, UserInfo info) {
-        redis.save(refresh, objectMapperUtils.toStringValue(info),
-                provider.getRefreshTokenValidityInSeconds());
-    }
+  private User validRefreshTokenSubject(UserInfo userInfo) {
+    return userRepository
+        .findByEmail(userInfo.getUserName())
+        .orElseThrow(() -> new BusinessLogicException(UserExceptionCode.USER_NOT_FOUND));
+  }
 
-    private User validRefreshTokenSubject(UserInfo userInfo) {
-        return userRepository.findByEmail(userInfo.getUserName())
-                .orElseThrow(() -> new BusinessLogicException(UserExceptionCode.USER_NOT_FOUND));
-    }
+  private UserInfo findUserInfo(Cookie refreshCookie) {
+    return objectMapperUtils.toEntity(findAndDeleteToRedis(refreshCookie), UserInfo.class);
+  }
 
-    private UserInfo findUserInfo(Cookie refreshCookie) {
-        return objectMapperUtils.toEntity(findAndDeleteToRedis(refreshCookie), UserInfo.class);
-    }
+  private String findAndDeleteToRedis(Cookie refreshCookie) {
+    String tokenToRedis = findTokenToRedis(refreshCookie);
+    deleteToken(tokenToRedis);
+    return tokenToRedis;
+  }
 
-    private String findAndDeleteToRedis(Cookie refreshCookie) {
-        String tokenToRedis = findTokenToRedis(refreshCookie);
-        deleteToken(tokenToRedis);
-        return tokenToRedis;
-    }
+  private void deleteToken(String tokenToRedis) {
+    redis.delete(tokenToRedis);
+  }
 
-    private void deleteToken(String tokenToRedis) {
-        redis.delete(tokenToRedis);
-    }
-
-    private String findTokenToRedis(Cookie refreshCookie) {
-        return Optional.ofNullable(redis.findByKey(refreshCookie.getValue()))
-                .orElseThrow(() -> new BusinessLogicException(
-                        AuthExceptionCode.REFRESH_TOKEN_NOT_FOUND));
-    }
-
+  private String findTokenToRedis(Cookie refreshCookie) {
+    return Optional.ofNullable(redis.findByKey(refreshCookie.getValue()))
+        .orElseThrow(() -> new BusinessLogicException(AuthExceptionCode.REFRESH_TOKEN_NOT_FOUND));
+  }
 }

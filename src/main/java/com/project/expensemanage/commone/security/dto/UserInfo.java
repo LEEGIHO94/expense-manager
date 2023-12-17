@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserInfo {
-    private String userName;
-    private String authorities;
+  private String userName;
+  private String authorities;
 }

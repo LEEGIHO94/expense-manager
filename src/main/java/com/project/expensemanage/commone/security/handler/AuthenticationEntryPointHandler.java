@@ -18,36 +18,37 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint {
 
-    private final ObjectMapperUtils objectMapperUtils;
+  private final ObjectMapperUtils objectMapperUtils;
 
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException {
-        sendError(response, getExceptionCodeByRequest(request));
-    }
+  @Override
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
+      throws IOException {
+    sendError(response, getExceptionCodeByRequest(request));
+  }
 
-    private AuthExceptionCode getExceptionCodeByRequest(HttpServletRequest request) {
-        if (!(request.getAttribute("exceptionCode") instanceof AuthExceptionCode)) {
-            return AuthExceptionCode.UNAUTHENTICATED;
-        }
-        return (AuthExceptionCode) request.getAttribute("exceptionCode");
+  private AuthExceptionCode getExceptionCodeByRequest(HttpServletRequest request) {
+    if (!(request.getAttribute("exceptionCode") instanceof AuthExceptionCode)) {
+      return AuthExceptionCode.UNAUTHENTICATED;
     }
+    return (AuthExceptionCode) request.getAttribute("exceptionCode");
+  }
 
-    private void sendError(HttpServletResponse response, AuthExceptionCode authExceptionCode)
-            throws IOException {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding("utf-8");
-        response.setStatus(authExceptionCode.getHttpStatus().value());
-        response.getWriter().write(getResponseData(authExceptionCode));
-    }
+  private void sendError(HttpServletResponse response, AuthExceptionCode authExceptionCode)
+      throws IOException {
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding("utf-8");
+    response.setStatus(authExceptionCode.getHttpStatus().value());
+    response.getWriter().write(getResponseData(authExceptionCode));
+  }
 
-    private String getResponseData(AuthExceptionCode authExceptionCode){
-        return objectMapperUtils.toStringValue(createErrorResponse(authExceptionCode));
-    }
+  private String getResponseData(AuthExceptionCode authExceptionCode) {
+    return objectMapperUtils.toStringValue(createErrorResponse(authExceptionCode));
+  }
 
-    private ErrorResponse createErrorResponse(AuthExceptionCode authExceptionCode) {
-        return ErrorResponse.of(authExceptionCode.getHttpStatus(), authExceptionCode.getMessage());
-    }
+  private ErrorResponse createErrorResponse(AuthExceptionCode authExceptionCode) {
+    return ErrorResponse.of(authExceptionCode.getHttpStatus(), authExceptionCode.getMessage());
+  }
 }
-//TODO: 리펙토링 대상 존재 추 후 한 예정
-
