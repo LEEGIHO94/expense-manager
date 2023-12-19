@@ -22,14 +22,10 @@ import org.springframework.context.annotation.Import;
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({QueryDslConfig.class, TestSQLUtils.class})
 class RecommendationRepositoryTest {
-  @Autowired
-  RecommendationRepository repository;
-  @Autowired
-  BudgetRepository budgetRepository;
-  @Autowired
-  ExpenditureRepository expenditureRepository;
-  @Autowired
-  TestSQLUtils sql;
+  @Autowired RecommendationRepository repository;
+  @Autowired BudgetRepository budgetRepository;
+  @Autowired ExpenditureRepository expenditureRepository;
+  @Autowired TestSQLUtils sql;
 
   @Test
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
@@ -37,7 +33,8 @@ class RecommendationRepositoryTest {
     LocalDate startDate = LocalDate.of(2020, 01, 01);
     LocalDate endDate = LocalDate.of(2020, 01, 31);
     long userId = 1L;
-    List<RecommendationExpenditure> result = repository.findTotalExpenditureByCategoryAndDateAndId(startDate, endDate, userId);
+    List<RecommendationExpenditure> result =
+        repository.findTotalExpenditureByCategoryAndDateAndId(startDate, endDate, userId);
 
     result.forEach(
         data ->
@@ -46,13 +43,15 @@ class RecommendationRepositoryTest {
                     sql.getTotalExpenditureByCategoryAndUser(
                         userId, data.categoryId(), startDate, endDate)));
   }
+
   @Test
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
   void recommend_date_all_user_test() throws Exception {
     LocalDate startDate = LocalDate.of(2020, 01, 01);
     LocalDate endDate = LocalDate.of(2020, 01, 31);
     long userId = 1L;
-    List<RecommendationExpenditureAllUser> result = repository.findTotalExpenditureByCategoryAndDate(startDate, endDate);
+    List<RecommendationExpenditureAllUser> result =
+        repository.findTotalExpenditureByCategoryAndDate(startDate, endDate);
 
     result.forEach(
         data ->

@@ -12,10 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserValidService {
-    private final UserRepository repository;
+  private final UserRepository repository;
 
-    public User validUser(Long userId) {
-        return repository.findById(userId).orElseThrow(() -> new BusinessLogicException(
-                UserExceptionCode.USER_NOT_FOUND));
-    }
+  public User validUser(Long userId) {
+    return repository
+        .findById(userId)
+        .orElseThrow(() -> new BusinessLogicException(UserExceptionCode.USER_NOT_FOUND));
+  }
 }

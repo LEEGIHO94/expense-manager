@@ -6,5 +6,4 @@ import org.springframework.context.event.EventListener;
 public interface ExpenditureRecommendationEventListener {
   @EventListener
   void handle(DailyRecommendationExpenditureEvent event);
-
 }

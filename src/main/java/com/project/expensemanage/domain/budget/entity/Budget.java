@@ -26,24 +26,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class Budget {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false,name = "budget_id")
-    private Long id;
-    private LocalDate date;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(updatable = false, name = "budget_id")
+  private Long id;
 
-    @Embedded
-    private Price price;
+  private LocalDate date;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @Embedded private Price price;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    public void updatePrice(Long amount) {
-        this.price = new Price(amount);
-    }
+  @ManyToOne(fetch = LAZY)
+  @JoinColumn(name = "category_id")
+  private Category category;
+
+  public void updatePrice(Long amount) {
+    this.price = new Price(amount);
+  }
 }

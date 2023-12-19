@@ -15,19 +15,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository repository;
-    private final PasswordEncoder encoder;
-    private final UserMapper mapper;
+  private final UserRepository repository;
+  private final PasswordEncoder encoder;
+  private final UserMapper mapper;
 
-    public UserIdResponse postUser(UserPostRequest post) {
-        validUserExist(post.email());
-        User savedEntity = repository.save(mapper.toEntity(post, encoder.encode(post.password())));
-        return mapper.toIdDto(savedEntity);
-    }
+  public UserIdResponse postUser(UserPostRequest post) {
+    validUserExist(post.email());
+    User savedEntity = repository.save(mapper.toEntity(post, encoder.encode(post.password())));
+    return mapper.toIdDto(savedEntity);
+  }
 
-    private void validUserExist(String email) {
-        repository.findByEmail(email).ifPresent(d -> {
-            throw new BusinessLogicException(UserExceptionCode.USER_EXIST);
-        });
-    }
+  private void validUserExist(String email) {
+    repository
+        .findByEmail(email)
+        .ifPresent(
+            d -> {
+              throw new BusinessLogicException(UserExceptionCode.USER_EXIST);
+            });
+  }
 }

@@ -21,17 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private static final String DEFAULT = "/api/users";
-    private final UserService service;
+  private static final String DEFAULT = "/api/users";
+  private final UserService service;
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<UserIdResponse>> postUser(
-            @RequestBody @Valid UserPostRequest dto) {
-        ResponseDto<UserIdResponse> response = ResponseDto.<UserIdResponse>builder()
-                .data(service.postUser(dto)).status(CREATE).build();
-        URI location = UrlCreator.createUri(DEFAULT, response.getData().userId());
+  @PostMapping
+  public ResponseEntity<ResponseDto<UserIdResponse>> postUser(
+      @RequestBody @Valid UserPostRequest dto) {
+    ResponseDto<UserIdResponse> response =
+        ResponseDto.<UserIdResponse>builder().data(service.postUser(dto)).status(CREATE).build();
+    URI location = UrlCreator.createUri(DEFAULT, response.getData().userId());
 
-        return ResponseEntity.created(location).body(response);
-    }
-
+    return ResponseEntity.created(location).body(response);
+  }
 }

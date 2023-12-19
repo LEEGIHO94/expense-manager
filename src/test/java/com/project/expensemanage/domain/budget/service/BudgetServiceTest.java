@@ -35,123 +35,122 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Import(BudgetTestConfig.class)
 class BudgetServiceTest {
 
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    BudgetService service;
-    @MockBean
-    BudgetRepository budgetRepository;
-    @MockBean
-    CategoryRepository categoryRepository;
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    UserMock userMock;
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    BudgetMock mock;
-    @Autowired
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    CategoryMock categoryMock;
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  BudgetService service;
 
-    @Test
-    @DisplayName("예산 설정 테스트")
-    void post_budget_success_test() throws Exception {
-        // given
+  @MockBean BudgetRepository budgetRepository;
+  @MockBean CategoryRepository categoryRepository;
 
-        given(categoryRepository.findById(anyLong()))
-                .willReturn(Optional.of(categoryMock.standardEntityMock()));
-        given(budgetRepository.findByDateAndUserIdAndCategoryId(any(LocalDate.class), anyLong(),
-                anyLong())).willReturn(Optional.empty());
-        given(budgetRepository.save(any(Budget.class)))
-                .willReturn(mock.entityMock());
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  UserMock userMock;
 
-        // when
-        BudgetIdResponse result = service.postBudget(userMock.getUserId(),
-                mock.postDtoMock());
-        // then
-        assertThat(result.budgetId()).isNotNull();
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  BudgetMock mock;
+
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  CategoryMock categoryMock;
+
+  @Test
+  @DisplayName("예산 설정 테스트")
+  void post_budget_success_test() throws Exception {
+    // given
+
+    given(categoryRepository.findById(anyLong()))
+        .willReturn(Optional.of(categoryMock.standardEntityMock()));
+    given(
+            budgetRepository.findByDateAndUserIdAndCategoryId(
+                any(LocalDate.class), anyLong(), anyLong()))
+        .willReturn(Optional.empty());
+    given(budgetRepository.save(any(Budget.class))).willReturn(mock.entityMock());
+
+    // when
+    BudgetIdResponse result = service.postBudget(userMock.getUserId(), mock.postDtoMock());
+    // then
+    assertThat(result.budgetId()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("예산 설정 테스트: 실패[예산 이미 존재]")
+  void post_budget_fail_budget_already_exist_test() throws Exception {
+    // given
+
+    given(categoryRepository.findById(anyLong()))
+        .willReturn(Optional.of(categoryMock.standardEntityMock()));
+    given(
+            budgetRepository.findByDateAndUserIdAndCategoryId(
+                any(LocalDate.class), anyLong(), anyLong()))
+        .willReturn(Optional.of(mock.entityMock()));
+    given(budgetRepository.save(any(Budget.class))).willReturn(mock.entityMock());
+
+    // when
+    // then
+    assertThatThrownBy(() -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(BudgetExceptionCode.BUDGET_EXIST.getMessage());
+  }
+
+  @Test
+  @DisplayName("예산 설정 테스트: 실패[카테고리 존재하지 않음]")
+  void post_budget_fail_budget_no_have_category_test() throws Exception {
+    // given
+
+    given(categoryRepository.findById(anyLong())).willReturn(Optional.empty());
+
+    // when
+    // then
+    assertThatThrownBy(() -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(CategoryExceptionCode.CATEGORY_NOT_FOUND.getMessage());
+  }
+
+  @Test
+  @DisplayName("카테고리 별 추천 금액 서비스 테스트")
+  void get_recommended_amount_for_category_test() throws Exception {
+    // given
+    Long totalAmount = 1000000L;
+    given(budgetRepository.findTotalAmountByCategory()).willReturn(mock.dbDtoMock());
+    // when
+    List<RecommendBudget> result = service.getRecommendedAmountForCategory(totalAmount);
+    // then
+    for (int i = 0; i < result.size(); i++) {
+      assertThat(result.get(i).getCategoryId()).isNotNull();
+      assertThat(result.get(i).getAmount()).isNotZero();
+      assertThat(result.get(i).getCategoryName()).isInstanceOf(String.class);
     }
+    long resultSum = result.stream().mapToLong(RecommendBudget::getAmount).sum();
+    assertThat(resultSum).isEqualTo(totalAmount);
+  }
 
-    @Test
-    @DisplayName("예산 설정 테스트: 실패[예산 이미 존재]")
-    void post_budget_fail_budget_already_exist_test() throws Exception {
-        // given
+  @Test
+  @DisplayName("예산 수정 테스트 : 성공")
+  void update_budget_success_test() throws Exception {
+    // given
+    given(budgetRepository.findByBudgetIdAndUserId(anyLong(), anyLong()))
+        .willReturn(Optional.of(mock.entityMock()));
+    // when
+    BudgetIdResponse result =
+        service.patchBudget(userMock.getUserId(), mock.getBudgetId(), mock.patchDtoMock());
+    // then
+    assertThat(result.budgetId()).isNotNull().isEqualTo(mock.getBudgetId());
+    verify(budgetRepository, times(1)).findByBudgetIdAndUserId(anyLong(), anyLong());
+  }
 
-        given(categoryRepository.findById(anyLong()))
-                .willReturn(Optional.of(categoryMock.standardEntityMock()));
-        given(budgetRepository.findByDateAndUserIdAndCategoryId(any(LocalDate.class), anyLong(),
-                anyLong())).willReturn(Optional.of(mock.entityMock()));
-        given(budgetRepository.save(any(Budget.class)))
-                .willReturn(mock.entityMock());
-
-        // when
-        // then
-        assertThatThrownBy(
-                () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
-                .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(BudgetExceptionCode.BUDGET_EXIST.getMessage());
-    }
-
-    @Test
-    @DisplayName("예산 설정 테스트: 실패[카테고리 존재하지 않음]")
-    void post_budget_fail_budget_no_have_category_test() throws Exception {
-        // given
-
-        given(categoryRepository.findById(anyLong()))
-                .willReturn(Optional.empty());
-
-        // when
-        // then
-        assertThatThrownBy(
-                () -> service.postBudget(userMock.getUserId(), mock.postDtoMock()))
-                .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(CategoryExceptionCode.CATEGORY_NOT_FOUND.getMessage());
-    }
-
-    @Test
-    @DisplayName("카테고리 별 추천 금액 서비스 테스트")
-    void get_recommended_amount_for_category_test() throws Exception {
-        // given
-        Long totalAmount = 1000000L;
-        given(budgetRepository.findTotalAmountByCategory()).willReturn(mock.dbDtoMock());
-        // when
-        List<RecommendBudget> result = service.getRecommendedAmountForCategory(
-                totalAmount);
-        // then
-        for (int i = 0; i < result.size(); i++) {
-            assertThat(result.get(i).getCategoryId()).isNotNull();
-            assertThat(result.get(i).getAmount()).isNotZero();
-            assertThat(result.get(i).getCategoryName()).isInstanceOf(String.class);
-        }
-        long resultSum = result.stream().mapToLong(RecommendBudget::getAmount).sum();
-        assertThat(resultSum).isEqualTo(totalAmount);
-    }
-
-    @Test
-    @DisplayName("예산 수정 테스트 : 성공")
-    void update_budget_success_test() throws Exception {
-        // given
-        given(budgetRepository.findByBudgetIdAndUserId(anyLong(), anyLong())).willReturn(
-                Optional.of(mock.entityMock()));
-        // when
-        BudgetIdResponse result = service.patchBudget(userMock.getUserId(), mock.getBudgetId(),
-                mock.patchDtoMock());
-        // then
-        assertThat(result.budgetId()).isNotNull().isEqualTo(mock.getBudgetId());
-        verify(budgetRepository, times(1)).findByBudgetIdAndUserId(anyLong(), anyLong());
-    }
-
-    @Test
-    @DisplayName("예산 수정 테스트 : 실패[예산 조회 실패]")
-    void update_budget_failure_test() throws Exception {
-        // given
-        given(budgetRepository.findByBudgetIdAndUserId(anyLong(), anyLong())).willReturn(
-                Optional.empty());
-        // when
-        // then
-        assertThatThrownBy(
-                () -> service.patchBudget(userMock.getUserId(), mock.getBudgetId(),
-                        mock.patchDtoMock())).isInstanceOf(
-                        BusinessLogicException.class)
-                .hasMessage(BudgetExceptionCode.BUDGET_NOT_FOUND.getMessage());
-    }
+  @Test
+  @DisplayName("예산 수정 테스트 : 실패[예산 조회 실패]")
+  void update_budget_failure_test() throws Exception {
+    // given
+    given(budgetRepository.findByBudgetIdAndUserId(anyLong(), anyLong()))
+        .willReturn(Optional.empty());
+    // when
+    // then
+    assertThatThrownBy(
+            () ->
+                service.patchBudget(userMock.getUserId(), mock.getBudgetId(), mock.patchDtoMock()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(BudgetExceptionCode.BUDGET_NOT_FOUND.getMessage());
+  }
 }

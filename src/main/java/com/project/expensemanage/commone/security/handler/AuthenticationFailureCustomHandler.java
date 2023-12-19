@@ -15,15 +15,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthenticationFailureCustomHandler implements AuthenticationFailureHandler {
 
-    private final ErrorResponseUtils errorResponseUtils;
+  private final ErrorResponseUtils errorResponseUtils;
 
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException exception) throws IOException {
-        log.error("# Authentication failed: {}", exception.getMessage());
-        log.error("authentication ", exception);
+  @Override
+  public void onAuthenticationFailure(
+      HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+      throws IOException {
+    log.error("# Authentication failed: {}", exception.getMessage());
+    log.error("authentication ", exception);
 
-        errorResponseUtils.sendErrorResponse(response);
-    }
-
+    errorResponseUtils.sendErrorResponse(response);
+  }
 }

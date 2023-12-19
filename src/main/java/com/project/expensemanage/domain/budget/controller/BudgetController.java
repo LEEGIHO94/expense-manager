@@ -28,38 +28,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BudgetController {
 
-    private static final String DEFAULT = "/api/budgets";
-    private final BudgetService service;
+  private static final String DEFAULT = "/api/budgets";
+  private final BudgetService service;
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<BudgetIdResponse>> postBudget(
-            @Valid @RequestBody PostBudgetRequest post, @CurrentUser Long userId) {
-        ResponseDto<BudgetIdResponse> response = ResponseDto.<BudgetIdResponse>builder()
-                .data(service.postBudget(userId, post))
-                .status(ResponseStatus.CREATE)
-                .build();
-        URI location = UrlCreator.createUri(DEFAULT, response.getData().budgetId());
-        return ResponseEntity.created(location).body(response);
-    }
+  @PostMapping
+  public ResponseEntity<ResponseDto<BudgetIdResponse>> postBudget(
+      @Valid @RequestBody PostBudgetRequest post, @CurrentUser Long userId) {
+    ResponseDto<BudgetIdResponse> response =
+        ResponseDto.<BudgetIdResponse>builder()
+            .data(service.postBudget(userId, post))
+            .status(ResponseStatus.CREATE)
+            .build();
+    URI location = UrlCreator.createUri(DEFAULT, response.getData().budgetId());
+    return ResponseEntity.created(location).body(response);
+  }
 
-    @GetMapping("/recommendation")
-    public ResponseEntity<ResponseDto<List<RecommendBudget>>> postRecommendBudget(
-            @RequestParam("amount") Long amount) {
-        ResponseDto<List<RecommendBudget>> response = ResponseDto.<List<RecommendBudget>>builder()
-                .data(service.getRecommendedAmountForCategory(amount))
-                .status(ResponseStatus.GET)
-                .build();
-        return ResponseEntity.ok(response);
-    }
+  @GetMapping("/recommendation")
+  public ResponseEntity<ResponseDto<List<RecommendBudget>>> postRecommendBudget(
+      @RequestParam("amount") Long amount) {
+    ResponseDto<List<RecommendBudget>> response =
+        ResponseDto.<List<RecommendBudget>>builder()
+            .data(service.getRecommendedAmountForCategory(amount))
+            .status(ResponseStatus.GET)
+            .build();
+    return ResponseEntity.ok(response);
+  }
 
-    @PatchMapping("/{budgetId}")
-    public ResponseEntity<ResponseDto<BudgetIdResponse>> patchBudget(@PathVariable Long budgetId,
-            @RequestBody @Valid PatchBudgetRequest patch, @CurrentUser Long userId) {
-        ResponseDto<BudgetIdResponse> response = ResponseDto.<BudgetIdResponse>builder()
-                .data(service.patchBudget(userId, budgetId, patch))
-                .status(ResponseStatus.CREATE)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
+  @PatchMapping("/{budgetId}")
+  public ResponseEntity<ResponseDto<BudgetIdResponse>> patchBudget(
+      @PathVariable Long budgetId,
+      @RequestBody @Valid PatchBudgetRequest patch,
+      @CurrentUser Long userId) {
+    ResponseDto<BudgetIdResponse> response =
+        ResponseDto.<BudgetIdResponse>builder()
+            .data(service.patchBudget(userId, budgetId, patch))
+            .status(ResponseStatus.CREATE)
+            .build();
+    return ResponseEntity.ok(response);
+  }
 }

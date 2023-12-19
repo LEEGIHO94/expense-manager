@@ -6,5 +6,4 @@ import org.springframework.context.event.EventListener;
 public interface TotalExpenditureNotificationEventListener {
   @EventListener
   void handle(TodayExpenditureEvent event);
-
 }

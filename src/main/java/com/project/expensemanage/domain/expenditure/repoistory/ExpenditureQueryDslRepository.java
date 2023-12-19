@@ -7,7 +7,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ExpenditureQueryDslRepository {
-    List<Expenditure> findAllExpenditureByCondition(GetExpenditureDetailsCondition condition);
-    List<TotalExpenditureByCategory> findTotalExpenditureByCategory(GetExpenditureDetailsCondition condition);
-    public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(Long userId, LocalDate date);
+  List<Expenditure> findAllExpenditureByCondition(GetExpenditureDetailsCondition condition);
+
+  List<TotalExpenditureByCategory> findTotalExpenditureByCategory(
+      GetExpenditureDetailsCondition condition);
+
+  public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(
+      Long userId, LocalDate date);
 }

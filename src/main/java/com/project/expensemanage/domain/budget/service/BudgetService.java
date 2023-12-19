@@ -24,52 +24,53 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BudgetService {
 
-    private final BudgetRepository repository;
-    private final CategoryValidService categoryValid;
-    private final BudgetMapper mapper;
+  private final BudgetRepository repository;
+  private final CategoryValidService categoryValid;
+  private final BudgetMapper mapper;
 
+  public BudgetIdResponse postBudget(Long userId, PostBudgetRequest post) {
+    validBudget(userId, post);
+    Budget save = repository.save(mapper.toEntity(userId, post));
 
-    public BudgetIdResponse postBudget(Long userId, PostBudgetRequest post) {
-        validBudget(userId, post);
-        Budget save = repository.save(mapper.toEntity(userId, post));
+    return mapper.toDto(save);
+  }
 
-        return mapper.toDto(save);
-    }
+  /*
+   * 카테고리가 없으면 예외 발생
+   * */
+  public void validBudget(Long userId, PostBudgetRequest post) {
+    categoryValid.validCategory(post.categoryId());
+    validBudgetExist(userId, post);
+  }
 
-    /*
-     * 카테고리가 없으면 예외 발생
-     * */
-    public void validBudget(Long userId, PostBudgetRequest post) {
-        categoryValid.validCategory(post.categoryId());
-        validBudgetExist(userId, post);
-    }
+  public BudgetIdResponse patchBudget(Long userId, Long budgetId, PatchBudgetRequest patch) {
+    Budget result = patch(findBudget(userId, budgetId), patch);
+    return mapper.toDto(result);
+  }
 
-    public BudgetIdResponse patchBudget(Long userId, Long budgetId, PatchBudgetRequest patch) {
-        Budget result = patch(findBudget(userId, budgetId), patch);
-        return mapper.toDto(result);
-    }
+  public Budget patch(Budget entity, PatchBudgetRequest patch) {
+    Optional.ofNullable(patch.amount()).ifPresent(entity::updatePrice);
+    return entity;
+  }
 
-    public Budget patch(Budget entity, PatchBudgetRequest patch) {
-        Optional.ofNullable(patch.amount()).ifPresent(entity::updatePrice);
-        return entity;
-    }
+  private Budget findBudget(Long userId, Long budgetId) {
+    return repository
+        .findByBudgetIdAndUserId(budgetId, userId)
+        .orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
+  }
 
-    private Budget findBudget(Long userId, Long budgetId) {
-        return repository.findByBudgetIdAndUserId(budgetId, userId)
-                .orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
-    }
+  public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
+    return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
+        .getRecommendedData();
+  }
 
-    public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
-        return new RecommendBudgetHelper(repository.findTotalAmountByCategory(),
-                totalAmount).getRecommendedData();
-    }
-
-
-    //예산이 이미 존재한다면 예외 발생
-    private void validBudgetExist(Long userId, PostBudgetRequest post) {
-        repository.findByDateAndUserIdAndCategoryId(post.budgetDate(), post.categoryId(), userId)
-                .ifPresent(d -> {
-                    throw new BusinessLogicException(BUDGET_EXIST);
-                });
-    }
+  // 예산이 이미 존재한다면 예외 발생
+  private void validBudgetExist(Long userId, PostBudgetRequest post) {
+    repository
+        .findByDateAndUserIdAndCategoryId(post.budgetDate(), post.categoryId(), userId)
+        .ifPresent(
+            d -> {
+              throw new BusinessLogicException(BUDGET_EXIST);
+            });
+  }
 }

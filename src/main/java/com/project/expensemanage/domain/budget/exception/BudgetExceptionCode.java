@@ -8,10 +8,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum BudgetExceptionCode implements ExceptionCode {
-    BUDGET_EXIST(HttpStatus.CONFLICT,"예산이 이미 존재"),
-    BUDGET_NOT_FOUND(HttpStatus.BAD_REQUEST,"예산이 존재하지 않습니다");
+  BUDGET_EXIST(HttpStatus.CONFLICT, "예산이 이미 존재"),
+  BUDGET_NOT_FOUND(HttpStatus.BAD_REQUEST, "예산이 존재하지 않습니다");
 
-
-    private final HttpStatus httpStatus;
-    private final String message;
+  private final HttpStatus httpStatus;
+  private final String message;
 }

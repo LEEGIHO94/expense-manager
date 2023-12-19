@@ -1,4 +1,4 @@
-package com.project.expensemanage.notification.discord.body.embedObject;
+package com.project.expensemanage.notification.discord.body.embed;
 
 /*
  * name : name of the field
@@ -9,4 +9,4 @@ package com.project.expensemanage.notification.discord.body.embedObject;
 import lombok.Builder;
 
 @Builder
-public record DiscordEmbedField(String name, String value,boolean inline) {}
+public record DiscordEmbedField(String name, String value, boolean inline) {}

@@ -15,13 +15,12 @@ public class AnalysisConfig {
   }
 
   @Bean
-  public DateUtils dateUtils(){
+  public DateUtils dateUtils() {
     return new DateUtils();
   }
 
   @Bean
-  public AnalysisService analysisService(){
-    return new AnalysisService(analysisRepository(),dateUtils());
+  public AnalysisService analysisService() {
+    return new AnalysisService(analysisRepository(), dateUtils());
   }
-
 }

@@ -17,29 +17,32 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final AuthenticationEntryPointHandler authenticationEntryPointHandler;
-    private final LogoutSuccessCustomHandler logoutSuccessCustomHandler;
-    private final JwtFilterDsl jwtFilterDsl;
+  private final AuthenticationEntryPointHandler authenticationEntryPointHandler;
+  private final LogoutSuccessCustomHandler logoutSuccessCustomHandler;
+  private final JwtFilterDsl jwtFilterDsl;
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.apply(jwtFilterDsl);
-        http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/reissue").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(
-                        session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(
-                        authenticationEntryPointHandler))
-                .logout(logout -> logout.logoutSuccessHandler(logoutSuccessCustomHandler)
-                        .logoutUrl("/api/logout"));
-        return http.build();
-    }
-
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http.apply(jwtFilterDsl);
+    http.authorizeHttpRequests(
+            authorize ->
+                authorize
+                    .requestMatchers(HttpMethod.POST, "/api/users")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/reissue")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(
+            exception -> exception.authenticationEntryPoint(authenticationEntryPointHandler))
+        .logout(
+            logout ->
+                logout.logoutSuccessHandler(logoutSuccessCustomHandler).logoutUrl("/api/logout"));
+    return http.build();
+  }
 }

@@ -13,10 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CategoryValidService {
 
-    private final CategoryRepository repository;
+  private final CategoryRepository repository;
 
-    public void validCategory(Long categoryId) {
-        repository.findById(categoryId).orElseThrow(() -> new BusinessLogicException(
-                CATEGORY_NOT_FOUND));
-    }
+  public void validCategory(Long categoryId) {
+    repository
+        .findById(categoryId)
+        .orElseThrow(() -> new BusinessLogicException(CATEGORY_NOT_FOUND));
+  }
 }

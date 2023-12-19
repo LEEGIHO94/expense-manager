@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface AnalysisRepository extends JpaRepository<Expenditure, Long>, AnalysisQueryDslRepository {
+public interface AnalysisRepository
+    extends JpaRepository<Expenditure, Long>, AnalysisQueryDslRepository {
   @Query(
       """
     select

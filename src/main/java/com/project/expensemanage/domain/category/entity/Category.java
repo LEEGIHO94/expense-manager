@@ -21,11 +21,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false,name = "category_id")
-    private Long id;
-    private String name;
-    @Enumerated(EnumType.STRING)
-    private CategoryType categoryType;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(updatable = false, name = "category_id")
+  private Long id;
+
+  private String name;
+
+  @Enumerated(EnumType.STRING)
+  private CategoryType categoryType;
 }

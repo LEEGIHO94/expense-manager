@@ -6,11 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class RecommendedBudgetData {
-    private Long categoryId;
-    private String name;
-    private Long amount;
+  private Long categoryId;
+  private String name;
+  private Long amount;
 }
-
-/*
-* 카테고리 별 총 합을 구해야한다. -> 카테고리별 총합을 간단하게 구하는 방법을 고려해 보는 것이 좋을 것 같다 이 때 카테고리가 고정되어
-* */

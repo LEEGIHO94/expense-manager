@@ -14,25 +14,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ErrorResponseUtils {
 
-    private final ObjectMapperUtils objectMapperUtils;
+  private final ObjectMapperUtils objectMapperUtils;
 
-    public void sendErrorResponse(HttpServletResponse response) throws IOException {
-        setResponseAuthErrorToHeader(response);
-        response.getWriter().write(getResponseData());
-    }
+  public void sendErrorResponse(HttpServletResponse response) throws IOException {
+    setResponseAuthErrorToHeader(response);
+    response.getWriter().write(getResponseData());
+  }
 
-    private void setResponseAuthErrorToHeader(HttpServletResponse response) {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setCharacterEncoding("utf-8");
-    }
+  private void setResponseAuthErrorToHeader(HttpServletResponse response) {
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    response.setCharacterEncoding("utf-8");
+  }
 
-    private String getResponseData() {
-        return objectMapperUtils.toStringValue(createErrorResponse());
-    }
+  private String getResponseData() {
+    return objectMapperUtils.toStringValue(createErrorResponse());
+  }
 
-    private ErrorResponse createErrorResponse() {
-        return ErrorResponse.of(AuthExceptionCode.UNAUTHENTICATED.getHttpStatus(),
-                AuthExceptionCode.UNAUTHENTICATED.getMessage());
-    }
+  private ErrorResponse createErrorResponse() {
+    return ErrorResponse.of(
+        AuthExceptionCode.UNAUTHENTICATED.getHttpStatus(),
+        AuthExceptionCode.UNAUTHENTICATED.getMessage());
+  }
 }

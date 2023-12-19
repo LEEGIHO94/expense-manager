@@ -16,25 +16,25 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LogoutSuccessCustomHandler implements LogoutSuccessHandler {
 
-    private final RedisRepository repository;
-    private final CookieUtils cookieUtils;
+  private final RedisRepository repository;
+  private final CookieUtils cookieUtils;
 
-    private static void createResponse(HttpServletResponse response) throws IOException {
-        response.setStatus(HttpStatus.OK.value());
-        response.getWriter().flush();
-    }
+  private static void createResponse(HttpServletResponse response) throws IOException {
+    response.setStatus(HttpStatus.OK.value());
+    response.getWriter().flush();
+  }
 
-    @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException {
+  @Override
+  public void onLogoutSuccess(
+      HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+      throws IOException {
 
-        deleteTokenToRedis(cookieUtils.deleteCookie(request));
+    deleteTokenToRedis(cookieUtils.deleteCookie(request));
 
-        createResponse(response);
-    }
+    createResponse(response);
+  }
 
-    private void deleteTokenToRedis(Cookie refreshCookie) {
-        repository.delete(refreshCookie.getValue());
-    }
-
+  private void deleteTokenToRedis(Cookie refreshCookie) {
+    repository.delete(refreshCookie.getValue());
+  }
 }

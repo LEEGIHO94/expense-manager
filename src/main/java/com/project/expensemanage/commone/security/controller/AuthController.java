@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService service;
+  private final AuthService service;
 
-    @PostMapping("/reissue")
-    public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
-        service.reissue(request, response);
-        return ResponseEntity.noContent().build();
-    }
-
+  @PostMapping("/reissue")
+  public ResponseEntity<Void> reissue(HttpServletRequest request, HttpServletResponse response) {
+    service.reissue(request, response);
+    return ResponseEntity.noContent().build();
+  }
 }
