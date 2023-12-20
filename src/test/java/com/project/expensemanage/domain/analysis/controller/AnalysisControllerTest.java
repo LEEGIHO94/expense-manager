@@ -16,9 +16,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +38,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
   JacksonConfig.class,
   SecurityConfig.class
 })
+@AutoConfigureRestDocs
 class AnalysisControllerTest {
 
   final String DEFAULT = "/api/analysis";
@@ -54,13 +60,22 @@ class AnalysisControllerTest {
     perform
         .andDo(MockMvcResultHandlers.log())
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.timeStamp").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.code").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryId").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryName").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].rate").isNumber());
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "get-analysis-weekly",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY).description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
+                    PayloadDocumentation.fieldWithPath("data[].rate").type(JsonFieldType.NUMBER).description("이 전주 대비 지출 비율"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
+                )
+            )
+        );
   }
 
   @Test
@@ -76,13 +91,24 @@ class AnalysisControllerTest {
     perform
         .andDo(MockMvcResultHandlers.log())
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.timeStamp").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.code").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryId").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].categoryName").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].rate").isNumber());
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[?(@.categoryId == 1)].categoryName").value("카테고리이름1"))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].rate").isNumber())
+        .andDo(
+        MockMvcRestDocumentation.document(
+            "get-analysis-monthly",
+            Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+            Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+            PayloadDocumentation.responseFields(
+                PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
+                PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
+                PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
+                PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY).description("전송 데이터"),
+                PayloadDocumentation.fieldWithPath("data[].categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
+                PayloadDocumentation.fieldWithPath("data[].rate").type(JsonFieldType.NUMBER).description("이 전주 대비 지출 비율"),
+                PayloadDocumentation.fieldWithPath("data[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
+            )
+        )
+    );
   }
 
   @Test
@@ -98,12 +124,24 @@ class AnalysisControllerTest {
     perform
         .andDo(MockMvcResultHandlers.log())
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data").isMap())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.timeStamp").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.code").isNumber())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.message").isString())
         .andExpect(MockMvcResultMatchers.jsonPath("$.data.analysisDate").isString())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data.expenditureRate").isNumber());
+        .andExpect(MockMvcResultMatchers.jsonPath("$.data.expenditureRate").isNumber())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "get-analysis-user",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.OBJECT).description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.expenditureRate").type(JsonFieldType.NUMBER).description("다른 사용자 대비 당일 지출 비율"),
+                    PayloadDocumentation.fieldWithPath("data.analysisDate").type(JsonFieldType.STRING).description("분석 날짜")
+                )
+            )
+        );
+
   }
 
   List<ExpenditureDiffResponse> expenditureDiffResponseList() {
