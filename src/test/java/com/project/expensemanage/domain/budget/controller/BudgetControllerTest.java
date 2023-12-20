@@ -15,10 +15,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.headers.HeaderDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -33,6 +40,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
   JacksonConfig.class,
   SecurityConfig.class
 })
+@AutoConfigureRestDocs
 class BudgetControllerTest {
 
   @Autowired MockMvc mvc;
@@ -59,6 +67,42 @@ class BudgetControllerTest {
     // then
     perform
         .andDo(MockMvcResultHandlers.log())
-        .andExpect(MockMvcResultMatchers.status().isCreated());
+        .andExpect(MockMvcResultMatchers.status().isCreated())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "post-budget",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.requestFields(
+                    PayloadDocumentation.fieldWithPath("budgetDate")
+                        .type(JsonFieldType.STRING)
+                        .description("지출 일자"),
+                    PayloadDocumentation.fieldWithPath("amount")
+                        .type(JsonFieldType.NUMBER)
+                        .description("지출 비용"),
+                    PayloadDocumentation.fieldWithPath("categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자")),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.OBJECT)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.budgetId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 식별자")),
+                HeaderDocumentation.responseHeaders(
+                    HeaderDocumentation.headerWithName(HttpHeaders.LOCATION)
+                        .description("리소스 위치"))));
   }
+
+
 }
