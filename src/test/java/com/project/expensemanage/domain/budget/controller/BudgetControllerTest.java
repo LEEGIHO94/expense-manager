@@ -1,5 +1,6 @@
 package com.project.expensemanage.domain.budget.controller;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
@@ -10,10 +11,10 @@ import com.project.expensemanage.commone.security.annotation.WithMockCustomUser;
 import com.project.expensemanage.commone.security.config.AuthTestConfig;
 import com.project.expensemanage.domain.budget.mock.BudgetMock;
 import com.project.expensemanage.domain.budget.service.BudgetService;
-import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,7 +51,7 @@ class BudgetControllerTest {
   @Autowired ObjectMapper objectMapper;
 
   @Test
-  @DisplayName("예산 등록 테스트 : 성공")
+  @DisplayName("지출 등록 테스트 : 성공")
   @WithMockCustomUser
   void post_budget_success_test() throws Exception {
     String content = objectMapper.writeValueAsString(mock.postDtoMock());
@@ -104,5 +105,55 @@ class BudgetControllerTest {
                         .description("리소스 위치"))));
   }
 
+  @Test
+  @WithMockCustomUser
+  @DisplayName("지출 수정 테스트")
+  void patch_budget_success_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
 
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform = mvc.perform(
+        MockMvcRequestBuilders.patch("/api/budgets" + "/{budgetId}", mock.getBudgetId())
+            .content(content)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "patch-budget",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.requestFields(
+                    PayloadDocumentation.fieldWithPath("amount")
+                        .type(JsonFieldType.NUMBER)
+                        .description("지출 비용"),
+                    PayloadDocumentation.fieldWithPath("categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자")),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.OBJECT)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.budgetId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 식별자")),
+                HeaderDocumentation.responseHeaders(
+                    HeaderDocumentation.headerWithName(HttpHeaders.LOCATION)
+                        .description("리소스 위치"))));
+  }
 }

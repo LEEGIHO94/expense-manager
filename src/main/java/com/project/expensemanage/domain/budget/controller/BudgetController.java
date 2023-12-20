@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -64,6 +65,7 @@ public class BudgetController {
             .data(service.patchBudget(userId, budgetId, patch))
             .status(ResponseStatus.CREATE)
             .build();
-    return ResponseEntity.ok(response);
+    URI location = UrlCreator.createUri(DEFAULT, response.getData().budgetId());
+    return ResponseEntity.ok().header(HttpHeaders.LOCATION,location.toString()).body(response);
   }
 }
