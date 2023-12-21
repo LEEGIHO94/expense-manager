@@ -50,7 +50,7 @@ public class BudgetService {
     return mapper.toDto(result);
   }
 
-  public List<BudgetResponse> getBudget(Long userId) {
+  public List<BudgetResponse> getBudgetList(Long userId) {
     return mapper.toDto(repository.findByUserId(userId));
   }
 

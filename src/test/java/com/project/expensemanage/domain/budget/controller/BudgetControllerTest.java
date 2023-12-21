@@ -10,13 +10,10 @@ import com.project.expensemanage.commone.config.SecurityConfig;
 import com.project.expensemanage.commone.security.annotation.WithMockCustomUser;
 import com.project.expensemanage.commone.security.config.AuthTestConfig;
 import com.project.expensemanage.domain.budget.mock.BudgetMock;
-import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.BudgetService;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -169,7 +166,7 @@ class BudgetControllerTest {
   @DisplayName("예산 조회 테스트")
   void get_budget_success_test() throws Exception {
     // given
-    BDDMockito.given(service.getBudget(anyLong())).willReturn(mock.getDtoMock());
+    BDDMockito.given(service.getBudgetList(anyLong())).willReturn(mock.getDtoMock());
     // when
     ResultActions perform =
         mvc.perform(
