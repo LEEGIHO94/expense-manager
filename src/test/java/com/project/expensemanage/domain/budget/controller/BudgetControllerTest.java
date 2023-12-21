@@ -1,6 +1,5 @@
 package com.project.expensemanage.domain.budget.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
