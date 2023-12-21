@@ -14,6 +14,7 @@ import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
+import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,16 @@ public class BudgetService {
         .ifPresent(
             d -> {
               throw new BusinessLogicException(BUDGET_EXIST);
+            });
+  }
+
+  public void deleteBudget(Long userId, Long budgetId) {
+    repository
+        .findById(budgetId)
+        .ifPresent(
+            d -> {
+              if (d.getUser().getId().equals(userId)) repository.deleteById(budgetId);
+              else throw new BusinessLogicException(UserExceptionCode.USER_NOT_SAME);
             });
   }
 }
