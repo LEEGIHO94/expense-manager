@@ -1,10 +1,12 @@
 package com.project.expensemanage.domain.budget.mock;
 
+import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
+import com.project.expensemanage.domain.category.dto.CategoryByBudget;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.vo.Phone;
 import com.project.expensemanage.domain.vo.Price;
@@ -77,5 +79,21 @@ public class BudgetMock {
 
   public Long getBudgetId() {
     return id;
+  }
+
+  public List<BudgetResponse> getDtoMock() {
+    return List.of(
+        BudgetResponse.builder()
+            .budgetId(1L)
+            .amount(100000L)
+            .date(LocalDate.now())
+            .category(new CategoryByBudget(4L, "카테고리4"))
+            .build(),
+        BudgetResponse.builder()
+            .budgetId(2L)
+            .amount(200000L)
+            .date(LocalDate.now())
+            .category(new CategoryByBudget(5L, "카테고리5"))
+            .build());
   }
 }
