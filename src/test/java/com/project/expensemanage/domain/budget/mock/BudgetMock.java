@@ -6,6 +6,8 @@ import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.dto.CategoryByBudget;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.vo.Phone;
@@ -96,4 +98,12 @@ public class BudgetMock {
             .category(new CategoryByBudget(5L, "카테고리5"))
             .build());
   }
+
+  public List<RecommendBudget> getDto(){
+    return List.of(
+        RecommendBudget.builder().categoryName("카테고리1").categoryId(1L).amount(10000L).build(),
+        RecommendBudget.builder().categoryName("카테고리2").categoryId(2L).amount(20000L).build(),
+        RecommendBudget.builder().categoryName("카테고리3").categoryId(3L).amount(30000L).build()
+    );
+}
 }

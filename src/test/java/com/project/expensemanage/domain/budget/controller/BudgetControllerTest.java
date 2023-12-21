@@ -27,6 +27,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -129,6 +130,9 @@ class BudgetControllerTest {
                 "patch-budget",
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                RequestDocumentation.pathParameters(
+                    RequestDocumentation.parameterWithName("budgetId").description("예산 식별자")
+                ),
                 PayloadDocumentation.requestFields(
                     PayloadDocumentation.fieldWithPath("amount")
                         .type(JsonFieldType.NUMBER)
@@ -198,6 +202,52 @@ class BudgetControllerTest {
                     PayloadDocumentation.fieldWithPath("data[].category").type(JsonFieldType.OBJECT).description("카테고리 데이터"),
                     PayloadDocumentation.fieldWithPath("data[].category.categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
                     PayloadDocumentation.fieldWithPath("data[].category.categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
+                )
+            ));
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트")
+  void get_recommendation_budget_success_test() throws Exception {
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform = mvc.perform(
+        MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
+            .param("amount","100000")
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "recommend-budget",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                RequestDocumentation.queryParameters(
+                    RequestDocumentation.parameterWithName("amount").description("사용자가 설정할 예산의 초액")
+                ),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.ARRAY)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자"),
+                    PayloadDocumentation.fieldWithPath("data[].amount").type(JsonFieldType.NUMBER).description("카테고리 별 예산"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
                 )
             ));
   }
