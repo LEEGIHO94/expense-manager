@@ -163,8 +163,8 @@ class BudgetControllerTest {
 
   @Test
   @WithMockCustomUser
-  @DisplayName("예산 조회 테스트")
-  void get_budget_success_test() throws Exception {
+  @DisplayName("예산 다건 조회 테스트")
+  void get_budget_list_success_test() throws Exception {
     // given
     BDDMockito.given(service.getBudgetList(anyLong())).willReturn(mock.getDtoMock());
     // when
@@ -179,7 +179,7 @@ class BudgetControllerTest {
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andDo(
             MockMvcRestDocumentation.document(
-                "get-budget",
+                "get-budgets",
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 PayloadDocumentation.responseFields(
@@ -211,6 +211,62 @@ class BudgetControllerTest {
                         .type(JsonFieldType.NUMBER)
                         .description("카테고리 식별자"),
                     PayloadDocumentation.fieldWithPath("data[].category.categoryName")
+                        .type(JsonFieldType.STRING)
+                        .description("카테고리 이름"))));
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 단건 조회 테스트")
+  void get_budget_success_test() throws Exception {
+    // given
+    BDDMockito.given(service.getBudget(anyLong(), anyLong())).willReturn(mock.getDtoMock().get(1));
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.get("/api/budgets" + "/{budgetId}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "get-budget",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                RequestDocumentation.pathParameters(
+                    RequestDocumentation.parameterWithName("budgetId").description("예산 식별자")),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.OBJECT)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.budgetId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 식별자"),
+                    PayloadDocumentation.fieldWithPath("data.date")
+                        .type(JsonFieldType.STRING)
+                        .description("예산 날짜"),
+                    PayloadDocumentation.fieldWithPath("data.amount")
+                        .type(JsonFieldType.NUMBER)
+                        .description("예산 금액"),
+                    PayloadDocumentation.fieldWithPath("data.category")
+                        .type(JsonFieldType.OBJECT)
+                        .description("카테고리 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.category.categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자"),
+                    PayloadDocumentation.fieldWithPath("data.category.categoryName")
                         .type(JsonFieldType.STRING)
                         .description("카테고리 이름"))));
   }
@@ -288,4 +344,5 @@ class BudgetControllerTest {
                 RequestDocumentation.pathParameters(
                     RequestDocumentation.parameterWithName("budgetId").description("예산 식별자"))));
   }
+
 }
