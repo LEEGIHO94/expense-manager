@@ -9,6 +9,7 @@ import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
+import com.project.expensemanage.domain.budget.exception.BudgetExceptionCode;
 import com.project.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
@@ -17,6 +18,7 @@ import com.project.expensemanage.domain.category.service.CategoryValidService;
 import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,22 @@ public class BudgetService {
   public List<BudgetResponse> getBudgetList(Long userId) {
     return mapper.toDto(repository.findByUserId(userId));
   }
+
+  public BudgetResponse getBudget(Long userId, Long budgetId){
+    return mapper.toDtoBudget(validBudget(userId,budgetId));
+}
+
+  private Budget validBudget(Long userId, Long budgetId){
+    Optional<Budget> find = repository.findById(budgetId);
+
+    Budget findEntity = find.orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
+
+    if(!findEntity.getUser().getId().equals(userId)){
+      throw new BusinessLogicException(UserExceptionCode.USER_NOT_SAME);
+    }
+    return findEntity;
+  }
+
 
   private Budget patch(Budget entity, PatchBudgetRequest patch) {
     Optional.ofNullable(patch.amount()).ifPresent(entity::updatePrice);

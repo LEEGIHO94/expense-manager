@@ -61,7 +61,7 @@ public class BudgetController {
   public ResponseEntity<ResponseDto<List<BudgetResponse>>> getBudget(@CurrentUser Long userId) {
     ResponseDto<List<BudgetResponse>> response =
         ResponseDto.<List<BudgetResponse>>builder()
-            .data(service.getBudget(userId))
+            .data(service.getBudgetList(userId))
             .status(ResponseStatus.GET)
             .build();
     return ResponseEntity.ok(response);
@@ -81,9 +81,18 @@ public class BudgetController {
     return ResponseEntity.ok().header(HttpHeaders.LOCATION, location.toString()).body(response);
   }
 
-  @DeleteMapping("/{budgetId")
+  @DeleteMapping("/{budgetId}")
   public ResponseEntity<Void> deleteBudget(@CurrentUser Long userId,@PathVariable Long budgetId){
     service.deleteBudget(userId,budgetId);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{budgetId}")
+  public ResponseEntity<ResponseDto<BudgetResponse>> getBudget(@CurrentUser Long userId,@PathVariable Long budgetId){
+    ResponseDto<BudgetResponse> response = ResponseDto.<BudgetResponse>builder()
+        .status(ResponseStatus.GET)
+        .data(service.getBudget(userId, budgetId))
+        .build();
+    return ResponseEntity.ok(response);
   }
 }

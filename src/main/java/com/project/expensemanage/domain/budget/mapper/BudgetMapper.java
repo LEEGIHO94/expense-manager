@@ -33,7 +33,7 @@ public class BudgetMapper {
     return entityList.stream().map(this::toDtoBudget).toList();
   }
 
-  private BudgetResponse toDtoBudget(Budget budget) {
+  public BudgetResponse toDtoBudget(Budget budget) {
     return BudgetResponse.builder()
         .date(budget.getDate())
         .amount(budget.getPrice().getValue())
