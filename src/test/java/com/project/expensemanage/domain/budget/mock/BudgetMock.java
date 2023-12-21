@@ -9,6 +9,8 @@ import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetD
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.dto.CategoryByBudget;
+import com.project.expensemanage.domain.category.entity.Category;
+import com.project.expensemanage.domain.category.enums.CategoryType;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.vo.Phone;
 import com.project.expensemanage.domain.vo.Price;
@@ -99,11 +101,28 @@ public class BudgetMock {
             .build());
   }
 
-  public List<RecommendBudget> getDto(){
+  public List<RecommendBudget> getDto() {
     return List.of(
         RecommendBudget.builder().categoryName("카테고리1").categoryId(1L).amount(10000L).build(),
         RecommendBudget.builder().categoryName("카테고리2").categoryId(2L).amount(20000L).build(),
-        RecommendBudget.builder().categoryName("카테고리3").categoryId(3L).amount(30000L).build()
-    );
-}
+        RecommendBudget.builder().categoryName("카테고리3").categoryId(3L).amount(30000L).build());
+  }
+
+  public List<Budget> entityMockList() {
+    return List.of(
+        Budget.builder()
+            .id(id)
+            .category(new Category(categoryId, "카테고리1", CategoryType.STANDARD))
+            .price(price)
+            .date(date)
+            .user(serviceUser)
+            .build(),
+        Budget.builder()
+            .id(id + 1)
+            .price(price)
+            .category(new Category(categoryId + 1, "카테고리2", CategoryType.STANDARD))
+            .date(date)
+            .user(serviceUser)
+            .build());
+  }
 }
