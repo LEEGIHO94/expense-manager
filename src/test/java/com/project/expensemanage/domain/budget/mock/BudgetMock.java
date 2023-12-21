@@ -23,21 +23,27 @@ import org.springframework.stereotype.Component;
 public class BudgetMock {
 
   private final Long id = 1L;
+  private final Long categoryId = 1L;
   private final Long amount = 100000L;
   private final Long patchedAmount = 200000L;
   private final Price price = new Price(amount);
   private final LocalDate date = LocalDate.of(2024, 1, 1);
   private final User serviceUser = entity();
   private final User requestUser = postEntity();
-  private final Long categoryId = 1L;
+  private final Category category = categoryEntity();
+
 
   public Budget entityMock() {
-    return Budget.builder().id(id).price(price).date(date).user(serviceUser).build();
+    return Budget.builder().id(id).price(price).category(category).date(date).user(serviceUser).build();
   }
 
   public Budget entityPostMock() {
     return Budget.builder().price(price).date(date).user(requestUser).build();
   }
+
+  public Category categoryEntity(){
+    return new Category(categoryId, "카테고리", CategoryType.STANDARD);
+}
 
   public PostBudgetRequest postDtoMock() {
     return PostBudgetRequest.builder()
