@@ -4,6 +4,7 @@ import static com.project.expensemanage.domain.budget.exception.BudgetExceptionC
 import static com.project.expensemanage.domain.budget.exception.BudgetExceptionCode.BUDGET_NOT_FOUND;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
+import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
@@ -48,7 +49,11 @@ public class BudgetService {
     return mapper.toDto(result);
   }
 
-  public Budget patch(Budget entity, PatchBudgetRequest patch) {
+  public List<BudgetResponse> getBudget(Long userId) {
+    return mapper.toDto(repository.findByUserId(userId));
+  }
+
+  private Budget patch(Budget entity, PatchBudgetRequest patch) {
     Optional.ofNullable(patch.amount()).ifPresent(entity::updatePrice);
     return entity;
   }

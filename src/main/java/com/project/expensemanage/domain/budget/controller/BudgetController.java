@@ -4,6 +4,7 @@ import com.project.expensemanage.commone.annotation.CurrentUser;
 import com.project.expensemanage.commone.dto.ResponseDto;
 import com.project.expensemanage.commone.dto.ResponseStatus;
 import com.project.expensemanage.commone.utils.response.UrlCreator;
+import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
@@ -55,6 +56,16 @@ public class BudgetController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping
+  public ResponseEntity<ResponseDto<List<BudgetResponse>>> getBudget(@CurrentUser Long userId) {
+    ResponseDto<List<BudgetResponse>> response =
+        ResponseDto.<List<BudgetResponse>>builder()
+            .data(service.getBudget(userId))
+            .status(ResponseStatus.GET)
+            .build();
+    return ResponseEntity.ok(response);
+  }
+
   @PatchMapping("/{budgetId}")
   public ResponseEntity<ResponseDto<BudgetIdResponse>> patchBudget(
       @PathVariable Long budgetId,
@@ -66,6 +77,6 @@ public class BudgetController {
             .status(ResponseStatus.CREATE)
             .build();
     URI location = UrlCreator.createUri(DEFAULT, response.getData().budgetId());
-    return ResponseEntity.ok().header(HttpHeaders.LOCATION,location.toString()).body(response);
+    return ResponseEntity.ok().header(HttpHeaders.LOCATION, location.toString()).body(response);
   }
 }
