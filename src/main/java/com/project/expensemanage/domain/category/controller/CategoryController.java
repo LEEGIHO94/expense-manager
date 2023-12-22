@@ -43,9 +43,11 @@ public class CategoryController {
 
   @GetMapping
   public ResponseEntity<ResponseDto<List<GetCategoryResponse>>> getCategoryList() {
-    List<Category> result = service.getCategoryList();
-
-    return ResponseEntity.ok(mapper.toDto(result));
+    ResponseDto<List<GetCategoryResponse>> response = ResponseDto.<List<GetCategoryResponse>>builder()
+        .status(ResponseStatus.GET)
+        .data(service.getCategoryList())
+        .build();
+    return ResponseEntity.ok(response);
   }
   //  @GetMapping("/{categoryId}")
   //  public ResponseEntity<ResponseDto<GetCategoryResponse>> getCategory(@PathVariable Long

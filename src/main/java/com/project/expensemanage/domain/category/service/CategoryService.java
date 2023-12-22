@@ -35,8 +35,8 @@ public class CategoryService {
             });
   }
 
-  public List<Category> getCategoryList() {
-    return repository.findAllByType();
+  public List<GetCategoryResponse> getCategoryList() {
+    return mapper.toGetListDto(repository.findAllByType());
   }
 
   public GetCategoryResponse getCategory(Long categoryId) {

@@ -25,19 +25,11 @@ public class CategoryMapper {
     return Category.builder().categoryType(post.categoryType()).name(post.name()).build();
   }
 
-
-  public ResponseDto<List<GetCategoryResponse>> toDto(List<Category> categoryList) {
-    return ResponseDto.<List<GetCategoryResponse>>builder()
-        .data(toGetListDto(categoryList))
-        .status(ResponseStatus.GET)
-        .build();
-  }
-
   public CategoryIdResponse toDto(Category category) {
     return CategoryIdResponse.builder().categoryId(category.getId()).build();
   }
 
-  private List<GetCategoryResponse> toGetListDto(List<Category> categoryList) {
+  public List<GetCategoryResponse> toGetListDto(List<Category> categoryList) {
     return categoryList.stream().map(this::toGetDto).toList();
   }
 

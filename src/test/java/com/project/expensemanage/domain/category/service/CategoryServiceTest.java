@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
 import com.project.expensemanage.domain.category.config.CategoryTestConfig;
+import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
 import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.exception.CategoryExceptionCode;
@@ -73,13 +74,13 @@ class CategoryServiceTest {
 
   @Test
   @DisplayName("카테고리 전체 조회 : 성공")
-  void get_category_success_test() throws Exception {
+  void get_category_success_test() {
     // given
     given(repository.findAllByType()).willReturn(mock.EntityListMock());
     // when
-    List<Category> result = service.getCategoryList();
+    List<GetCategoryResponse> result = service.getCategoryList();
     // then
-    Assertions.assertThat(result.stream().map((Category::getName)).toList())
+    Assertions.assertThat(result.stream().map((GetCategoryResponse::name)).toList())
         .containsExactlyElementsOf(mock.getNameList());
   }
 }

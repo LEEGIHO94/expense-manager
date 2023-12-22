@@ -54,7 +54,8 @@ class CategoryControllerTest {
     // given
     String content = objectMapper.writeValueAsString(mock.standardCategoryPostDto());
 
-    BDDMockito.given(service.postCategory(any(PostStandardCategoryRequest.class))).willReturn(mock.getIdDto());
+    BDDMockito.given(service.postCategory(any(PostStandardCategoryRequest.class)))
+        .willReturn(mock.getIdDto());
 
     // when
     ResultActions perform =
@@ -107,7 +108,7 @@ class CategoryControllerTest {
   @WithMockCustomUser
   void get_category_list_test() throws Exception {
     // given
-    BDDMockito.given(service.getCategoryList()).willReturn(mock.EntityListMock());
+    BDDMockito.given(service.getCategoryList()).willReturn(mock.getCategoryResponseList());
     // when
     ResultActions perform = mvc.perform(MockMvcRequestBuilders.get("/api/categories"));
     // then
