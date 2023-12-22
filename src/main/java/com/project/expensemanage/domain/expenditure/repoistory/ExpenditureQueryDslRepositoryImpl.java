@@ -48,7 +48,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 TotalExpenditureByCategory.class,
                 expenditure.category.id.as("categoryId"),
                 expenditure.category.name.as("categoryName"),
-                expenditure.price.value.sum().as("amount")))
+                expenditure.price.value.sum().as("budget")))
         .where(
             expenditureSumIncludeCondition(),
             userIdEq(condition.userId()),
@@ -66,7 +66,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 TotalExpenditureByCategory.class,
                 expenditure.category.id.as("categoryId"),
                 expenditure.category.name.as("categoryName"),
-                expenditure.price.value.sum().as("amount")))
+                expenditure.price.value.sum().as("budget")))
         .from(expenditure)
         .where(dailyExpendEq(date), userIdEq(userId))
         .groupBy()

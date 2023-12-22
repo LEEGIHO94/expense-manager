@@ -1,13 +1,17 @@
 package com.project.expensemanage.domain.expenditure.mock;
 
+import com.project.expensemanage.domain.category.dto.CategoryByExpenditure;
 import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.expenditure.controller.dto.request.PostExpenditureRequest;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse.ExpenditureCategory;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal;
 import com.project.expensemanage.domain.user.entity.User;
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -65,4 +69,15 @@ public class ExpenditureMock {
         .category(new GetCategoryResponse(1L,"카테고리 이름1"))
         .build();
   }
+
+  public ExpenditureListResponse getExpenditureListResponse(){
+    return new ExpenditureListResponse(getExpendtirueCategoryList());
+  }
+
+  public List<ExpenditureCategory> getExpendtirueCategoryList(){
+    return List.of(
+        new ExpenditureCategory(1L, LocalDate.now(), 10000L, new CategoryByExpenditure(1L,"카테고리 이름1",1000000L)),
+        new ExpenditureCategory(2L, LocalDate.now(), 20000L, new CategoryByExpenditure(2L,"카테고리 이름2",2000000L))
+        );
+}
 }

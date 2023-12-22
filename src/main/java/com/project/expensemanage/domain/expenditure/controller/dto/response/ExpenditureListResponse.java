@@ -5,15 +5,18 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public class ExpenditureListResponse {
 
   private final List<ExpenditureCategory> expenditureList;
 
   @Builder
   @AllArgsConstructor
+  @Getter
   public static class ExpenditureCategory {
 
     private final Long budgetId;
