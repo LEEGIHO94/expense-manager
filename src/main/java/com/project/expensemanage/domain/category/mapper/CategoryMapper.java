@@ -1,7 +1,5 @@
 package com.project.expensemanage.domain.category.mapper;
 
-import com.project.expensemanage.commone.dto.ResponseDto;
-import com.project.expensemanage.commone.dto.ResponseStatus;
 import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
 import com.project.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.project.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
@@ -33,7 +31,7 @@ public class CategoryMapper {
     return categoryList.stream().map(this::toGetDto).toList();
   }
 
-  private GetCategoryResponse toGetDto(Category category) {
+  public GetCategoryResponse toGetDto(Category category) {
     return GetCategoryResponse.builder()
         .categoryId(category.getId())
         .name(category.getName())

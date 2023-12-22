@@ -40,6 +40,10 @@ public class CategoryService {
   }
 
   public GetCategoryResponse getCategory(Long categoryId) {
-    return null;
+    return mapper.toGetDto(validCategory(categoryId));
   }
+
+  private Category validCategory(Long categoryId){
+    return repository.findById(categoryId).orElseThrow(() -> new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_FOUND));
+}
 }
