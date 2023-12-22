@@ -1,8 +1,12 @@
 package com.project.expensemanage.domain.category.service;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
+import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
+import com.project.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
+import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.exception.CategoryExceptionCode;
+import com.project.expensemanage.domain.category.mapper.CategoryMapper;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CategoryService {
   private final CategoryRepository repository;
+  private final CategoryMapper mapper;
 
-  public Category postCategory(Category category) {
-    validCategoryExist(category.getName());
-
-    return repository.save(category);
+  public CategoryIdResponse postCategory(PostStandardCategoryRequest post) {
+    validCategoryExist(post.name());
+    Category savedEntity = repository.save(mapper.toEntity(post));
+    return mapper.toDto(savedEntity);
   }
 
   private void validCategoryExist(String name) {
@@ -32,5 +37,9 @@ public class CategoryService {
 
   public List<Category> getCategoryList() {
     return repository.findAllByType();
+  }
+
+  public GetCategoryResponse getCategory(Long categoryId) {
+    return null;
   }
 }

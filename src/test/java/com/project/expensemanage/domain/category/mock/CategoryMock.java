@@ -2,6 +2,7 @@ package com.project.expensemanage.domain.category.mock;
 
 import com.project.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.project.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
+import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.enums.CategoryType;
 import java.util.ArrayList;
@@ -51,5 +52,9 @@ public class CategoryMock {
 
   public List<String> getNameList() {
     return nameList;
+  }
+
+  public CategoryIdResponse getIdDto() {
+    return new CategoryIdResponse(2L);
   }
 }

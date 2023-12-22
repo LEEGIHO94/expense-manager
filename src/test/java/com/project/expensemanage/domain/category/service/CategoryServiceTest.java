@@ -8,8 +8,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
+import com.project.expensemanage.domain.category.config.CategoryTestConfig;
+import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.exception.CategoryExceptionCode;
+import com.project.expensemanage.domain.category.mapper.CategoryMapper;
 import com.project.expensemanage.domain.category.mock.CategoryMock;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
 import java.util.List;
@@ -21,19 +24,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@Import({CategoryMock.class})
+@Import({CategoryTestConfig.class})
 class CategoryServiceTest {
 
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   CategoryMock mock;
 
-  @InjectMocks CategoryService service;
-  @Mock CategoryRepository repository;
+  @Autowired
+  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+  CategoryService service;
+
+  @MockBean CategoryRepository repository;
 
   @Test
   @DisplayName("카테고리 등록 테스트 : 성공")
@@ -44,11 +51,11 @@ class CategoryServiceTest {
     Category saveMock = mock.standardEntityMock();
     given(repository.save(any(Category.class))).willReturn(saveMock);
     // when
-    Category result = service.postCategory(saveMock);
+    CategoryIdResponse result = service.postCategory(mock.standardCategoryPostDto());
     // then
     verify(repository, times(1)).findByName(anyString());
     verify(repository, times(1)).save(any(Category.class));
-    Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(saveMock);
+    Assertions.assertThat(result.categoryId()).isEqualTo(100L);
   }
 
   @Test
@@ -59,7 +66,7 @@ class CategoryServiceTest {
     given(repository.findByName(anyString())).willReturn(Optional.of(mock.standardEntityMock()));
     // when
     // then
-    Assertions.assertThatThrownBy(() -> service.postCategory(mock.standardEntityPostMock()))
+    Assertions.assertThatThrownBy(() -> service.postCategory(mock.standardCategoryPostDto()))
         .isInstanceOf(BusinessLogicException.class)
         .hasMessage(CategoryExceptionCode.CATEGORY_EXIST.getMessage());
   }

@@ -1,9 +1,9 @@
 package com.project.expensemanage.domain.category.controller;
 
 import com.project.expensemanage.commone.dto.ResponseDto;
+import com.project.expensemanage.commone.dto.ResponseStatus;
 import com.project.expensemanage.commone.utils.response.UrlCreator;
 import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
-import com.project.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.project.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
@@ -29,22 +29,16 @@ public class CategoryController {
   private final CategoryService service;
   private final CategoryMapper mapper;
 
-  @PostMapping("/client")
-  public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(
-      @RequestBody @Valid PostCustomCategoryRequest post) {
-    Category result = service.postCategory(mapper.toEntity(post));
-    ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
-    URI location = UrlCreator.createUri(DEFAULT, result.getId());
-    return ResponseEntity.created(location).body(responseDto);
-  }
-
   @PostMapping("/admin")
   public ResponseEntity<ResponseDto<CategoryIdResponse>> postCustomCategory(
       @RequestBody @Valid PostStandardCategoryRequest post) {
-    Category result = service.postCategory(mapper.toEntity(post));
-    ResponseDto<CategoryIdResponse> responseDto = mapper.toDto(result);
-    URI location = UrlCreator.createUri(DEFAULT, result.getId());
-    return ResponseEntity.created(location).body(responseDto);
+    ResponseDto<CategoryIdResponse> response =
+        ResponseDto.<CategoryIdResponse>builder()
+            .data(service.postCategory(post))
+            .status(ResponseStatus.CREATE)
+            .build();
+    URI location = UrlCreator.createUri(DEFAULT, response.getData().categoryId());
+    return ResponseEntity.created(location).body(response);
   }
 
   @GetMapping
@@ -53,4 +47,9 @@ public class CategoryController {
 
     return ResponseEntity.ok(mapper.toDto(result));
   }
+  //  @GetMapping("/{categoryId}")
+  //  public ResponseEntity<ResponseDto<GetCategoryResponse>> getCategory(@PathVariable Long
+  // categoryId){
+  //    service.getCategory(categoryId);
+  //  }
 }

@@ -25,12 +25,6 @@ public class CategoryMapper {
     return Category.builder().categoryType(post.categoryType()).name(post.name()).build();
   }
 
-  public ResponseDto<CategoryIdResponse> toDto(Category category) {
-    return ResponseDto.<CategoryIdResponse>builder()
-        .status(ResponseStatus.CREATE)
-        .data(toIdDto(category))
-        .build();
-  }
 
   public ResponseDto<List<GetCategoryResponse>> toDto(List<Category> categoryList) {
     return ResponseDto.<List<GetCategoryResponse>>builder()
@@ -39,7 +33,7 @@ public class CategoryMapper {
         .build();
   }
 
-  private CategoryIdResponse toIdDto(Category category) {
+  public CategoryIdResponse toDto(Category category) {
     return CategoryIdResponse.builder().categoryId(category.getId()).build();
   }
 
