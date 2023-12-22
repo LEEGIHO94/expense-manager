@@ -12,6 +12,7 @@ import com.project.expensemanage.domain.expenditure.controller.dto.response.Expe
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.mock.ExpenditureMock;
 import com.project.expensemanage.domain.expenditure.repoistory.ExpenditureRepository;
+import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import com.project.expensemanage.domain.user.mock.UserMock;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -45,7 +46,7 @@ class ExpenditureServiceTest {
 
   @Test
   @DisplayName("지출 등록 테스트 : 성공")
-  void post_expenditure_test() throws Exception {
+  void post_expenditure_test() {
     // given
     Long userId = 1L;
 
@@ -62,7 +63,7 @@ class ExpenditureServiceTest {
 
   @Test
   @DisplayName("지출 등록 테스트 : 실패[카테고리 조회 실패]")
-  void post_expenditure_fail_test() throws Exception {
+  void post_expenditure_fail_test() {
     // given
     Long userId = 1L;
 
@@ -74,5 +75,45 @@ class ExpenditureServiceTest {
     // then
   }
 
+  @Test
+  @DisplayName("지출 삭제 테스트 : 성공")
+  void delete_expenditure_success_test() {
+    // given
+    Long userId = 1L;
 
+    given(repository.findById(anyLong())).willReturn(Optional.of(mock.getEntity()));
+    willDoNothing().given(repository).deleteById(anyLong());
+    // when
+    service.deleteExpenditure(mock.getId(), userId);
+    // then
+    Mockito.verify(repository, times(1)).deleteById(anyLong());
+  }
+
+  @Test
+  @DisplayName("지출 삭제 테스트 : 성공[조회한 지출이 없을 경우]")
+  void delete_expenditure_success_not_search_expenditure_test() {
+    // given
+    Long userId = 1L;
+
+    given(repository.findById(anyLong())).willReturn(Optional.empty());
+    willDoNothing().given(repository).deleteById(anyLong());
+    // when
+    service.deleteExpenditure(mock.getId(), userId);
+    // then
+    Mockito.verify(repository, times(0)).deleteById(anyLong());
+    Mockito.verify(repository, times(1)).findById(anyLong());
+  }
+
+  @Test
+  @DisplayName("지출 삭제 테스트 : 실패[사용자 권한 없음]")
+  void delete_expenditure_fail_test() {
+    // given
+    Long userId = 2L;
+
+    given(repository.findById(anyLong())).willReturn(Optional.of(mock.getEntity()));
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> service.deleteExpenditure(mock.getId(), userId))
+        .hasMessage(UserExceptionCode.USER_NOT_SAME.getMessage());
+  }
 }
