@@ -8,8 +8,10 @@ import com.project.expensemanage.domain.expenditure.controller.dto.response.Expe
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse.ExpenditureCategory;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
+import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal;
 import com.project.expensemanage.domain.user.entity.User;
+import com.project.expensemanage.domain.vo.Price;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -66,18 +68,31 @@ public class ExpenditureMock {
         .amount(amount)
         .memo(memo)
         .expendedDate(expenditureDate)
-        .category(new GetCategoryResponse(1L,"카테고리 이름1"))
+        .category(new GetCategoryResponse(1L, "카테고리 이름1"))
         .build();
   }
 
-  public ExpenditureListResponse getExpenditureListResponse(){
+  public ExpenditureListResponse getExpenditureListResponse() {
     return new ExpenditureListResponse(getExpendtirueCategoryList());
   }
 
-  public List<ExpenditureCategory> getExpendtirueCategoryList(){
+  public List<ExpenditureCategory> getExpendtirueCategoryList() {
     return List.of(
-        new ExpenditureCategory(1L, LocalDate.now(), 10000L, new CategoryByExpenditure(1L,"카테고리 이름1",1000000L)),
-        new ExpenditureCategory(2L, LocalDate.now(), 20000L, new CategoryByExpenditure(2L,"카테고리 이름2",2000000L))
-        );
-}
+        new ExpenditureCategory(
+            1L, LocalDate.now(), 10000L, new CategoryByExpenditure(1L, "카테고리 이름1", 1000000L)),
+        new ExpenditureCategory(
+            2L, LocalDate.now(), 20000L, new CategoryByExpenditure(2L, "카테고리 이름2", 2000000L)));
+  }
+
+  public Expenditure getEntity() {
+    return Expenditure.builder()
+        .id(expenditureId)
+        .expendedDate(expenditureDate)
+        .category(category)
+        .memo(memo)
+        .excludeSpendingTotal(include)
+        .price(new Price(amount))
+        .user(user)
+        .build();
+  }
 }
