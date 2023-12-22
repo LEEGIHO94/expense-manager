@@ -27,6 +27,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -36,16 +37,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Import({AuthTestConfig.class, JacksonConfig.class, SecurityConfig.class, ExpenditureMock.class})
 @AutoConfigureRestDocs
 class ExpenditureControllerTest {
+  final String DEFAULT = "/api/expenditures";
   @Autowired MockMvc mvc;
   @Autowired ObjectMapper objectMapper;
   @Autowired ExpenditureMock mock;
   @MockBean ExpenditureService service;
-  final String DEFAULT = "/api/expenditures";
 
   @Test
   @WithMockCustomUser
   @DisplayName("예산 등록 테스트")
-  void delete_budget_success_test() throws Exception {
+  void post_expenditure_success_test() throws Exception {
     // given
     String content = objectMapper.writeValueAsString(mock.getPostDtoMock());
 
@@ -99,6 +100,92 @@ class ExpenditureControllerTest {
                     HeaderDocumentation.headerWithName(HttpHeaders.LOCATION)
                         .description("리소스 위치"))));
   }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 등록 테스트 : 실패[과거의 예산 등록]")
+  void post_expenditure_fail_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.getPostDtoMockDateBadValidation());
+
+    BDDMockito.given(service.postExpenditure(Mockito.any(PostExpenditureRequest.class),anyLong())).willReturn(mock.getIdMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.post(DEFAULT)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 등록 테스트 : 실패[음수 예산 등록]")
+  void post_expenditure_fail_minus_amount_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.getPostDtoMockAmountBadValidation());
+
+    BDDMockito.given(service.postExpenditure(Mockito.any(PostExpenditureRequest.class),anyLong())).willReturn(mock.getIdMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.post(DEFAULT)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("등록된 예산 삭제 테스트")
+  void delete_expenditure_success_test() throws Exception {
+    // given
+
+    BDDMockito.given(service.postExpenditure(Mockito.any(PostExpenditureRequest.class),anyLong())).willReturn(mock.getIdMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.delete(DEFAULT + "/{expenditureId}",mock.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isNoContent())
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "delete-expenditure",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                RequestDocumentation.pathParameters(
+                    RequestDocumentation.parameterWithName("expenditureId").description("예산 식별자"))));
+  }
+
+  @Test
+  @DisplayName("등록된 예산 삭제 테스트 : 실패[사용자 미 로그인]")
+  void delete_expenditure_fail_test() throws Exception {
+    // given
+
+    BDDMockito.given(service.postExpenditure(Mockito.any(PostExpenditureRequest.class),anyLong())).willReturn(mock.getIdMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.delete(DEFAULT + "/{expenditureId}",mock.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
+
 
 
 }

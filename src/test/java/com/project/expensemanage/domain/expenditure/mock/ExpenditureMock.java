@@ -22,13 +22,34 @@ public class ExpenditureMock {
     return ExpenditureIdResponse.builder().expenditureId(expenditureId).build();
   }
 
-  public PostExpenditureRequest getPostDtoMock(){
+  public PostExpenditureRequest getPostDtoMock() {
     return PostExpenditureRequest.builder()
         .expendedAmount(10000L)
         .memo(memo)
         .categoryId(1L)
         .expendedDate(LocalDate.now())
         .build();
-}
+  }
 
+  public PostExpenditureRequest getPostDtoMockDateBadValidation() {
+    return PostExpenditureRequest.builder()
+        .expendedAmount(10000L)
+        .memo(memo)
+        .categoryId(1L)
+        .expendedDate(LocalDate.now().minusMonths(1))
+        .build();
+  }
+
+  public PostExpenditureRequest getPostDtoMockAmountBadValidation() {
+    return PostExpenditureRequest.builder()
+        .expendedAmount(-10000L)
+        .memo(memo)
+        .categoryId(1L)
+        .expendedDate(LocalDate.now())
+        .build();
+  }
+
+  public Long getId() {
+    return expenditureId;
+  }
 }
