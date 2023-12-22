@@ -2,6 +2,7 @@ package com.project.expensemanage.domain.category.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -74,7 +75,7 @@ class CategoryServiceTest {
 
   @Test
   @DisplayName("카테고리 전체 조회 : 성공")
-  void get_category_success_test() {
+  void get_category_list_success_test() {
     // given
     given(repository.findAllByType()).willReturn(mock.EntityListMock());
     // when
@@ -82,5 +83,29 @@ class CategoryServiceTest {
     // then
     Assertions.assertThat(result.stream().map((GetCategoryResponse::name)).toList())
         .containsExactlyElementsOf(mock.getNameList());
+  }
+
+  @Test
+  @DisplayName("카테고리 단건 조회 : 성공")
+  void get_category_success_test() {
+    // given
+    given(repository.findById(anyLong())).willReturn(Optional.of(mock.standardEntityMock()));
+    // when
+    GetCategoryResponse result = service.getCategory(100L);
+    // then
+    Assertions.assertThat(result.categoryId()).isEqualTo(100L);
+    Assertions.assertThat(result.name()).isEqualTo("교통비");
+  }
+
+  @Test
+  @DisplayName("카테고리 단건 조회 : 실패")
+  void get_category_fail_test() {
+    // given
+    given(repository.findById(anyLong())).willReturn(Optional.empty());
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> service.getCategory(anyLong()))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(CategoryExceptionCode.CATEGORY_NOT_FOUND.getMessage());
   }
 }
