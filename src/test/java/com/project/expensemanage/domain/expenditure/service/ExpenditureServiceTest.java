@@ -1,25 +1,23 @@
 package com.project.expensemanage.domain.expenditure.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.*;
 
 import com.project.expensemanage.domain.category.exception.CategoryExceptionCode;
 import com.project.expensemanage.domain.category.mock.CategoryMock;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
-import com.project.expensemanage.domain.category.service.CategoryValidService;
 import com.project.expensemanage.domain.expenditure.config.ExpenditureTestConfig;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
+import com.project.expensemanage.domain.expenditure.exception.ExpenditureExceptionCode;
 import com.project.expensemanage.domain.expenditure.mock.ExpenditureMock;
 import com.project.expensemanage.domain.expenditure.repoistory.ExpenditureRepository;
 import com.project.expensemanage.domain.user.exception.UserExceptionCode;
-import com.project.expensemanage.domain.user.mock.UserMock;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -116,4 +114,44 @@ class ExpenditureServiceTest {
     Assertions.assertThatThrownBy(() -> service.deleteExpenditure(mock.getId(), userId))
         .hasMessage(UserExceptionCode.USER_NOT_SAME.getMessage());
   }
+
+  @Test
+  @DisplayName("지출 단건 조회 테스트 : 성공")
+  void get_expenditure_success_test() {
+    // given
+    Long userId = 1L;
+    given(repository.findById(anyLong())).willReturn(Optional.of(mock.getEntity()));
+    // when
+    ExpenditureResponse result = service.getExpenditureDetails(userId, mock.getId());
+    // then
+    Assertions.assertThat(result.expenditureId()).isEqualTo(mock.getId());
+    Assertions.assertThat(result.amount()).isEqualTo(100000L);
+    Assertions.assertThat(result.memo()).isEqualTo("메모");
+    Assertions.assertThat(result.category().categoryId()).isEqualTo(1L);
+  }
+
+  @Test
+  @DisplayName("지출 단건 조회 테스트 : 실패[사용자 인증 실패]")
+  void get_expenditure_fail_test() {
+    // given
+    Long userId = 2L;
+    given(repository.findById(anyLong())).willReturn(Optional.of(mock.getEntity()));
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> service.getExpenditureDetails(userId, mock.getId()))
+        .hasMessage(UserExceptionCode.USER_NOT_SAME.getMessage());
+  }
+
+  @Test
+  @DisplayName("지출 단건 조회 테스트 : 실패[조회 실패]")
+  void get_expenditure_no_search_fail_test() {
+    // given
+    Long userId = 2L;
+    given(repository.findById(anyLong())).willReturn(Optional.empty());
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> service.getExpenditureDetails(userId, mock.getId()))
+        .hasMessage(ExpenditureExceptionCode.NOT_FOUND.getMessage());
+  }
+
 }
