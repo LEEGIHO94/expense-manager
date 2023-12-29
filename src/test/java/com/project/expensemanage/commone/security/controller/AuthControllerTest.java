@@ -20,12 +20,18 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.cookies.CookieDocumentation;
+import org.springframework.restdocs.headers.HeaderDocumentation;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,6 +40,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @WebMvcTest(AuthController.class)
 @Import({AuthTestConfig.class, SecurityConfig.class, JwtFilterDsl.class})
 @MockBean(JpaMetamodelMappingContext.class)
+@AutoConfigureRestDocs
 class AuthControllerTest {
 
   @Autowired MockMvc mvc;
@@ -63,7 +70,20 @@ class AuthControllerTest {
     perform
         .andExpect(MockMvcResultMatchers.status().isOk())
         .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
-        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
+        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"))
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "post-sign-in",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.requestFields(
+                    PayloadDocumentation.fieldWithPath("username").description("이메일(아이디)"),
+                    PayloadDocumentation.fieldWithPath("password").description("비밀번호")),
+                HeaderDocumentation.responseHeaders(
+                    HeaderDocumentation.headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("액세스 토큰")),
+                CookieDocumentation.responseCookies(
+                    CookieDocumentation.cookieWithName("Refresh").description("리프레시 토큰"))));
   }
 
   @Test
@@ -103,7 +123,19 @@ class AuthControllerTest {
     perform
         .andExpect(MockMvcResultMatchers.status().isNoContent())
         .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.AUTHORIZATION))
-        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"));
+        .andExpect(MockMvcResultMatchers.cookie().exists("Refresh"))
+        .andDo(
+            MockMvcRestDocumentation.document(
+                "post-reissue",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                CookieDocumentation.requestCookies(
+                    CookieDocumentation.cookieWithName("Refresh").description("리프레시 토큰")),
+                HeaderDocumentation.responseHeaders(
+                    HeaderDocumentation.headerWithName(HttpHeaders.AUTHORIZATION)
+                        .description("액세스 토큰(재발급)")),
+                CookieDocumentation.responseCookies(
+                    CookieDocumentation.cookieWithName("Refresh").description("리프레시 토큰(재발급)"))));
   }
 
   @Test
