@@ -4,6 +4,7 @@ import static com.project.expensemanage.domain.budget.exception.BudgetExceptionC
 import static com.project.expensemanage.domain.budget.exception.BudgetExceptionCode.BUDGET_NOT_FOUND;
 
 import com.project.expensemanage.commone.exception.BusinessLogicException;
+import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
@@ -13,6 +14,7 @@ import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
+import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,6 @@ public class BudgetService {
   public BudgetIdResponse postBudget(Long userId, PostBudgetRequest post) {
     validBudget(userId, post);
     Budget save = repository.save(mapper.toEntity(userId, post));
-
     return mapper.toDto(save);
   }
 
@@ -48,7 +49,41 @@ public class BudgetService {
     return mapper.toDto(result);
   }
 
-  public Budget patch(Budget entity, PatchBudgetRequest patch) {
+  public List<BudgetResponse> getBudgetList(Long userId) {
+    return mapper.toDto(repository.findByUserId(userId));
+  }
+
+  public BudgetResponse getBudget(Long userId, Long budgetId) {
+    return mapper.toDtoBudget(validBudget(userId, budgetId));
+  }
+
+  public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
+    return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
+        .getRecommendedData();
+  }
+
+  public void deleteBudget(Long userId, Long budgetId) {
+    repository
+        .findById(budgetId)
+        .ifPresent(
+            d -> {
+              if (d.getUser().getId().equals(userId)) repository.deleteById(budgetId);
+              else throw new BusinessLogicException(UserExceptionCode.USER_NOT_SAME);
+            });
+  }
+
+  private Budget validBudget(Long userId, Long budgetId) {
+    Optional<Budget> find = repository.findById(budgetId);
+
+    Budget findEntity = find.orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
+
+    if (!findEntity.getUser().getId().equals(userId)) {
+      throw new BusinessLogicException(UserExceptionCode.USER_NOT_SAME);
+    }
+    return findEntity;
+  }
+
+  private Budget patch(Budget entity, PatchBudgetRequest patch) {
     Optional.ofNullable(patch.amount()).ifPresent(entity::updatePrice);
     return entity;
   }
@@ -57,11 +92,6 @@ public class BudgetService {
     return repository
         .findByBudgetIdAndUserId(budgetId, userId)
         .orElseThrow(() -> new BusinessLogicException(BUDGET_NOT_FOUND));
-  }
-
-  public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
-    return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
-        .getRecommendedData();
   }
 
   // 예산이 이미 존재한다면 예외 발생

@@ -1,10 +1,16 @@
 package com.project.expensemanage.domain.budget.mock;
 
+import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
 import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
+import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
+import com.project.expensemanage.domain.category.dto.CategoryByBudget;
+import com.project.expensemanage.domain.category.entity.Category;
+import com.project.expensemanage.domain.category.enums.CategoryType;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.vo.Phone;
 import com.project.expensemanage.domain.vo.Price;
@@ -17,21 +23,27 @@ import org.springframework.stereotype.Component;
 public class BudgetMock {
 
   private final Long id = 1L;
+  private final Long categoryId = 1L;
   private final Long amount = 100000L;
   private final Long patchedAmount = 200000L;
   private final Price price = new Price(amount);
   private final LocalDate date = LocalDate.of(2024, 1, 1);
   private final User serviceUser = entity();
   private final User requestUser = postEntity();
-  private final Long categoryId = 1L;
+  private final Category category = categoryEntity();
+
 
   public Budget entityMock() {
-    return Budget.builder().id(id).price(price).date(date).user(serviceUser).build();
+    return Budget.builder().id(id).price(price).category(category).date(date).user(serviceUser).build();
   }
 
   public Budget entityPostMock() {
     return Budget.builder().price(price).date(date).user(requestUser).build();
   }
+
+  public Category categoryEntity(){
+    return new Category(categoryId, "카테고리", CategoryType.STANDARD);
+}
 
   public PostBudgetRequest postDtoMock() {
     return PostBudgetRequest.builder()
@@ -77,5 +89,46 @@ public class BudgetMock {
 
   public Long getBudgetId() {
     return id;
+  }
+
+  public List<BudgetResponse> getDtoMock() {
+    return List.of(
+        BudgetResponse.builder()
+            .budgetId(1L)
+            .amount(100000L)
+            .date(LocalDate.now())
+            .category(new CategoryByBudget(4L, "카테고리4"))
+            .build(),
+        BudgetResponse.builder()
+            .budgetId(2L)
+            .amount(200000L)
+            .date(LocalDate.now())
+            .category(new CategoryByBudget(5L, "카테고리5"))
+            .build());
+  }
+
+  public List<RecommendBudget> getDto() {
+    return List.of(
+        RecommendBudget.builder().categoryName("카테고리1").categoryId(1L).amount(10000L).build(),
+        RecommendBudget.builder().categoryName("카테고리2").categoryId(2L).amount(20000L).build(),
+        RecommendBudget.builder().categoryName("카테고리3").categoryId(3L).amount(30000L).build());
+  }
+
+  public List<Budget> entityMockList() {
+    return List.of(
+        Budget.builder()
+            .id(id)
+            .category(new Category(categoryId, "카테고리1", CategoryType.STANDARD))
+            .price(price)
+            .date(date)
+            .user(serviceUser)
+            .build(),
+        Budget.builder()
+            .id(id + 1)
+            .price(price)
+            .category(new Category(categoryId + 1, "카테고리2", CategoryType.STANDARD))
+            .date(date)
+            .user(serviceUser)
+            .build());
   }
 }

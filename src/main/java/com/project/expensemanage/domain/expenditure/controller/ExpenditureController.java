@@ -63,7 +63,7 @@ public class ExpenditureController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping()
+  @GetMapping
   public ResponseEntity<ResponseDto<ExpenditureListResponse>> getList(
       @ModelAttribute GetExpenditureList dto, @CurrentUser Long userId) {
     var response =
