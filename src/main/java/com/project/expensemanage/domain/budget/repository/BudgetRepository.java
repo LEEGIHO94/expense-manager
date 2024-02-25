@@ -48,4 +48,5 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
               join tb.category c
           """)
   List<RecommendedBudgetData> findTotalBudgetByCategory();
+
 }

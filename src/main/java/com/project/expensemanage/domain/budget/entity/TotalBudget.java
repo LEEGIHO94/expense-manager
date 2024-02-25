@@ -25,4 +25,8 @@ public class TotalBudget {
   private Long totalBudget;
   @OneToOne(mappedBy = "totalBudget")
   private Category category;
+
+  public void addTotalBudget(Long totalBudget){
+    this.totalBudget += totalBudget;
+  }
 }
