@@ -71,6 +71,10 @@ public class BudgetService {
     return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
         .getRecommendedData();
   }
+  public List<RecommendBudget> getRecommendedAmountForCategoryV2(Long totalAmount) {
+    return new RecommendBudgetHelper(repository.findTotalBudgetByCategory(), totalAmount)
+        .getRecommendedData();
+  }
 
   public void deleteBudget(Long userId, Long budgetId) {
     repository
