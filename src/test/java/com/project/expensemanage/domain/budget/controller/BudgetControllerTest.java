@@ -78,7 +78,7 @@ class BudgetControllerTest {
                     PayloadDocumentation.fieldWithPath("budgetDate")
                         .type(JsonFieldType.STRING)
                         .description("지출 일자"),
-                    PayloadDocumentation.fieldWithPath("budget")
+                    PayloadDocumentation.fieldWithPath("amount")
                         .type(JsonFieldType.NUMBER)
                         .description("지출 비용"),
                     PayloadDocumentation.fieldWithPath("categoryId")
@@ -133,7 +133,7 @@ class BudgetControllerTest {
                 RequestDocumentation.pathParameters(
                     RequestDocumentation.parameterWithName("budgetId").description("예산 식별자")),
                 PayloadDocumentation.requestFields(
-                    PayloadDocumentation.fieldWithPath("budget")
+                    PayloadDocumentation.fieldWithPath("amount")
                         .type(JsonFieldType.NUMBER)
                         .description("지출 비용"),
                     PayloadDocumentation.fieldWithPath("categoryId")
@@ -200,7 +200,7 @@ class BudgetControllerTest {
                     PayloadDocumentation.fieldWithPath("data[].date")
                         .type(JsonFieldType.STRING)
                         .description("예산 날짜"),
-                    PayloadDocumentation.fieldWithPath("data[].budget")
+                    PayloadDocumentation.fieldWithPath("data[].amount")
                         .type(JsonFieldType.NUMBER)
                         .description("예산 금액"),
                     PayloadDocumentation.fieldWithPath("data[].category")
@@ -256,7 +256,7 @@ class BudgetControllerTest {
                     PayloadDocumentation.fieldWithPath("data.date")
                         .type(JsonFieldType.STRING)
                         .description("예산 날짜"),
-                    PayloadDocumentation.fieldWithPath("data.budget")
+                    PayloadDocumentation.fieldWithPath("data.amount")
                         .type(JsonFieldType.NUMBER)
                         .description("예산 금액"),
                     PayloadDocumentation.fieldWithPath("data.category")
@@ -280,7 +280,7 @@ class BudgetControllerTest {
     ResultActions perform =
         mvc.perform(
             MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
-                .param("budget", "100000")
+                .param("amount", "100000")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
     // then
@@ -293,7 +293,7 @@ class BudgetControllerTest {
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 RequestDocumentation.queryParameters(
-                    RequestDocumentation.parameterWithName("budget")
+                    RequestDocumentation.parameterWithName("amount")
                         .description("사용자가 설정할 예산의 초액")),
                 PayloadDocumentation.responseFields(
                     PayloadDocumentation.fieldWithPath("timeStamp")
@@ -311,7 +311,7 @@ class BudgetControllerTest {
                     PayloadDocumentation.fieldWithPath("data[].categoryId")
                         .type(JsonFieldType.NUMBER)
                         .description("카테고리 식별자"),
-                    PayloadDocumentation.fieldWithPath("data[].budget")
+                    PayloadDocumentation.fieldWithPath("data[].amount")
                         .type(JsonFieldType.NUMBER)
                         .description("카테고리 별 예산"),
                     PayloadDocumentation.fieldWithPath("data[].categoryName")

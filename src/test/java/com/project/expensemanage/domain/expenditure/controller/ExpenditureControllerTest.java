@@ -223,7 +223,7 @@ class ExpenditureControllerTest {
                     PayloadDocumentation.fieldWithPath("data.expenditureId").type(JsonFieldType.NUMBER).description("지출 식별자"),
                     PayloadDocumentation.fieldWithPath("data.expendedDate").type(JsonFieldType.STRING).description("지출 날짜"),
                     PayloadDocumentation.fieldWithPath("data.memo").type(JsonFieldType.STRING).description("지출 메모"),
-                    PayloadDocumentation.fieldWithPath("data.budget").type(JsonFieldType.NUMBER).description("지출 비용"),
+                    PayloadDocumentation.fieldWithPath("data.amount").type(JsonFieldType.NUMBER).description("지출 비용"),
                     PayloadDocumentation.fieldWithPath("data.category").type(JsonFieldType.OBJECT).description("카테고리 데이터"),
                     PayloadDocumentation.fieldWithPath("data.category.categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
                     PayloadDocumentation.fieldWithPath("data.category.name").type(JsonFieldType.STRING).description("카테고리 이름"))

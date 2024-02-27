@@ -13,6 +13,7 @@ import com.project.expensemanage.domain.budget.mapper.BudgetMapper;
 import com.project.expensemanage.domain.budget.repository.BudgetRepository;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudgetHelper;
+import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.category.service.CategoryValidService;
 import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import java.util.List;
@@ -35,6 +36,15 @@ public class BudgetService {
     Budget save = repository.save(mapper.toEntity(userId, post));
     return mapper.toDto(save);
   }
+  public BudgetIdResponse postBudgetDBFix(Long userId, PostBudgetRequest post) {
+    validBudget(userId, post);
+    Budget save = repository.save(mapper.toEntity(userId, post));
+    Category category = categoryValid.validCategoryReturnEntity(post.categoryId());
+
+    category.getTotalBudget().addTotalBudget(post.amount());
+    return mapper.toDto(save);
+  }
+
 
   /*
    * 카테고리가 없으면 예외 발생
@@ -59,6 +69,10 @@ public class BudgetService {
 
   public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
     return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
+        .getRecommendedData();
+  }
+  public List<RecommendBudget> getRecommendedAmountForCategoryV2(Long totalAmount) {
+    return new RecommendBudgetHelper(repository.findTotalBudgetByCategory(), totalAmount)
         .getRecommendedData();
   }
 

@@ -56,6 +56,16 @@ public class BudgetController {
             .build();
     return ResponseEntity.ok(response);
   }
+  @GetMapping("/recommendation/v2")
+  public ResponseEntity<ResponseDto<List<RecommendBudget>>> getRecommendBudgetV2(
+      @RequestParam("amount") Long amount) {
+    ResponseDto<List<RecommendBudget>> response =
+        ResponseDto.<List<RecommendBudget>>builder()
+            .data(service.getRecommendedAmountForCategoryV2(amount))
+            .status(ResponseStatus.GET)
+            .build();
+    return ResponseEntity.ok(response);
+  }
 
   @GetMapping
   public ResponseEntity<ResponseDto<List<BudgetResponse>>> getBudget(@CurrentUser Long userId) {
