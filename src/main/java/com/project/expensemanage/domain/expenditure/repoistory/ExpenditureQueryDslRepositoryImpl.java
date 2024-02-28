@@ -69,7 +69,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 expenditure.price.value.sum().as("budget")))
         .from(expenditure)
         .where(dailyExpendEq(date), userIdEq(userId))
-        .groupBy()
+        .groupBy(expenditure.category.id)
         .fetch();
   }
 
