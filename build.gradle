@@ -117,7 +117,9 @@ jacoco {
     reportsDirectory = layout.buildDirectory.dir('reports/result')
 }
 
-test.finalizedBy 'jacocoTestReport'
+test{
+    finalizedBy 'jacocoTestReport'
+}
 
 
 jacocoTestReport {
@@ -131,18 +133,19 @@ jacocoTestReport {
 
     }
 
-//    finalizedBy 'jacocoTestCoverageVerification'
+    finalizedBy 'jacocoTestCoverageVerification'
 }
-//
-//jacocoTestCoverageVerification {
-//    violationRules {
-//        rule {
-//            limit {
-//                minimum = 0.10
-//            }
-//        }
-//    }
-//}
+
+jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.50
+            }
+        }
+    }
+}
 
 spotless {
     java {
