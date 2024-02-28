@@ -1,19 +1,17 @@
 package com.project.expensemanage.notification.expenseTracker.event.listener.implement;
 
 import static com.project.expensemanage.domain.user.enums.ServiceSubscriber.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.BDDMockito.*;
 
 import com.project.expensemanage.commone.utils.date.DateUtils;
 import com.project.expensemanage.domain.expenditure.repoistory.ExpenditureRepository;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
 import com.project.expensemanage.domain.user.entity.User;
-import com.project.expensemanage.domain.user.enums.ServiceSubscriber;
 import com.project.expensemanage.domain.user.repository.UserRepository;
+import com.project.expensemanage.notification.discord.mapper.DiscordMapper;
+import com.project.expensemanage.notification.discord.mapper.DiscordProperties;
 import com.project.expensemanage.notification.expenseTracker.event.event.TodayExpenditureEvent;
 import com.project.expensemanage.notification.expenseTracker.event.publisher.TodayTotalExpenditurePublisher;
-import com.project.expensemanage.notification.recommendation.event.event.DailyRecommendationExpenditureEvent;
-import com.project.expensemanage.notification.recommendation.repository.RecommendationRepository;
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -22,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.event.ApplicationEvents;
@@ -30,7 +29,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @RecordApplicationEvents
-@Import(TodayTotalExpenditurePublisher.class)
+@Import({TodayTotalExpenditurePublisher.class, DiscordMapper.class})
+@EnableConfigurationProperties(value = DiscordProperties.class)
 class DiscordNotificationListenerTest {
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
