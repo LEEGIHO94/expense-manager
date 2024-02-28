@@ -133,16 +133,36 @@ jacocoTestReport {
 
     }
 
+    def Qdomains = []
+    for(qPattern in "**/QA" .. "**/QZ"){
+        Qdomains.add(qPattern+"*")
+    }
+
+    afterEvaluate {
+
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: [] + Qdomains)
+        }))
+    }
+
     finalizedBy 'jacocoTestCoverageVerification'
 }
 
+//Q타입 제거
 jacocoTestCoverageVerification {
+    def Qdomains = []
+    for (qPattern in "*.QA".."*.QZ") {  // qPattern = "*.QA","*.QB","*.QC", ... "*.QZ"
+        Qdomains.add(qPattern + "*")
+    }
 
     violationRules {
         rule {
             limit {
                 minimum = 0.50
             }
+
+            excludes = [] + Qdomains
         }
     }
 }
