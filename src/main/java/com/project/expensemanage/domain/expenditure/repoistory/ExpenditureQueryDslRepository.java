@@ -12,6 +12,6 @@ public interface ExpenditureQueryDslRepository {
   List<TotalExpenditureByCategory> findTotalExpenditureByCategory(
       GetExpenditureDetailsCondition condition);
 
-  public List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(
+  List<TotalExpenditureByCategory> findDailyTotalExpenditureByUserId(
       Long userId, LocalDate date);
 }

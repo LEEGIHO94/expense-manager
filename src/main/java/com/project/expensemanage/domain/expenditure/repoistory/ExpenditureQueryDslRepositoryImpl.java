@@ -1,6 +1,5 @@
 package com.project.expensemanage.domain.expenditure.repoistory;
 
-import static com.project.expensemanage.domain.category.entity.QCategory.category;
 import static com.project.expensemanage.domain.expenditure.entity.QExpenditure.expenditure;
 import static com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -30,7 +29,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
   public List<Expenditure> findAllExpenditureByCondition(GetExpenditureDetailsCondition condition) {
     return query
         .selectFrom(expenditure)
-        .join(category)
+        .join(expenditure.category)
         .where(
             expendDateRange(condition.startDate(), condition.endDate()),
             userIdEq(condition.userId()),
