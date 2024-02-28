@@ -117,7 +117,9 @@ jacoco {
     reportsDirectory = layout.buildDirectory.dir('reports/result')
 }
 
-test.finalizedBy 'jacocoTestReport'
+test{
+    finalizedBy 'jacocoTestReport'
+}
 
 
 jacocoTestReport {
@@ -131,18 +133,39 @@ jacocoTestReport {
 
     }
 
-//    finalizedBy 'jacocoTestCoverageVerification'
+    def Qdomains = []
+    for(qPattern in "**/QA" .. "**/QZ"){
+        Qdomains.add(qPattern+"*")
+    }
+
+    afterEvaluate {
+
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: [] + Qdomains)
+        }))
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
 }
-//
-//jacocoTestCoverageVerification {
-//    violationRules {
-//        rule {
-//            limit {
-//                minimum = 0.10
-//            }
-//        }
-//    }
-//}
+
+//Q타입 제거
+jacocoTestCoverageVerification {
+    def Qdomains = []
+    for (qPattern in "*.QA".."*.QZ") {  // qPattern = "*.QA","*.QB","*.QC", ... "*.QZ"
+        Qdomains.add(qPattern + "*")
+    }
+
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.50
+            }
+
+            excludes = [] + Qdomains
+        }
+    }
+}
 
 spotless {
     java {
