@@ -3,11 +3,9 @@ package com.project.expensemanage.domain.expenditure.repoistory;
 
 
 import com.project.expensemanage.commone.config.QueryDslConfig;
-import com.project.expensemanage.domain.category.entity.Category;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
-import com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.GetExpenditureDetailsCondition;
-import com.project.expensemanage.domain.vo.Price;
+import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
@@ -35,33 +33,39 @@ class ExpenditureQueryDslRepositoryImplTest {
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   ExpenditureRepository repository;
-  Expenditure expenditure;
+  GetExpenditureDetailsCondition condition;
   @BeforeEach
   void init(){
-    expenditure = Expenditure.builder()
-        .id(1L)
-        .price(new Price(1000L))
-        .category(Category.builder().id(2L).build())
-        .expendedDate(LocalDate.of(2020,4,2))
-        .excludeSpendingTotal(ExcludeSpendingTotal.INCLUDE)
-        .build();
-  }
-
-  @Test
-  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회")
-  void get_expenditure_by_condition_test() throws Exception{
-      // given
-    GetExpenditureDetailsCondition dto = GetExpenditureDetailsCondition.builder()
+     condition = GetExpenditureDetailsCondition.builder()
         .userId(1L)
         .startDate(LocalDate.of(2010, 1, 1))
         .endDate(LocalDate.of(2011, 1, 1))
         .minAmount(1000L)
         .maxAmount(100000L)
         .build();
+  }
+
+  @Test
+  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회")
+  void get_expenditure_by_condition_test(){
+      // given
+
     // when
-    List<Expenditure> result = repository.findAllExpenditureByCondition(dto);
+    List<Expenditure> result = repository.findAllExpenditureByCondition(condition);
     // then
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
   }
+
+  @Test
+  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회")
+  void get_total_expenditure_by_category_test(){
+    // when
+    List<TotalExpenditureByCategory> result = repository.findTotalExpenditureByCategory(condition);
+    // then
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result).isInstanceOf(List.class);
+  }
+
+
 }

@@ -48,6 +48,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 expenditure.category.id.as("categoryId"),
                 expenditure.category.name.as("categoryName"),
                 expenditure.price.value.sum().as("budget")))
+        .from(expenditure)
         .where(
             expenditureSumIncludeCondition(),
             userIdEq(condition.userId()),
