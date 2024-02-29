@@ -11,11 +11,14 @@ import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.service.BudgetService;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequestMapping("/api/budgets")
 @RequiredArgsConstructor
@@ -48,7 +52,7 @@ public class BudgetController {
 
   @GetMapping("/recommendation")
   public ResponseEntity<ResponseDto<List<RecommendBudget>>> getRecommendBudget(
-      @RequestParam("amount") Long amount) {
+      @PositiveOrZero @RequestParam("amount") Long amount) {
     ResponseDto<List<RecommendBudget>> response =
         ResponseDto.<List<RecommendBudget>>builder()
             .data(service.getRecommendedAmountForCategory(amount))
@@ -56,9 +60,10 @@ public class BudgetController {
             .build();
     return ResponseEntity.ok(response);
   }
+
   @GetMapping("/recommendation/v2")
   public ResponseEntity<ResponseDto<List<RecommendBudget>>> getRecommendBudgetV2(
-      @RequestParam("amount") Long amount) {
+      @PositiveOrZero @RequestParam("amount") Long amount) {
     ResponseDto<List<RecommendBudget>> response =
         ResponseDto.<List<RecommendBudget>>builder()
             .data(service.getRecommendedAmountForCategoryV2(amount))
@@ -79,7 +84,7 @@ public class BudgetController {
 
   @PatchMapping("/{budgetId}")
   public ResponseEntity<ResponseDto<BudgetIdResponse>> patchBudget(
-      @PathVariable Long budgetId,
+      @Positive @PathVariable Long budgetId,
       @RequestBody @Valid PatchBudgetRequest patch,
       @CurrentUser Long userId) {
     ResponseDto<BudgetIdResponse> response =
@@ -92,17 +97,20 @@ public class BudgetController {
   }
 
   @DeleteMapping("/{budgetId}")
-  public ResponseEntity<Void> deleteBudget(@CurrentUser Long userId,@PathVariable Long budgetId){
-    service.deleteBudget(userId,budgetId);
+  public ResponseEntity<Void> deleteBudget(
+      @CurrentUser Long userId, @PositiveOrZero @PathVariable Long budgetId) {
+    service.deleteBudget(userId, budgetId);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{budgetId}")
-  public ResponseEntity<ResponseDto<BudgetResponse>> getBudget(@CurrentUser Long userId,@PathVariable Long budgetId){
-    ResponseDto<BudgetResponse> response = ResponseDto.<BudgetResponse>builder()
-        .status(ResponseStatus.GET)
-        .data(service.getBudget(userId, budgetId))
-        .build();
+  public ResponseEntity<ResponseDto<BudgetResponse>> getBudget(
+      @CurrentUser Long userId, @Positive @PathVariable Long budgetId) {
+    ResponseDto<BudgetResponse> response =
+        ResponseDto.<BudgetResponse>builder()
+            .status(ResponseStatus.GET)
+            .data(service.getBudget(userId, budgetId))
+            .build();
     return ResponseEntity.ok(response);
   }
 }

@@ -117,7 +117,8 @@ class BudgetControllerTest {
     // when
     ResultActions perform =
         mvc.perform(
-            RestDocumentationRequestBuilders.patch("/api/budgets" + "/{budgetId}", mock.getBudgetId())
+            RestDocumentationRequestBuilders.patch(
+                    "/api/budgets" + "/{budgetId}", mock.getBudgetId())
                 .content(content)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -158,6 +159,72 @@ class BudgetControllerTest {
                 HeaderDocumentation.responseHeaders(
                     HeaderDocumentation.headerWithName(HttpHeaders.LOCATION)
                         .description("리소스 위치"))));
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 수정 테스트: 실패 예산 식별자 음수")
+  void patch_budget_fail_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
+
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.patch("/api/budgets" + "/{budgetId}", -1)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 수정 테스트: 실패 패스 파라미터 타입 오류")
+  void patch_budget_fail_type_error_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
+
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.patch("/api/budgets" + "/{budgetId}", "한글")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 수정 테스트: 실패 패스 HTTP 메서드 타입 오류")
+  void patch_budget_fail_http_method_error_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
+
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.post("/api/budgets" + "/{budgetId}", 1)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
   }
 
   @Test
@@ -223,7 +290,7 @@ class BudgetControllerTest {
     // when
     ResultActions perform =
         mvc.perform(
-            RestDocumentationRequestBuilders.get("/api/budgets" + "/{budgetId}",1L)
+            RestDocumentationRequestBuilders.get("/api/budgets" + "/{budgetId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
     // then
@@ -321,6 +388,60 @@ class BudgetControllerTest {
 
   @Test
   @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트 : amount 음수 삽입 실패")
+  void get_recommendation_budget_fail_test() throws Exception {
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
+                .param("amount", "-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트 : 파라미터 타입 오류 실패")
+  void get_recommendation_budget_fail_cast_error_test() throws Exception {
+
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
+                .param("amount", "한글")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+  @Test
+  @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트 : 파라미터 미등록 실패")
+  void get_recommendation_budget_fail_no_parameter_test() throws Exception {
+
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
   @DisplayName("예산 삭제 테스트")
   void delete_budget_success_test() throws Exception {
     // given
@@ -344,4 +465,21 @@ class BudgetControllerTest {
                     RequestDocumentation.parameterWithName("budgetId").description("예산 식별자"))));
   }
 
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 삭제 테스트: 예산 식별자 음수 실패")
+  void delete_budget_fail_test() throws Exception {
+    // given
+    BDDMockito.willDoNothing().given(service).deleteBudget(anyLong(), anyLong());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.delete("/api/budgets" + "/{budgetId}", -1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
 }

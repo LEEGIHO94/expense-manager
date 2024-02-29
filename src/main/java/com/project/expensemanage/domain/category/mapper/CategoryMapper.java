@@ -1,7 +1,6 @@
 package com.project.expensemanage.domain.category.mapper;
 
 import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
-import com.project.expensemanage.domain.category.dto.request.PostCustomCategoryRequest;
 import com.project.expensemanage.domain.category.dto.request.PostStandardCategoryRequest;
 import com.project.expensemanage.domain.category.dto.response.CategoryIdResponse;
 import com.project.expensemanage.domain.category.entity.Category;
@@ -13,10 +12,6 @@ public class CategoryMapper {
 
   public static Category toIdEntity(Long categoryId) {
     return Category.builder().id(categoryId).build();
-  }
-
-  public Category toEntity(PostCustomCategoryRequest post) {
-    return Category.builder().categoryType(post.categoryType()).name(post.name()).build();
   }
 
   public Category toEntity(PostStandardCategoryRequest post) {

@@ -34,8 +34,8 @@ class ExpenditureRepositoryTest {
     condition =
         GetExpenditureDetailsCondition.builder()
             .userId(1L)
-            .startDate(LocalDate.of(2010, 1, 1))
-            .endDate(LocalDate.of(2011, 1, 1))
+            .startDate(LocalDate.of(2020, 1, 1))
+            .endDate(LocalDate.of(2021, 1, 1))
             .minAmount(1000L)
             .maxAmount(100000L)
             .build();
@@ -103,8 +103,8 @@ class ExpenditureRepositoryTest {
     condition =
         GetExpenditureDetailsCondition.builder()
             .userId(1L)
-            .startDate(LocalDate.of(2010, 1, 1))
-            .endDate(LocalDate.of(2011, 1, 1))
+            .startDate(LocalDate.of(2020, 1, 1))
+            .endDate(LocalDate.of(2021, 1, 1))
             .build();
     // when
     List<Expenditure> result = repository.findAllExpenditureByCondition(condition);
