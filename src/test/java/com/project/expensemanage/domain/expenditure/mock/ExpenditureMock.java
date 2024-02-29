@@ -3,6 +3,7 @@ package com.project.expensemanage.domain.expenditure.mock;
 import com.project.expensemanage.domain.category.dto.CategoryByExpenditure;
 import com.project.expensemanage.domain.category.dto.GetCategoryResponse;
 import com.project.expensemanage.domain.category.entity.Category;
+import com.project.expensemanage.domain.expenditure.controller.dto.request.GetExpenditureList;
 import com.project.expensemanage.domain.expenditure.controller.dto.request.PostExpenditureRequest;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
@@ -10,6 +11,7 @@ import com.project.expensemanage.domain.expenditure.controller.dto.response.Expe
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal;
+import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
 import com.project.expensemanage.domain.user.entity.User;
 import com.project.expensemanage.domain.vo.Price;
 import java.time.LocalDate;
@@ -94,5 +96,18 @@ public class ExpenditureMock {
         .price(new Price(amount))
         .user(user)
         .build();
+  }
+
+  public List<Expenditure> getEntityList() {
+    return List.of(getEntity());
+  }
+
+  public List<TotalExpenditureByCategory> getTotalExpenditureByCategory() {
+    return List.of(new TotalExpenditureByCategory(1L, "카테고리이름1", 10000L));
+  }
+
+  public GetExpenditureList getGetExpenditureListDto() {
+    return new GetExpenditureList(
+        1L, LocalDate.of(2020, 2, 1), LocalDate.of(2020, 3, 1), 1000L, 10000000L);
   }
 }

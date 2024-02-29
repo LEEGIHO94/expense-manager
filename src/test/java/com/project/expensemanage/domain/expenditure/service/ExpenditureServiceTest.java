@@ -6,13 +6,17 @@ import com.project.expensemanage.domain.category.exception.CategoryExceptionCode
 import com.project.expensemanage.domain.category.mock.CategoryMock;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
 import com.project.expensemanage.domain.expenditure.config.ExpenditureTestConfig;
+import com.project.expensemanage.domain.expenditure.controller.dto.request.GetExpenditureList;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.exception.ExpenditureExceptionCode;
 import com.project.expensemanage.domain.expenditure.mock.ExpenditureMock;
 import com.project.expensemanage.domain.expenditure.repoistory.ExpenditureRepository;
+import com.project.expensemanage.domain.expenditure.repoistory.dto.GetExpenditureDetailsCondition;
 import com.project.expensemanage.domain.user.exception.UserExceptionCode;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -154,4 +158,27 @@ class ExpenditureServiceTest {
         .hasMessage(ExpenditureExceptionCode.NOT_FOUND.getMessage());
   }
 
+  @Test
+  @DisplayName("조건별 리스트 조회 : 성공")
+  void get_expenditure_list_by_condition_test() {
+    // given
+    Long userId = 2L;
+    GetExpenditureList dto = mock.getGetExpenditureListDto();
+
+    given(
+            repository.findAllExpenditureByCondition(
+                Mockito.any(GetExpenditureDetailsCondition.class)))
+        .willReturn(mock.getEntityList());
+    given(
+            repository.findTotalExpenditureByCategory(
+                Mockito.any(GetExpenditureDetailsCondition.class)))
+        .willReturn(mock.getTotalExpenditureByCategory());
+    // when
+    ExpenditureListResponse result = service.getExpenditureListByCondition(dto,1L);
+    // then
+    Assertions.assertThat(result.getExpenditureList()).isNotEmpty();
+    Assertions.assertThat(result.getExpenditureList().get(0).getBudgetId()).isEqualTo(1L);
+    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isAfterOrEqualTo(LocalDate.of(2024,02,01));
+    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isBefore(LocalDate.of(2024,03,01));
+  }
 }

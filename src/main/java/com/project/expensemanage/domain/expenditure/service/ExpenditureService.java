@@ -55,6 +55,7 @@ public class ExpenditureService {
    * 1. 카테고리가 존재하면 해당 카테고리의 데이터만 조회
    * 2. 최대, 최소 금액 설정 시 해당 금액 범위만 조회
    * 3. 특정 기간 조회 (필수) 즉 특정 기간 조회는 필수로 하되 최대 최소 금액, 카테고리가 존재하면 해당 데이터를 받아와라
+   * 4. 양방향 매핑을 하지 않아 2회 조회를 들어간 것
    * */
   public ExpenditureListResponse getExpenditureListByCondition(
       GetExpenditureList dto, Long userId) {
