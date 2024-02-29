@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
@@ -72,5 +73,33 @@ class ObjectMapperUtilsTest {
     Assertions.assertThatThrownBy(() -> utils.toStringValue(mock))
         .isInstanceOf(BusinessLogicException.class)
         .hasMessage(CommonExceptionCode.TRANS_JSON_ERROR.getMessage());
+  }
+
+  @Test
+  @DisplayName("Request 속 JSON -> Entity 변환 성공")
+  void entity_to_string_within_request_success_test() {
+    // given
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setContent(json.getBytes());
+    request.setContentType("application/json");
+    // when
+    Category result = utils.toEntity(request, Category.class);
+    // then
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getId()).isEqualTo(entity.getId());
+  }
+
+  @Test
+  @DisplayName("Request 속 JSON -> Entity 변환 실패")
+  void entity_to_string_within_request_fail_test() {
+    // given
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setContent(jsonWrong.getBytes());
+    request.setContentType("application/json");
+    // when
+    // then
+    Assertions.assertThatThrownBy(() -> utils.toEntity(request, Category.class))
+        .isInstanceOf(BusinessLogicException.class)
+        .hasMessage(CommonExceptionCode.TRANS_ENTITY_ERROR.getMessage());
   }
 }
