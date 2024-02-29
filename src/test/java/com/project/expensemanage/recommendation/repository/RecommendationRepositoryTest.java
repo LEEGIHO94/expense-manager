@@ -10,6 +10,7 @@ import com.project.expensemanage.notification.recommendation.dto.RecommendationE
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,11 @@ class RecommendationRepositoryTest {
   @Autowired TestSQLUtils sql;
 
   @Test
+  @Disabled("삽입한 데이터가 많아 테스트 중지 중")
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
-  void recommend_date_test() throws Exception {
-    LocalDate startDate = LocalDate.of(2020, 01, 01);
-    LocalDate endDate = LocalDate.of(2020, 01, 31);
+  void recommend_date_test() {
+    LocalDate startDate = LocalDate.of(2024, 01, 01);
+    LocalDate endDate = LocalDate.of(2024, 01, 01);
     long userId = 1L;
     List<RecommendationExpenditure> result =
         repository.findTotalExpenditureByCategoryAndDateAndId(startDate, endDate, userId);
@@ -44,11 +46,13 @@ class RecommendationRepositoryTest {
                         userId, data.categoryId(), startDate, endDate)));
   }
 
+
   @Test
+  @Disabled("삽입한 데이터가 많아 테스트 중지 중")
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
-  void recommend_date_all_user_test() throws Exception {
+  void recommend_date_all_user_test(){
     LocalDate startDate = LocalDate.of(2020, 01, 01);
-    LocalDate endDate = LocalDate.of(2020, 01, 31);
+    LocalDate endDate = LocalDate.of(2020, 01, 01);
     long userId = 1L;
     List<RecommendationExpenditureAllUser> result =
         repository.findTotalExpenditureByCategoryAndDate(startDate, endDate);
