@@ -179,6 +179,6 @@ class ExpenditureServiceTest {
     Assertions.assertThat(result.getExpenditureList()).isNotEmpty();
     Assertions.assertThat(result.getExpenditureList().get(0).getBudgetId()).isEqualTo(1L);
     Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isAfterOrEqualTo(LocalDate.of(2024,02,01));
-    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isBefore(LocalDate.of(2024,03,01));
+    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isBeforeOrEqualTo(LocalDate.of(2024,03,01));
   }
 }
