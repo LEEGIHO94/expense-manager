@@ -17,7 +17,7 @@ public class AnalysisQueryDslRepositoryImpl implements AnalysisQueryDslRepositor
   private final JPAQueryFactory query;
 
   @Override
-  public List<ExpenditureDiff> getRateOfExpenditureDiff(
+  public List<ExpenditureDiff> getExpenditureSumDuringDateRange(
       Long userId, LocalDate startDate, LocalDate endDate) {
     return query
         .select(

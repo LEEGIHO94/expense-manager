@@ -37,10 +37,10 @@ class AnalysisServiceTest {
     // given
     Long userId = 1L;
     BDDMockito.given(
-            repository.getRateOfExpenditureDiff(1L, LocalDate.now(), LocalDate.now().minusWeeks(1)))
+            repository.getExpenditureSumDuringDateRange(1L, LocalDate.now(), LocalDate.now().minusWeeks(1)))
         .willReturn(expenditureDiffList());
     BDDMockito.given(
-            repository.getRateOfExpenditureDiff(
+            repository.getExpenditureSumDuringDateRange(
                 1L, LocalDate.now().minusWeeks(1), LocalDate.now().minusWeeks(2)))
         .willReturn(lastExpenditureList());
 
@@ -60,11 +60,11 @@ class AnalysisServiceTest {
     // given
     Long userId = 1L;
     BDDMockito.given(
-            repository.getRateOfExpenditureDiff(
+            repository.getExpenditureSumDuringDateRange(
                 1L, LocalDate.now(), LocalDate.now().minusMonths(1)))
         .willReturn(expenditureDiffList());
     BDDMockito.given(
-            repository.getRateOfExpenditureDiff(
+            repository.getExpenditureSumDuringDateRange(
                 1L, LocalDate.now().minusMonths(1), LocalDate.now().minusMonths(2)))
         .willReturn(lastExpenditureList());
 

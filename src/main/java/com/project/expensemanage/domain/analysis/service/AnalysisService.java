@@ -93,7 +93,7 @@ public class AnalysisService {
 
   private List<ExpenditureDiff> getExpenditureDateRange(
       Long userId, LocalDate startDate, LocalDate endDate) {
-    return repository.getRateOfExpenditureDiff(userId, startDate, endDate);
+    return repository.getExpenditureSumDuringDateRange(userId, startDate, endDate);
   }
 
   private long getTotalExpenditureExcludeUser(ExpenditureTotalUser totalExpenditureAllUserAndUser) {

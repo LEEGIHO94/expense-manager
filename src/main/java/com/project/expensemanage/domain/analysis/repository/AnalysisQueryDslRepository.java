@@ -5,6 +5,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AnalysisQueryDslRepository {
-  List<ExpenditureDiff> getRateOfExpenditureDiff(
+  List<ExpenditureDiff> getExpenditureSumDuringDateRange(
       Long userId, LocalDate startDate, LocalDate endDate);
 }
