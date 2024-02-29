@@ -8,4 +8,9 @@ class ExpenseManageApplicationTests {
 
   @Test
   void contextLoads() {}
+
+  @Test
+  void main(){
+    ExpenseManageApplication.main(new String[]{});
+  }
 }
