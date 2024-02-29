@@ -4,8 +4,6 @@ import com.project.expensemanage.commone.config.QueryDslConfig;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.GetExpenditureDetailsCondition;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -24,9 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({ExpenditureQueryDslRepositoryImpl.class, QueryDslConfig.class})
-class ExpenditureQueryDslRepositoryImplTest {
-  @PersistenceContext EntityManager em;
-
+class ExpenditureRepositoryTest {
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   ExpenditureRepository repository;
@@ -55,6 +51,66 @@ class ExpenditureQueryDslRepositoryImplTest {
     // then
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
+    for (Expenditure expenditure : result) {
+      Assertions.assertThat(expenditure.getPrice().getValue()).isBetween(1000L,100000L);
+    }
+  }
+  @Test
+  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : min 값 미 등록")
+  void get_expenditure_by_condition_min_null_test() {
+    // given
+    condition =
+        GetExpenditureDetailsCondition.builder()
+            .userId(1L)
+            .startDate(LocalDate.of(2020, 1, 1))
+            .endDate(LocalDate.of(2031, 1, 1))
+            .maxAmount(100000L)
+            .build();
+    // when
+    List<Expenditure> result = repository.findAllExpenditureByCondition(condition);
+    // then
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result).isInstanceOf(List.class);
+    for (Expenditure expenditure : result) {
+      Assertions.assertThat(expenditure.getPrice().getValue()).isLessThanOrEqualTo(100000L);
+    }
+  }
+  @Test
+  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max 값 미 등록")
+  void get_expenditure_by_condition_max_null_test() {
+    // given
+    condition =
+        GetExpenditureDetailsCondition.builder()
+            .userId(1L)
+            .startDate(LocalDate.of(2020, 1, 1))
+            .endDate(LocalDate.of(2021, 1, 1))
+            .minAmount(1000L)
+            .build();
+    // when
+    List<Expenditure> result = repository.findAllExpenditureByCondition(condition);
+    // then
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result).isInstanceOf(List.class);
+
+    for (Expenditure expenditure : result) {
+      Assertions.assertThat(expenditure.getPrice().getValue()).isGreaterThanOrEqualTo(1000L);
+    }
+  }
+  @Test
+  @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max, min null")
+  void get_expenditure_by_condition_max_min_null_test() {
+    // given
+    condition =
+        GetExpenditureDetailsCondition.builder()
+            .userId(1L)
+            .startDate(LocalDate.of(2010, 1, 1))
+            .endDate(LocalDate.of(2011, 1, 1))
+            .build();
+    // when
+    List<Expenditure> result = repository.findAllExpenditureByCondition(condition);
+    // then
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result).isInstanceOf(List.class);
   }
 
   @Test
@@ -77,4 +133,5 @@ class ExpenditureQueryDslRepositoryImplTest {
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
   }
+
 }

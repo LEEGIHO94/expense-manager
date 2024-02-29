@@ -94,12 +94,6 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
     if (isEmpty(min) && isEmpty(max)) {
       return null;
     }
-    if (isEmpty(min) && !isEmpty(max)) {
-      expenditure.price.value.loe(max);
-    }
-    if (!isEmpty(min) && isEmpty(max)) {
-      expenditure.price.value.goe(min);
-    }
     return expenditure.price.value.between(min, max);
   }
 }
