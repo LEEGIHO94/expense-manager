@@ -185,6 +185,50 @@ class BudgetControllerTest {
 
   @Test
   @WithMockCustomUser
+  @DisplayName("예산 수정 테스트: 실패 패스 파라미터 타입 오류")
+  void patch_budget_fail_type_error_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
+
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.patch("/api/budgets" + "/{budgetId}", "한글")
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("예산 수정 테스트: 실패 패스 HTTP 메서드 타입 오류")
+  void patch_budget_fail_http_method_error_test() throws Exception {
+    // given
+    String content = objectMapper.writeValueAsString(mock.patchDtoMock());
+
+    BDDMockito.given(service.patchBudget(anyLong(), anyLong(), any(PatchBudgetRequest.class)))
+        .willReturn(mock.idDtoMock());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            RestDocumentationRequestBuilders.post("/api/budgets" + "/{budgetId}", 1)
+                .content(content)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    // then
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isMethodNotAllowed());
+  }
+
+  @Test
+  @WithMockCustomUser
   @DisplayName("예산 다건 조회 테스트")
   void get_budget_list_success_test() throws Exception {
     // given
@@ -353,6 +397,42 @@ class BudgetControllerTest {
         mvc.perform(
             MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
                 .param("amount", "-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트 : 파라미터 타입 오류 실패")
+  void get_recommendation_budget_fail_cast_error_test() throws Exception {
+
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
+                .param("amount", "한글")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON));
+    perform
+        .andDo(MockMvcResultHandlers.log())
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+  @Test
+  @WithMockCustomUser
+  @DisplayName("추천 예산 조회 테스트 : 파라미터 미등록 실패")
+  void get_recommendation_budget_fail_no_parameter_test() throws Exception {
+
+    // given
+    BDDMockito.given(service.getRecommendedAmountForCategory(anyLong())).willReturn(mock.getDto());
+    // when
+    ResultActions perform =
+        mvc.perform(
+            MockMvcRequestBuilders.get("/api/budgets" + "/recommendation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
     perform
