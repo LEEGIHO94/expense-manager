@@ -39,10 +39,6 @@ public class ErrorResponse {
     return new ErrorResponse(null, ConstraintViolationError.of(violations));
   }
 
-  public static ErrorResponse of(HttpStatus httpStatus) {
-    return new ErrorResponse(httpStatus, httpStatus.getReasonPhrase());
-  }
-
   public static ErrorResponse of(HttpStatus httpStatus, String message) {
     return new ErrorResponse(httpStatus, message);
   }
