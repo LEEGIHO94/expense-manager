@@ -1,6 +1,5 @@
 package com.project.expensemanage.domain.expenditure.repoistory;
 
-import static com.project.expensemanage.domain.category.entity.QCategory.category;
 import static com.project.expensemanage.domain.expenditure.entity.QExpenditure.expenditure;
 import static com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal.*;
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -30,7 +29,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
   public List<Expenditure> findAllExpenditureByCondition(GetExpenditureDetailsCondition condition) {
     return query
         .selectFrom(expenditure)
-        .join(category)
+        .join(expenditure.category)
         .where(
             expendDateRange(condition.startDate(), condition.endDate()),
             userIdEq(condition.userId()),
@@ -49,6 +48,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 expenditure.category.id.as("categoryId"),
                 expenditure.category.name.as("categoryName"),
                 expenditure.price.value.sum().as("budget")))
+        .from(expenditure)
         .where(
             expenditureSumIncludeCondition(),
             userIdEq(condition.userId()),
@@ -69,7 +69,7 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
                 expenditure.price.value.sum().as("budget")))
         .from(expenditure)
         .where(dailyExpendEq(date), userIdEq(userId))
-        .groupBy()
+        .groupBy(expenditure.category.id)
         .fetch();
   }
 
@@ -93,12 +93,6 @@ public class ExpenditureQueryDslRepositoryImpl implements ExpenditureQueryDslRep
   private BooleanExpression amountBetweenRequest(Long min, Long max) {
     if (isEmpty(min) && isEmpty(max)) {
       return null;
-    }
-    if (isEmpty(min) && !isEmpty(max)) {
-      expenditure.price.value.loe(max);
-    }
-    if (!isEmpty(min) && isEmpty(max)) {
-      expenditure.price.value.goe(min);
     }
     return expenditure.price.value.between(min, max);
   }
