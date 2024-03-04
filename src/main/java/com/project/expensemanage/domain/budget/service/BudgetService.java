@@ -19,6 +19,7 @@ import com.project.expensemanage.domain.user.exception.UserExceptionCode;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +68,7 @@ public class BudgetService {
     return mapper.toDtoBudget(validBudget(userId, budgetId));
   }
 
+  @Cacheable(cacheNames = "BUDGET",key = "'total_amount'")
   public List<RecommendBudget> getRecommendedAmountForCategory(Long totalAmount) {
     return new RecommendBudgetHelper(repository.findTotalAmountByCategory(), totalAmount)
         .getRecommendedData();

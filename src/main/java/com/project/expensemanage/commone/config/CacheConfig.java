@@ -2,6 +2,7 @@ package com.project.expensemanage.commone.config;
 
 import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
 
+import com.project.expensemanage.commone.config.cache.CacheKey;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.FixedDurationTtlFunction;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter.TtlFunction;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -19,7 +19,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @EnableCaching
 public class CacheConfig {
-
   @Bean
   public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
     return RedisCacheManager.builder(connectionFactory)
@@ -40,9 +39,13 @@ public class CacheConfig {
 
   private Map<String, RedisCacheConfiguration> customConfigMap() {
     Map<String, RedisCacheConfiguration> cacheConfigMap = new HashMap<>();
-
-    cacheConfigMap.put("CATEGORY",defaultConfig().entryTtl(TtlFunction.persistent()));
-
+    setCacheToMap(cacheConfigMap);
     return cacheConfigMap;
+  }
+
+  private void setCacheToMap(Map<String,RedisCacheConfiguration> customConfigMap){
+    for (CacheKey key : CacheKey.values()) {
+      customConfigMap.put(key.getKey(),defaultConfig().entryTtl(key));
+    }
   }
 }
