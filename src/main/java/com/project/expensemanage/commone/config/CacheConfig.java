@@ -40,6 +40,7 @@ public class CacheConfig {
   private Map<String, RedisCacheConfiguration> customConfigMap() {
     Map<String, RedisCacheConfiguration> cacheConfigMap = new HashMap<>();
     setCacheToMap(cacheConfigMap);
+
     return cacheConfigMap;
   }
 
