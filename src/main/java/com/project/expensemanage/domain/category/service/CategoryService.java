@@ -10,6 +10,7 @@ import com.project.expensemanage.domain.category.mapper.CategoryMapper;
 import com.project.expensemanage.domain.category.repository.CategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +35,11 @@ public class CategoryService {
               throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_EXIST);
             });
   }
-
+  @Cacheable(cacheNames = "CATEGORY",key = "'CategoryList'")
   public List<GetCategoryResponse> getCategoryList() {
     return mapper.toGetListDto(repository.findAllByType());
   }
-
+  @Cacheable(cacheNames = "CATEGORY",key = "'Category' + #categoryId")
   public GetCategoryResponse getCategory(Long categoryId) {
     return mapper.toGetDto(validCategory(categoryId));
   }
