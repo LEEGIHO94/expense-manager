@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/wanted
+    password: wkaqh12Q!
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        highlight_sql: true
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 100
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_size: 100
+    database: mysql
+  data:
+    redis:
+      host: 127.0.0.1   #${REDIS_URL}
+      port: 6379
+logging:
+  level:
+    org.hibernate.sql: info
+    org.hibernate.type.descriptor.sql: trace
+
+jwt:
+  prefix: 'Bearer '
+  secret-key: tj3io45htno453ihtnoi4253hntio2453ntio24ntio2ntionionion3io24ntoi32noti34noti
+  access-token-validity-in-seconds: 150
+  refresh-token-validity-in-seconds: 259200
+  access-header: Authentication
+  refresh-header: Refresh
+
+cookie:
+  limit-time: 259200
+  accepted-url: '/api/auth/reissue'
+  cookie-name: Refresh
+  domain: localhost
+discord:
+  username: SigLEE's Expenditure Manager
+  base-url: https://discord.com/api/webhooks
+  author-icon: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFDuCbcWNeH2E5EX2QOriookJFmLpDj-bYveM3Rje3Wg&s
+  avatar-url: https://play-lh.googleusercontent.com/YpstEg6vXVBJFkHdkmZW4mdUDWLTDjX52z89E3Cm1vSTidiuBozWuk-i2cGRQIoYYxg=w240-h480-rw
+  content: 일일 권장 지출량은 기본적으로 설정한 예산을 일로 나눈 나머지 값이 들어가게 된다.
+  thumbnail: https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.crowdpic.net%2Fphoto%2F%25ED%2592%258D%25EA%25B2%25BD-%25EC%259E%2590%25EC%2597%25B0-%25EB%2593%25A4%25ED%258C%2590-%25EC%25B4%2588%25EC%259B%2590-%25EB%2582%2598%25EB%25AC%25B4-136857&psig=AOvVaw3jTG2YQPMrSz2zYN7KgwIT&ust=1701492132394000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCKjVyaK27YIDFQAAAAAdAAAAABAE
+  color: 1702
+  footer-text: 언제나 감사합니다.
+  phrase-waring: '**경고!! 지출 감소 요망!**'
+  phrase-safe: '**좋습니다. 오늘도 절약하는 삶을 실철해볼까요?**'
+  embed-title: '## 금일 사용 권장 지출'
+
