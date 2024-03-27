@@ -18,18 +18,23 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({QueryDslConfig.class, TestSQLUtils.class})
 class RecommendationRepositoryTest {
+
+  @Container static final MySQLContainer container = new MySQLContainer("mysql:8");
   @Autowired RecommendationRepository repository;
   @Autowired BudgetRepository budgetRepository;
   @Autowired ExpenditureRepository expenditureRepository;
   @Autowired TestSQLUtils sql;
 
   @Test
-  @Disabled("삽입한 데이터가 많아 테스트 중지 중")
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
   void recommend_date_test() {
     LocalDate startDate = LocalDate.of(2024, 01, 01);

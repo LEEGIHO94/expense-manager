@@ -19,7 +19,6 @@ import com.project.expensemanage.domain.vo.Price;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -72,8 +71,9 @@ public class ExpenditureMapper {
     }
 
     for (int i = 0; i < budgetList.size(); i++) {
-      result.add(createExpenditureCategory(budgetList.get(i),
-          categoryMap.get(budgetList.get(i).getCategory().getId())));
+      result.add(
+          createExpenditureCategory(
+              budgetList.get(i), categoryMap.get(budgetList.get(i).getCategory().getId())));
     }
     return new ExpenditureListResponse(result);
   }

@@ -12,11 +12,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.StopWatch;
 import org.springframework.util.StopWatch.TaskInfo;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({QueryDslConfig.class})
 class BudgetRepositoryOptimizationTest {
+
+  @Container static final MySQLContainer container = new MySQLContainer("mysql:8");
   @Autowired BudgetRepository repository;
 
   /*

@@ -17,12 +17,19 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({ExpenditureQueryDslRepositoryImpl.class, QueryDslConfig.class})
 class ExpenditureRepositoryTest {
+
+  @Container static final MySQLContainer container = new MySQLContainer("mysql:8");
+
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   ExpenditureRepository repository;
