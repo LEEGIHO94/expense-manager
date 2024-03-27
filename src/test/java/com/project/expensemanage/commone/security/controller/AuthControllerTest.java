@@ -215,7 +215,6 @@ class AuthControllerTest {
                 .value(AuthExceptionCode.INVALID_SIGNATURE_ACCESS_TOKEN.getMessage()));
   }
 
-
   private Cookie createCookie() {
     return new Cookie("Refresh", jwtProvider.generateRefreshToken(userMock.getEmail()));
   }

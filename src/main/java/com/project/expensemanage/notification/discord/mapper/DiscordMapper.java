@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class DiscordMapper {
   private final DiscordProperties properties;
 
-  public String getBaseUrl(){
+  public String getBaseUrl() {
     return properties.getBaseUrl();
   }
 
@@ -32,7 +32,9 @@ public class DiscordMapper {
         .username(properties.getUsername())
         .build();
   }
-  public DiscordBody toDiscordTodayTotalExpenditureBody(List<TotalExpenditureByCategory> expenditureList) {
+
+  public DiscordBody toDiscordTodayTotalExpenditureBody(
+      List<TotalExpenditureByCategory> expenditureList) {
     return DiscordBody.builder()
         .content(properties.getContent())
         .embeds(List.of(createExpenditureDiscordEmbed(expenditureList)))
@@ -41,7 +43,8 @@ public class DiscordMapper {
         .build();
   }
 
-  private DiscordEmbed createExpenditureDiscordEmbed(List<TotalExpenditureByCategory> expenditureList) {
+  private DiscordEmbed createExpenditureDiscordEmbed(
+      List<TotalExpenditureByCategory> expenditureList) {
     return DiscordEmbed.builder()
         .color(properties.getColor())
         .description("Embded 설명")
@@ -52,6 +55,7 @@ public class DiscordMapper {
         .author(createAuthor())
         .build();
   }
+
   private DiscordEmbed createDiscordEmbed(List<RecommendationExpenditure> totalExpenditureList) {
     return DiscordEmbed.builder()
         .color(properties.getColor())
@@ -72,6 +76,7 @@ public class DiscordMapper {
     }
     return result;
   }
+
   private List<DiscordEmbedField> discordExpenditureEmbedFieldList(
       List<TotalExpenditureByCategory> expenditureList) {
     List<DiscordEmbedField> result = new ArrayList<>();
@@ -81,13 +86,15 @@ public class DiscordMapper {
     return result;
   }
 
-  private DiscordEmbedField createExpenditureField(TotalExpenditureByCategory expenditureByCategory) {
+  private DiscordEmbedField createExpenditureField(
+      TotalExpenditureByCategory expenditureByCategory) {
     return DiscordEmbedField.builder()
         .inline(false)
         .name(expenditureByCategory.categoryName())
         .value(createExpenditureValue(expenditureByCategory))
         .build();
   }
+
   private DiscordEmbedField createField(RecommendationExpenditure expenditure) {
     return DiscordEmbedField.builder()
         .inline(false)
@@ -111,7 +118,7 @@ public class DiscordMapper {
         .build();
   }
 
-  private String createValue(RecommendationExpenditure expenditure){
+  private String createValue(RecommendationExpenditure expenditure) {
     int dayOfMonth = LocalDate.now().getDayOfMonth();
     int endOfMonth = YearMonth.now().atEndOfMonth().getDayOfMonth();
 
@@ -127,14 +134,14 @@ public class DiscordMapper {
         .append(expenditure.totalExpenditure())
         .append("\n")
         .append("금일 권장 지출 : ")
-        .append(createRecommendedExpenditure(expenditure, restDay,endOfMonth));
+        .append(createRecommendedExpenditure(expenditure, restDay, endOfMonth));
 
     return sb.toString();
   }
-  private String createExpenditureValue(TotalExpenditureByCategory expenditureByCategory){
+
+  private String createExpenditureValue(TotalExpenditureByCategory expenditureByCategory) {
     StringBuilder sb = new StringBuilder();
-    sb
-        .append(expenditureByCategory.categoryName())
+    sb.append(expenditureByCategory.categoryName())
         .append("\n")
         .append("금일 지출 : ")
         .append(expenditureByCategory.amount());
@@ -142,52 +149,55 @@ public class DiscordMapper {
   }
 
   /*
-  * 로직 수정 필요
-  * 1. 최소 금액을 설정은 사용자가 설정한 예산을 해당월로 나눈 값, 즉 1일 사용 예상 량으로 한다.
-  * */
+   * 로직 수정 필요
+   * 1. 최소 금액을 설정은 사용자가 설정한 예산을 해당월로 나눈 값, 즉 1일 사용 예상 량으로 한다.
+   * */
 
-  private String createRecommendedExpenditure(RecommendationExpenditure expenditure, int restDay,int endOfMonth) {
-    long amount =  Math.max(expenditure.budget() - expenditure.totalExpenditure(),0) / restDay;
+  private String createRecommendedExpenditure(
+      RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
+    long amount = Math.max(expenditure.budget() - expenditure.totalExpenditure(), 0) / restDay;
     long amountOfReference = expenditure.budget() / endOfMonth;
-    return getMaxRecommendExpenditure(amount,amountOfReference);
+    return getMaxRecommendExpenditure(amount, amountOfReference);
   }
 
-  private String getMaxRecommendExpenditure(Long amount, Long amountOfReference){
+  private String getMaxRecommendExpenditure(Long amount, Long amountOfReference) {
     return roundAmount(amount) >= roundAmount(amountOfReference)
         ? roundAmount(amount) + " (**설정 예산 만족**)"
         : roundAmount(amountOfReference) + " (**!!예산 초과 1일 사용 권장량 제공!!**)";
-}
+  }
 
-  private Long roundAmount(Long num){
-    if(num / 1000 != 0){
+  private Long roundAmount(Long num) {
+    if (num / 1000 != 0) {
       return num / 1000 * 1000;
     }
 
-    if(num / 100 != 0){
+    if (num / 100 != 0) {
       return num / 100 * 100;
     }
 
-    if(num / 10 != 0){
+    if (num / 10 != 0) {
       return num / 10 * 10;
     }
 
     return num;
-}
+  }
 
   private String getPhrase(RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
-    return checkWaring(expenditure, restDay, endOfMonth) ? properties.getPhraseSafe() : properties.getPhraseWaring();
+    return checkWaring(expenditure, restDay, endOfMonth)
+        ? properties.getPhraseSafe()
+        : properties.getPhraseWaring();
   }
+
   /*
-  * true : 지출이 남은 날보다 짧다
-  * false : 지출이 남은 날 보다 많다.
-  * */
+   * true : 지출이 남은 날보다 짧다
+   * false : 지출이 남은 날 보다 많다.
+   * */
 
   private boolean checkWaring(RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
     return (restDay / endOfMonth) <= (expenditure.budget() - expenditure.totalExpenditure());
   }
 
-  private int getRestDay(int dayOfMonth, int endOfMonth){
+  private int getRestDay(int dayOfMonth, int endOfMonth) {
     return endOfMonth - dayOfMonth == 0 ? 1 : endOfMonth - dayOfMonth;
   }
 }
-

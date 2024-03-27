@@ -11,7 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface RecommendationRepository extends JpaRepository<Category, Long> {
 
-    @Query("""
+  @Query(
+      """
                 select new com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure(c.id,c.name,sum(e.price.value),b.price.value)
                 from Category c
                 join Budget b on c.id = b.category.id
@@ -22,8 +23,13 @@ public interface RecommendationRepository extends JpaRepository<Category, Long> 
                 e.expendedDate between :startDate and :endDate and e.user.id = :userId
                 group by c.id, c.name,b.price.value
             """)
-    List<RecommendationExpenditure> findTotalExpenditureByCategoryAndDateAndId(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("userId") Long userId);
-    @Query("""
+  List<RecommendationExpenditure> findTotalExpenditureByCategoryAndDateAndId(
+      @Param("startDate") LocalDate startDate,
+      @Param("endDate") LocalDate endDate,
+      @Param("userId") Long userId);
+
+  @Query(
+      """
                 select new com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditureAllUser(c.id,e.user.id,c.name,sum(e.price.value),b.price.value)
                 from Category c
                 join Budget b on c.id = b.category.id
@@ -34,5 +40,6 @@ public interface RecommendationRepository extends JpaRepository<Category, Long> 
                 e.expendedDate between :startDate and :endDate
                 group by c.id, c.name,b.price.value , e.user.id
             """)
-    List<RecommendationExpenditureAllUser> findTotalExpenditureByCategoryAndDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+  List<RecommendationExpenditureAllUser> findTotalExpenditureByCategoryAndDate(
+      @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

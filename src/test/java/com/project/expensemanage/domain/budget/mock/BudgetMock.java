@@ -2,9 +2,10 @@ package com.project.expensemanage.domain.budget.mock;
 
 import com.project.expensemanage.domain.budget.controller.dto.response.BudgetResponse;
 import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
+import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.dto.response.BudgetIdResponse;
 import com.project.expensemanage.domain.budget.entity.Budget;
-import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
+import com.project.expensemanage.domain.budget.entity.TotalBudget;
 import com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData;
 import com.project.expensemanage.domain.budget.service.dto.RecommendBudget;
 import com.project.expensemanage.domain.category.dto.CategoryByBudget;
@@ -31,18 +32,23 @@ public class BudgetMock {
   private final User requestUser = postEntity();
   private final Category category = categoryEntity();
 
-
   public Budget entityMock() {
-    return Budget.builder().id(id).price(price).category(category).date(date).user(serviceUser).build();
+    return Budget.builder()
+        .id(id)
+        .price(price)
+        .category(category)
+        .date(date)
+        .user(serviceUser)
+        .build();
   }
 
   public Budget entityPostMock() {
     return Budget.builder().price(price).date(date).user(requestUser).build();
   }
 
-  public Category categoryEntity(){
+  public Category categoryEntity() {
     return new Category(categoryId, "카테고리", CategoryType.STANDARD, new TotalBudget());
-}
+  }
 
   public PostBudgetRequest postDtoMock() {
     return PostBudgetRequest.builder()
@@ -125,7 +131,8 @@ public class BudgetMock {
         Budget.builder()
             .id(id + 1)
             .price(price)
-            .category(new Category(categoryId + 1, "카테고리2", CategoryType.STANDARD,new TotalBudget()))
+            .category(
+                new Category(categoryId + 1, "카테고리2", CategoryType.STANDARD, new TotalBudget()))
             .date(date)
             .user(serviceUser)
             .build());

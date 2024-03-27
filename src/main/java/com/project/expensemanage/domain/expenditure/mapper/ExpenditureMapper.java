@@ -9,15 +9,17 @@ import com.project.expensemanage.domain.expenditure.controller.dto.request.GetEx
 import com.project.expensemanage.domain.expenditure.controller.dto.request.PostExpenditureRequest;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureIdResponse;
 import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureListResponse;
+import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;
 import com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.GetExpenditureDetailsCondition;
 import com.project.expensemanage.domain.expenditure.repoistory.dto.TotalExpenditureByCategory;
-import com.project.expensemanage.domain.expenditure.controller.dto.response.ExpenditureResponse;
 import com.project.expensemanage.domain.user.mapper.UserMapper;
 import com.project.expensemanage.domain.vo.Price;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -63,9 +65,15 @@ public class ExpenditureMapper {
   public ExpenditureListResponse toDto(
       List<Expenditure> budgetList, List<TotalExpenditureByCategory> categoryList) {
     List<ExpenditureCategory> result = new ArrayList<>();
+    HashMap<Long, TotalExpenditureByCategory> categoryMap = new HashMap<>();
+
+    for (TotalExpenditureByCategory category : categoryList) {
+      categoryMap.put(category.categoryId(), category);
+    }
 
     for (int i = 0; i < budgetList.size(); i++) {
-      result.add(createExpenditureCategory(budgetList.get(i), categoryList.get(i)));
+      result.add(createExpenditureCategory(budgetList.get(i),
+          categoryMap.get(budgetList.get(i).getCategory().getId())));
     }
     return new ExpenditureListResponse(result);
   }

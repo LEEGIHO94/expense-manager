@@ -9,7 +9,7 @@ import org.springframework.data.redis.cache.RedisCacheWriter.TtlFunction;
 @AllArgsConstructor
 public enum CacheKey implements TtlFunction {
   CATEGORY("category", Duration.ZERO),
-  BUDGET("budget",Duration.ofHours(1L));
+  BUDGET("budget", Duration.ofHours(1L));
 
   private String key;
   private Duration duration;

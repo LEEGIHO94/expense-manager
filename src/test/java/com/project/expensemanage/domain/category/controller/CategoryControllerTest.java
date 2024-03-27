@@ -34,12 +34,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(CategoryController.class)
-@Import({
-  SecurityConfig.class,
-  AuthTestConfig.class,
-  CategoryService.class,
-  CategoryMock.class
-})
+@Import({SecurityConfig.class, AuthTestConfig.class, CategoryService.class, CategoryMock.class})
 @AutoConfigureRestDocs
 class CategoryControllerTest {
 
@@ -153,8 +148,8 @@ class CategoryControllerTest {
     BDDMockito.given(service.getCategory(anyLong()))
         .willReturn(mock.getCategoryResponseList().get(1));
     // when
-    ResultActions perform = mvc.perform(
-        RestDocumentationRequestBuilders.get("/api/categories" + "/{categoryId}",1L));
+    ResultActions perform =
+        mvc.perform(RestDocumentationRequestBuilders.get("/api/categories" + "/{categoryId}", 1L));
     // then
     perform
         .andDo(MockMvcResultHandlers.log())

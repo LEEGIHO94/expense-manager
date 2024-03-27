@@ -52,9 +52,10 @@ class ExpenditureRepositoryTest {
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
     for (Expenditure expenditure : result) {
-      Assertions.assertThat(expenditure.getPrice().getValue()).isBetween(1000L,100000L);
+      Assertions.assertThat(expenditure.getPrice().getValue()).isBetween(1000L, 100000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : min 값 미 등록")
   void get_expenditure_by_condition_min_null_test() {
@@ -75,6 +76,7 @@ class ExpenditureRepositoryTest {
       Assertions.assertThat(expenditure.getPrice().getValue()).isLessThanOrEqualTo(100000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max 값 미 등록")
   void get_expenditure_by_condition_max_null_test() {
@@ -96,6 +98,7 @@ class ExpenditureRepositoryTest {
       Assertions.assertThat(expenditure.getPrice().getValue()).isGreaterThanOrEqualTo(1000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max, min null")
   void get_expenditure_by_condition_max_min_null_test() {
@@ -133,5 +136,4 @@ class ExpenditureRepositoryTest {
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
   }
-
 }

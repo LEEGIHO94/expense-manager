@@ -10,7 +10,7 @@ class ExpenseManageApplicationTests {
   void contextLoads() {}
 
   @Test
-  void main(){
-    ExpenseManageApplication.main(new String[]{});
+  void main() {
+    ExpenseManageApplication.main(new String[] {});
   }
 }

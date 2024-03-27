@@ -41,18 +41,22 @@ public class CategoryController {
 
   @GetMapping
   public ResponseEntity<ResponseDto<List<GetCategoryResponse>>> getCategoryList() {
-    ResponseDto<List<GetCategoryResponse>> response = ResponseDto.<List<GetCategoryResponse>>builder()
-        .status(ResponseStatus.GET)
-        .data(service.getCategoryList())
-        .build();
+    ResponseDto<List<GetCategoryResponse>> response =
+        ResponseDto.<List<GetCategoryResponse>>builder()
+            .status(ResponseStatus.GET)
+            .data(service.getCategoryList())
+            .build();
     return ResponseEntity.ok(response);
   }
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<ResponseDto<GetCategoryResponse>> getCategory(@PathVariable Long categoryId){
-      ResponseDto<GetCategoryResponse> response = ResponseDto.<GetCategoryResponse>builder()
-          .data(service.getCategory(categoryId))
-          .status(ResponseStatus.GET)
-          .build();
-      return ResponseEntity.ok(response);
-    }
+
+  @GetMapping("/{categoryId}")
+  public ResponseEntity<ResponseDto<GetCategoryResponse>> getCategory(
+      @PathVariable Long categoryId) {
+    ResponseDto<GetCategoryResponse> response =
+        ResponseDto.<GetCategoryResponse>builder()
+            .data(service.getCategory(categoryId))
+            .status(ResponseStatus.GET)
+            .build();
+    return ResponseEntity.ok(response);
+  }
 }

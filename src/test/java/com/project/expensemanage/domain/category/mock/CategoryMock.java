@@ -59,11 +59,10 @@ public class CategoryMock {
     return new CategoryIdResponse(2L);
   }
 
-  public List<GetCategoryResponse> getCategoryResponseList(){
+  public List<GetCategoryResponse> getCategoryResponseList() {
     return List.of(
         GetCategoryResponse.builder().categoryId(1L).name("카테고리1").build(),
         GetCategoryResponse.builder().categoryId(2L).name("카테고리2").build(),
-        GetCategoryResponse.builder().categoryId(3L).name("카테고리3").build()
-    );
-}
+        GetCategoryResponse.builder().categoryId(3L).name("카테고리3").build());
+  }
 }
