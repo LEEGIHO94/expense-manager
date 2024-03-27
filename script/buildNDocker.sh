@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+./gradlew spotlessApply
 ./gradlew clean build
 
 if [ $? -eq 0 ]; then
