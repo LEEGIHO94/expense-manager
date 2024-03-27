@@ -31,6 +31,7 @@ services:
       - 8080:8080
     networks:
       - backend-network
+    restart: on-failure
 
 networks:
   backend-network:
