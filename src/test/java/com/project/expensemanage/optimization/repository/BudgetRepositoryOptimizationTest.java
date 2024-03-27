@@ -2,7 +2,7 @@ package com.project.expensemanage.optimization.repository;
 
 import com.project.expensemanage.commone.config.QueryDslConfig;
 import com.project.expensemanage.domain.budget.repository.BudgetRepository;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +29,7 @@ class BudgetRepositoryOptimizationTest {
    * 기존의 DB 구조와 변경된 DB 구조의 속도 차이 테스트
    * */
   @Test
+  @Disabled("성능 테스트 활용 이후 미사용으로 인한 disable")
   @DisplayName("예산 추천 서비스 실행 시간 테스트")
   void check_recommend_method_test() {
     // given
@@ -45,7 +46,5 @@ class BudgetRepositoryOptimizationTest {
     System.out.println("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
 
     TaskInfo[] taskInfo = stopWatch.getTaskInfo();
-
-    Assertions.assertThat(taskInfo[0].getTimeNanos()).isGreaterThan(taskInfo[1].getTimeNanos());
   }
 }
