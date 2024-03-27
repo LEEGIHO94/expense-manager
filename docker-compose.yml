@@ -1,0 +1,37 @@
+version: "3"
+services:
+  redis-server:
+    image: redis
+    ports:
+      - 36379:6379
+    networks:
+      - backend-network
+  mysql-server:
+    image: mysql
+    volumes:
+      - ./db/conf.d:/etc/mysql/conf.d
+      - ./db/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 33306:3306
+    env_file: ./db/env
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  backend-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql-server:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
