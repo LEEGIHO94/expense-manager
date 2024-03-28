@@ -1,7 +1,7 @@
 package com.project.expensemanage.domain.expenditure.repoistory;
 
 import static com.project.expensemanage.domain.expenditure.entity.QExpenditure.expenditure;
-import static com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal.*;
+import static com.project.expensemanage.domain.expenditure.enums.ExcludeSpendingTotal.INCLUDE;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 import com.project.expensemanage.domain.expenditure.entity.Expenditure;

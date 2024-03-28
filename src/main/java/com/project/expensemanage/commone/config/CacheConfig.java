@@ -44,9 +44,9 @@ public class CacheConfig {
     return cacheConfigMap;
   }
 
-  private void setCacheToMap(Map<String,RedisCacheConfiguration> customConfigMap){
+  private void setCacheToMap(Map<String, RedisCacheConfiguration> customConfigMap) {
     for (CacheKey key : CacheKey.values()) {
-      customConfigMap.put(key.getKey(),defaultConfig().entryTtl(key));
+      customConfigMap.put(key.getKey(), defaultConfig().entryTtl(key));
     }
   }
 }

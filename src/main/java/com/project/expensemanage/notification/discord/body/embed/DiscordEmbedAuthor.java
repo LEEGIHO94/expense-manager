@@ -8,4 +8,4 @@ import lombok.Builder;
  * icon_url : url of author icon
  * */
 @Builder
-public record DiscordEmbedAuthor(String name, String url,String iconUrl) {}
+public record DiscordEmbedAuthor(String name, String url, String iconUrl) {}

@@ -21,12 +21,12 @@ public class CategoryTestConfig {
   }
 
   @Bean
-  public CategoryRepository categoryRepository(){
+  public CategoryRepository categoryRepository() {
     return Mockito.mock(CategoryRepository.class);
   }
 
   @Bean
-  public CategoryService categoryService(){
-    return new CategoryService(categoryRepository(),categoryMapper());
-}
+  public CategoryService categoryService() {
+    return new CategoryService(categoryRepository(), categoryMapper());
+  }
 }

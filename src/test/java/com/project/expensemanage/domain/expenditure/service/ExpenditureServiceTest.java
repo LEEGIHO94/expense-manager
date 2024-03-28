@@ -174,10 +174,11 @@ class ExpenditureServiceTest {
                 Mockito.any(GetExpenditureDetailsCondition.class)))
         .willReturn(mock.getTotalExpenditureByCategory());
     // when
-    ExpenditureListResponse result = service.getExpenditureListByCondition(dto,1L);
+    ExpenditureListResponse result = service.getExpenditureListByCondition(dto, 1L);
     // then
     Assertions.assertThat(result.getExpenditureList()).isNotEmpty();
     Assertions.assertThat(result.getExpenditureList().get(0).getBudgetId()).isEqualTo(1L);
-    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate()).isEqualTo(LocalDate.now());
+    Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate())
+        .isEqualTo(LocalDate.now());
   }
 }

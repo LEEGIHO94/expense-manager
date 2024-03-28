@@ -9,15 +9,37 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+@Testcontainers
 @ExtendWith(SpringExtension.class)
 @DataRedisTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({RedisRepository.class, ObjectMapper.class})
 class RedisRepositoryTest {
+
+  @Container
+  static GenericContainer redis =
+      new GenericContainer(DockerImageName.parse("redis:7")).withExposedPorts(6379).withReuse(true);
+
   @Autowired RedisRepository repository;
   @Autowired ObjectMapper objectMapper;
+
+  @DynamicPropertySource
+  static void redisProperties(DynamicPropertyRegistry registry) {
+    redis.start();
+    registry.add("spring.data.redis.host", redis::getHost);
+    registry.add("spring.data.redis.port", redis::getFirstMappedPort);
+  }
 
   @Test
   @DisplayName("레디스 저장 테스트")
