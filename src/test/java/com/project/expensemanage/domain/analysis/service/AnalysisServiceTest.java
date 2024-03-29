@@ -66,7 +66,7 @@ class AnalysisServiceTest {
         .willReturn(expenditureDiffList());
     BDDMockito.given(
             repository.getExpenditureSumDuringDateRange(
-                1L, LocalDate.now().minusMonths(1), LocalDate.now().minusMonths(2)))
+                1L, LocalDate.now().minusMonths(1), LocalDate.now().minusMonths(1).minusMonths(1)))
         .willReturn(lastExpenditureList());
 
     // when
