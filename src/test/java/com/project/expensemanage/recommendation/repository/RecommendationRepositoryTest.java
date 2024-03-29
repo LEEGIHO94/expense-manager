@@ -52,7 +52,6 @@ class RecommendationRepositoryTest {
   }
 
   @Test
-  @Disabled("삽입한 데이터가 많아 테스트 중지 중")
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
   void recommend_date_all_user_test() {
     LocalDate startDate = LocalDate.of(2020, 01, 01);
