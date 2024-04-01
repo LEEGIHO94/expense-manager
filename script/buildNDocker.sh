@@ -4,7 +4,7 @@
 ./gradlew clean build
 
 if [ $? -eq 0 ]; then
-    docker-compose up --build
+    docker-compose up --build -d
 else
     echo "Build failed!! Aborting docker-compose up --build."
     echo "check your resource"
