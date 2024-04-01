@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql-server:3306/wanted?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
+    url: jdbc:mysql://mysql-server:3306/expense?useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
     password: back00112!
     username: back
     driver-class-name: com.mysql.cj.jdbc.Driver

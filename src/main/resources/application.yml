@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/wanted
+    url: jdbc:mysql://localhost:3306/expense
     password: back00112!
     username: back
     driver-class-name: com.mysql.cj.jdbc.Driver
