@@ -1,5 +1,7 @@
 # expense-manager
 
+<img width="726" alt="image" src="https://github.com/SigLee2247/expense-manager/assets/116015708/ea89e638-4950-4293-8939-1aa6da16d48e">
+
 지출 내역 기록 및 관리, 분석을 통해 사용자의 절약 습관에 도움을 주는 서비스 백엔드 API
 
 위 서비스는 사용자들이 예산을 설정하고 지출을 모니터링하며 재무 목표를 달성하는 데 도움이 됩니다.
