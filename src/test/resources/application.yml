@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/test
-    password: wkaqh12Q!
-    username: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:tc:mysql:8://test?TC_INITSCRIPT=file:src/test/resources/sql/schema.sql
+    password: test
+    username: 1234
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         highlight_sql: true

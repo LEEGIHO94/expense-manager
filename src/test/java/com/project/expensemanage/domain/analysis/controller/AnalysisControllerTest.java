@@ -66,16 +66,27 @@ class AnalysisControllerTest {
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 PayloadDocumentation.responseFields(
-                    PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
-                    PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
-                    PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
-                    PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY).description("전송 데이터"),
-                    PayloadDocumentation.fieldWithPath("data[].categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
-                    PayloadDocumentation.fieldWithPath("data[].rate").type(JsonFieldType.NUMBER).description("이 전주 대비 지출 비율"),
-                    PayloadDocumentation.fieldWithPath("data[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
-                )
-            )
-        );
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.ARRAY)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자"),
+                    PayloadDocumentation.fieldWithPath("data[].rate")
+                        .type(JsonFieldType.NUMBER)
+                        .description("이 전주 대비 지출 비율"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryName")
+                        .type(JsonFieldType.STRING)
+                        .description("카테고리 이름"))));
   }
 
   @Test
@@ -91,24 +102,37 @@ class AnalysisControllerTest {
     perform
         .andDo(MockMvcResultHandlers.log())
         .andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.data[?(@.categoryId == 1)].categoryName").value("카테고리이름1"))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.data[?(@.categoryId == 1)].categoryName")
+                .value("카테고리이름1"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].rate").isNumber())
         .andDo(
-        MockMvcRestDocumentation.document(
-            "get-analysis-monthly",
-            Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-            Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-            PayloadDocumentation.responseFields(
-                PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
-                PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
-                PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
-                PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY).description("전송 데이터"),
-                PayloadDocumentation.fieldWithPath("data[].categoryId").type(JsonFieldType.NUMBER).description("카테고리 식별자"),
-                PayloadDocumentation.fieldWithPath("data[].rate").type(JsonFieldType.NUMBER).description("이 전주 대비 지출 비율"),
-                PayloadDocumentation.fieldWithPath("data[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름")
-            )
-        )
-    );
+            MockMvcRestDocumentation.document(
+                "get-analysis-monthly",
+                Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                PayloadDocumentation.responseFields(
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.ARRAY)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryId")
+                        .type(JsonFieldType.NUMBER)
+                        .description("카테고리 식별자"),
+                    PayloadDocumentation.fieldWithPath("data[].rate")
+                        .type(JsonFieldType.NUMBER)
+                        .description("이 전주 대비 지출 비율"),
+                    PayloadDocumentation.fieldWithPath("data[].categoryName")
+                        .type(JsonFieldType.STRING)
+                        .description("카테고리 이름"))));
   }
 
   @Test
@@ -132,16 +156,24 @@ class AnalysisControllerTest {
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 PayloadDocumentation.responseFields(
-                    PayloadDocumentation.fieldWithPath("timeStamp").type(JsonFieldType.STRING).description("전송 시간"),
-                    PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER).description("상태 코드"),
-                    PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING).description("상태 메시지"),
-                    PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.OBJECT).description("전송 데이터"),
-                    PayloadDocumentation.fieldWithPath("data.expenditureRate").type(JsonFieldType.NUMBER).description("다른 사용자 대비 당일 지출 비율"),
-                    PayloadDocumentation.fieldWithPath("data.analysisDate").type(JsonFieldType.STRING).description("분석 날짜")
-                )
-            )
-        );
-
+                    PayloadDocumentation.fieldWithPath("timeStamp")
+                        .type(JsonFieldType.STRING)
+                        .description("전송 시간"),
+                    PayloadDocumentation.fieldWithPath("code")
+                        .type(JsonFieldType.NUMBER)
+                        .description("상태 코드"),
+                    PayloadDocumentation.fieldWithPath("message")
+                        .type(JsonFieldType.STRING)
+                        .description("상태 메시지"),
+                    PayloadDocumentation.fieldWithPath("data")
+                        .type(JsonFieldType.OBJECT)
+                        .description("전송 데이터"),
+                    PayloadDocumentation.fieldWithPath("data.expenditureRate")
+                        .type(JsonFieldType.NUMBER)
+                        .description("다른 사용자 대비 당일 지출 비율"),
+                    PayloadDocumentation.fieldWithPath("data.analysisDate")
+                        .type(JsonFieldType.STRING)
+                        .description("분석 날짜"))));
   }
 
   List<ExpenditureDiffResponse> expenditureDiffResponseList() {

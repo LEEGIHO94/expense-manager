@@ -22,11 +22,13 @@ public class TotalBudget {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(updatable = false, name = "total_budget_id")
   private Long id;
+
   private Long totalBudget;
+
   @OneToOne(mappedBy = "totalBudget")
   private Category category;
 
-  public void addTotalBudget(Long totalBudget){
+  public void addTotalBudget(Long totalBudget) {
     this.totalBudget += totalBudget;
   }
 }

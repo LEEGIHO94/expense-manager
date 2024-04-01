@@ -35,37 +35,37 @@ class DiscordNotificationListenerTest {
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   TodayTotalExpenditurePublisher publisher;
-  @MockBean
-  DateUtils dateUtils;
+
+  @MockBean DateUtils dateUtils;
+
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
   private ApplicationEvents events;
-  @MockBean
-  private UserRepository userRepository;
-  @MockBean
-  private ExpenditureRepository expenditureRepository;
+
+  @MockBean private UserRepository userRepository;
+  @MockBean private ExpenditureRepository expenditureRepository;
 
   private User userStub() {
-    return User.builder()
-        .email("test@gmail.com")
-        .id(1L)
-        .serviceSubscriber(RECOMMENDATION)
-        .build();
+    return User.builder().email("test@gmail.com").id(1L).serviceSubscriber(RECOMMENDATION).build();
   }
 
   @Test
   @DisplayName("토탈 집계 함수 구현")
-  void send_today_total_expenditure_test() throws Exception{
+  void send_today_total_expenditure_test() throws Exception {
     // given
-    var dateOne = new TotalExpenditureByCategory(1L,"카테고리1",10000L);
-    var dateTwo = new TotalExpenditureByCategory(2L,"카테고리2",20000L);
-    var dateThree = new TotalExpenditureByCategory(3L,"카테고리3",30000L);
+    var dateOne = new TotalExpenditureByCategory(1L, "카테고리1", 10000L);
+    var dateTwo = new TotalExpenditureByCategory(2L, "카테고리2", 20000L);
+    var dateThree = new TotalExpenditureByCategory(3L, "카테고리3", 30000L);
 
     List<TotalExpenditureByCategory> mockList = List.of(dateOne, dateTwo, dateThree);
 
-    BDDMockito.given(userRepository.findUserByServiceSubscriber(EVALUATION)).willReturn(List.of(userStub()));
-    BDDMockito.given(expenditureRepository.findDailyTotalExpenditureByUserId(anyLong(),any(LocalDate.class) )).willReturn(mockList);
-    BDDMockito.given(dateUtils.getLocalDate()).willReturn(LocalDate.of(2020,01,01));
+    BDDMockito.given(userRepository.findUserByServiceSubscriber(EVALUATION))
+        .willReturn(List.of(userStub()));
+    BDDMockito.given(
+            expenditureRepository.findDailyTotalExpenditureByUserId(
+                anyLong(), any(LocalDate.class)))
+        .willReturn(mockList);
+    BDDMockito.given(dateUtils.getLocalDate()).willReturn(LocalDate.of(2020, 01, 01));
     // when
     publisher.sendTodayExpenditure();
     // then
@@ -73,8 +73,7 @@ class DiscordNotificationListenerTest {
 
     Assertions.assertThat(result).isEqualTo(1L);
     verify(userRepository, times(1)).findUserByServiceSubscriber(EVALUATION);
-    verify(expenditureRepository, times(1)).findDailyTotalExpenditureByUserId(anyLong(), any(LocalDate.class));
+    verify(expenditureRepository, times(1))
+        .findDailyTotalExpenditureByUserId(anyLong(), any(LocalDate.class));
   }
-
-
 }

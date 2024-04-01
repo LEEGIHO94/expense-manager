@@ -28,7 +28,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -245,10 +244,9 @@ class BudgetServiceTest {
   @DisplayName("예산 삭제 테스트 : 성공[조회된 데이터 없을 경우 넘어감]")
   void delete_budget_not_research_budget_test() {
     // given
-    BDDMockito.given(budgetRepository.findById(anyLong()))
-        .willReturn(Optional.empty());
+    BDDMockito.given(budgetRepository.findById(anyLong())).willReturn(Optional.empty());
     // when
-    service.deleteBudget(userMock.getUserId(),mock.getBudgetId());
+    service.deleteBudget(userMock.getUserId(), mock.getBudgetId());
     // then
     Mockito.verify(budgetRepository, times(1)).findById(anyLong());
   }

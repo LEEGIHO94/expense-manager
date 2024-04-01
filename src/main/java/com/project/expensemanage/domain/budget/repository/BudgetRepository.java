@@ -41,12 +41,11 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
   List<Budget> findByUserId(@Param("userId") Long userId);
 
   @Query(
-          """
+      """
               select new com.project.expensemanage.domain.budget.repository.dto.RecommendedBudgetData
               (c.id,c.name,tb.totalBudget)
               from TotalBudget tb
               join tb.category c
           """)
   List<RecommendedBudgetData> findTotalBudgetByCategory();
-
 }

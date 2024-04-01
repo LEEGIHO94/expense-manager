@@ -103,16 +103,16 @@ class DiscordEventListenerTest {
   void litener_test() throws Exception {
     // given
     DiscordEventListener discordEventListener = new DiscordEventListener(mapper);
-    DailyRecommendationExpenditureEvent dto = new DailyRecommendationExpenditureEvent(getListStub(), userStub());
+    DailyRecommendationExpenditureEvent dto =
+        new DailyRecommendationExpenditureEvent(getListStub(), userStub());
     // when
     discordEventListener.handle(dto);
   }
 
-  List<RecommendationExpenditure> getListStub(){
+  List<RecommendationExpenditure> getListStub() {
     return List.of(
-        new RecommendationExpenditure(1L,"카테고리이름1",100000L,100L),
-        new RecommendationExpenditure(1L,"카테고리이름2",200000L,200L),
-        new RecommendationExpenditure(1L,"카테고리이름3",300000L,300L)
-    );
-}
+        new RecommendationExpenditure(1L, "카테고리이름1", 100000L, 100L),
+        new RecommendationExpenditure(1L, "카테고리이름2", 200000L, 200L),
+        new RecommendationExpenditure(1L, "카테고리이름3", 300000L, 300L));
+  }
 }

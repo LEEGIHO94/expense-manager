@@ -8,6 +8,8 @@ import com.project.expensemanage.commone.config.JacksonConfig;
 import com.project.expensemanage.commone.config.SecurityConfig;
 import com.project.expensemanage.commone.security.annotation.WithMockCustomUser;
 import com.project.expensemanage.commone.security.config.AuthTestConfig;
+import com.project.expensemanage.domain.budget.dto.request.PatchBudgetRequest;
+import com.project.expensemanage.domain.budget.dto.request.PostBudgetRequest;
 import com.project.expensemanage.domain.budget.mock.BudgetMock;
 import com.project.expensemanage.domain.budget.service.BudgetService;
 import org.junit.jupiter.api.DisplayName;
@@ -422,6 +424,7 @@ class BudgetControllerTest {
         .andDo(MockMvcResultHandlers.log())
         .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
+
   @Test
   @WithMockCustomUser
   @DisplayName("추천 예산 조회 테스트 : 파라미터 미등록 실패")

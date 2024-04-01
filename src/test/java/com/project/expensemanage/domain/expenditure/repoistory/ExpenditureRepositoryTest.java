@@ -17,12 +17,19 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import({ExpenditureQueryDslRepositoryImpl.class, QueryDslConfig.class})
 class ExpenditureRepositoryTest {
+
+  @Container static final MySQLContainer container = new MySQLContainer("mysql:8");
+
   @Autowired
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   ExpenditureRepository repository;
@@ -52,9 +59,10 @@ class ExpenditureRepositoryTest {
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
     for (Expenditure expenditure : result) {
-      Assertions.assertThat(expenditure.getPrice().getValue()).isBetween(1000L,100000L);
+      Assertions.assertThat(expenditure.getPrice().getValue()).isBetween(1000L, 100000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : min 값 미 등록")
   void get_expenditure_by_condition_min_null_test() {
@@ -75,6 +83,7 @@ class ExpenditureRepositoryTest {
       Assertions.assertThat(expenditure.getPrice().getValue()).isLessThanOrEqualTo(100000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max 값 미 등록")
   void get_expenditure_by_condition_max_null_test() {
@@ -96,6 +105,7 @@ class ExpenditureRepositoryTest {
       Assertions.assertThat(expenditure.getPrice().getValue()).isGreaterThanOrEqualTo(1000L);
     }
   }
+
   @Test
   @DisplayName("조건에 따른 조회 Expenditure 데이터 조회 : max, min null")
   void get_expenditure_by_condition_max_min_null_test() {
@@ -133,5 +143,4 @@ class ExpenditureRepositoryTest {
     Assertions.assertThat(result).isNotNull();
     Assertions.assertThat(result).isInstanceOf(List.class);
   }
-
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class CategoryService {
+
   private final CategoryRepository repository;
   private final CategoryMapper mapper;
 
@@ -35,16 +36,20 @@ public class CategoryService {
               throw new BusinessLogicException(CategoryExceptionCode.CATEGORY_EXIST);
             });
   }
-  @Cacheable(cacheNames = "CATEGORY",key = "'CategoryList'")
+
+  @Cacheable(cacheNames = "CATEGORY", key = "'CategoryList'")
   public List<GetCategoryResponse> getCategoryList() {
     return mapper.toGetListDto(repository.findAllByType());
   }
-  @Cacheable(cacheNames = "CATEGORY",key = "'Category' + #categoryId")
+
+  @Cacheable(cacheNames = "CATEGORY", key = "'Category' + #categoryId")
   public GetCategoryResponse getCategory(Long categoryId) {
     return mapper.toGetDto(validCategory(categoryId));
   }
 
-  private Category validCategory(Long categoryId){
-    return repository.findById(categoryId).orElseThrow(() -> new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_FOUND));
-}
+  private Category validCategory(Long categoryId) {
+    return repository
+        .findById(categoryId)
+        .orElseThrow(() -> new BusinessLogicException(CategoryExceptionCode.CATEGORY_NOT_FOUND));
+  }
 }

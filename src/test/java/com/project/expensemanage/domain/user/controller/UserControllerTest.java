@@ -65,10 +65,15 @@ class UserControllerTest {
                 Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                 Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 PayloadDocumentation.requestFields(
-                    PayloadDocumentation.fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                    PayloadDocumentation.fieldWithPath("password").type(JsonFieldType.STRING).description("비밀 번호"),
-                    PayloadDocumentation.fieldWithPath("phone").type(JsonFieldType.STRING).description("전화 번호")
-                    ),
+                    PayloadDocumentation.fieldWithPath("email")
+                        .type(JsonFieldType.STRING)
+                        .description("이메일"),
+                    PayloadDocumentation.fieldWithPath("password")
+                        .type(JsonFieldType.STRING)
+                        .description("비밀 번호"),
+                    PayloadDocumentation.fieldWithPath("phone")
+                        .type(JsonFieldType.STRING)
+                        .description("전화 번호")),
                 PayloadDocumentation.responseFields(
                     PayloadDocumentation.fieldWithPath("timeStamp")
                         .type(JsonFieldType.STRING)
