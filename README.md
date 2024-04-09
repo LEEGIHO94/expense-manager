@@ -116,8 +116,11 @@ kill -9 $(pgrep -f "java.*expense")
 ## 적용 기술 및  성능 개선
 
 ### Indexing을 통한 조회 성능 4배 개선
-- 300만 건의 데이터 보유 시 insert 성능 개선 필요
-- 각 index 적용을 통한 성능 개선 여부 체크
+- 부하 테스트 중 connection 이 부족해지는 현상 발생 -> connection pool이 부족해지기 때문에 동시 접속자가 많아질 경우 시간 지연 발생
+- HW를 늘리거나 connection-pool을 늘리는 방법을 통해 해결이 가능하나 진행 했던 부하테스트는 최대 부하에서 1시간동안 유지되는지 체크하기위한 것
+    - 항상 최대 부하를 발생 시키는 것이 아니기 때문에 HW를 늘리거나 connection-pool을 늘리는 것은 비효율적
+=> 각 서비스가 SQL에서 데이터를 가져오는게 걸리는 시간의 단축을 통한 성능 개선 방법 선정
+
 
 <details>
 <summary>index 적용 쿼리</summary>    
@@ -144,6 +147,7 @@ index 적용에 따른 실행 속도는 다음과 같다.
 | userId, expended_date, category_id  | 106        |
 | expended_date,  userId, category_id | 222        |
 | category_id, expended_date, userId  | 324        |
+index를 거는 순서에 따라 성능의 차이가 발생한다.
 
 
 
