@@ -15,17 +15,18 @@
     - [Docker Compose 사용](#1-docker-compose-사용)
     - [Docker 미사용 배포](#2-docker-미사용-서버-실행)
 5. [적용 기술 및 성능 개선](#적용-기술-및--성능-개선)
+    - [Indexing을 통한 조회 성능 4배 개선](#indexing을-통한-조회-성능-4배-개선)
     - [DB 성능 튜닝을 통한 성능 개선 & Cache 적용](#db-성능-튜닝을-통한-성능-개선--cache-적용)
     - [Cache 통한 서비스 개선](#cache-통한-서비스-개선-부하-테스트-시-성능-최대-2배-개선)
     - [Spring Security 활용한 인증 & 인가](#spring-security를-활용한-인증--인가)
-6. [TEST](#test)
+7. [TEST](#test)
     - [TestCoverage 90% 달성](#100여개의-테스트-진행을-통한-test-coverage-90-달성)
     - [Test 병렬 실행으로 인한 실행 시간 단축](#test-병렬-실행으로-인한-test-시간-단축-1m18s---46s-32s개선)
     - [TestContainer 적용](#testcontainer-적용)
-7. [배포](#배포)
+8. [배포](#배포)
     - [Docker Container 활용](#docker-container-활용을-통한-배포-안정성-확립)
     - [Docker Compose 활용](#docker-compose-활용을-통한-여러-컨테이너-제어)
-8. [협업](#협업)
+9. [협업](#협업)
     - [Github Issue 및 칸반 보드를 통한 일정 관리](#github-issue--칸반-보드를-통한-일정-관리)
     - [GitHook 활용을 통한 commit 제한](#githook을-활용한-commit-제한)
     - [코드 스타일 통일](#코드-스타일-통일)
@@ -113,6 +114,39 @@ kill -9 $(pgrep -f "java.*expense")
 ---
 
 ## 적용 기술 및  성능 개선
+
+### Indexing을 통한 조회 성능 4배 개선
+- 300만 건의 데이터 보유 시 insert 성능 개선 필요
+- 각 index 적용을 통한 성능 개선 여부 체크
+
+<details>
+<summary>index 적용 쿼리</summary>    
+    
+```sql
+select * from expenditure as e
+join
+category as c
+on e.category_id = c.category_id
+where
+    e.expended_date between :startDate and :endDate
+and
+    e.user_id = :userId;
+```
+    
+</details> 
+
+index 적용에 따른 실행 속도는 다음과 같다.
+
+| index 순서                            | 실행 시간 (ms) |
+| :----------------------------------- | ----------: |
+| index 미적용                           | 528        |
+| expended_date만 적용                   | 614        |
+| userId, expended_date, category_id  | 106        |
+| expended_date,  userId, category_id | 222        |
+| category_id, expended_date, userId  | 324        |
+
+
+
 
 ### DB 성능 튜닝을 통한 성능 개선 & Cache 적용
 
