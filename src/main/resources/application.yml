@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/expense
-    password: back00112!
-    username: back
+    password: wkaqh12Q!
+    username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       auto-commit: false
@@ -12,7 +12,7 @@ spring:
     properties:
       hibernate:
         connection:
-          autocommit: true
+            provider_disables_autocommit: false
         highlight_sql: true
         show_sql: true
         format_sql: true
