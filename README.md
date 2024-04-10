@@ -116,14 +116,19 @@ kill -9 $(pgrep -f "java.*expense")
 ## 적용 기술 및  성능 개선
 
 ### 부하테스트를 통항 성능 개선 지표 확보
+[부하테스트 지표](https://docs.google.com/spreadsheets/d/1Z8FSqOq_N1WrYVQ0p1gaqIwIjhAe6vvDtT05ZNGwt-I/edit?usp=sharing)
+<img width="1169" alt="image" src="https://github.com/SigLee2247/expense-manager/assets/116015708/2f3f49dd-982c-4f88-9e38-2e87ce6b7894">
+
+- 제공하려고하는 서비스와 유사한 서비스의 일일 접속량을 확인한 후 이를 통해 예상되는 사용자 수 산출
+
 
 
 ### Indexing을 통한 조회 성능 4배 개선
-- 부하 테스트 중 connection 이 부족해지는 현상 발생 -> connection pool이 부족해지기 때문에 동시 접속자가 많아질 경우 시간 지연 발생
-- HW를 늘리거나 connection-pool을 늘리는 방법을 통해 해결이 가능하나 진행 했던 부하테스트는 최대 부하에서 1시간동안 유지되는지 체크하기위한 것
-    - 항상 최대 부하를 발생 시키는 것이 아니기 때문에 HW를 늘리거나 connection-pool을 늘리는 것은 비효율적
-=> 각 서비스가 SQL에서 데이터를 가져오는게 걸리는 시간의 단축을 통한 성능 개선 방법 선정
-
+- 부하 테스트 중 connection 이 부족해지는 현상 발생 -> connection pool이 부족해지기 때문에 동시 접속자가 많아질 경우 문제가 될 가능성을 확인
+    - 해결을 위해 HW의 추가 등의 작업을 하는 것은 평상 부하 상태에서는 비효율적이라 판단
+- DB에서의 서비스 시간 단축을 통한 성능 개선을 통한 지표 개선
+    - cache 적용하지 않은 이유 : Cache Hit Rate가 낮을 것이라 예상(조회하는 사람마다, 날짜마다 조회 데이터가 다름)
+    - Index를 통한 성능 개선 희망
 
 <details>
 <summary>index 적용 쿼리</summary>    
@@ -155,16 +160,28 @@ index를 거는 순서에 따라 성능의 차이가 발생한다.
 ### Hibernate AutoCommit Check 최적화를 통한 쿼리 성능 개선
 부하 테스트 시 로직을 확인해보니 `setAutoCommit(false)` 에서 시간적인 낭비 발생
 
-- 기존의 Hibernate : AutoCommit 여부 확인을 위한 
+- 기존의 Hibernate
 ```yml
 transaction 시작 실행 시
     setAutoCommit(false) → 쿼리 1차 수행 → 쿼리 2차 수행 → setAutoCommit(true) → Commit or Rollback 로직 수행
 ```
+
 - setAutoCommit을 위해서 조회를 진행해야되는데 이때 Query를 통해 autoCommit을 직접 조회
 - 빈번한 setAutoCommit은 비효율적
-- 이를 개선하기 위해 hibernate에서의 autocommit을 확인하느 과정 생략
-- JDBC에서 autocommit을 false로 두고 이를 하이버네이터에서 참조하도록 수정
-- 이를 통해 서비스 쿼리들의 성능 개선
+- 이를 개선하기 위해 hibernate에서의 autocommit 확인 과정 생략
+
+```yaml
+spring:
+  datasource:
+    hikari:
+      auto-commit: false
+  jpa:
+    properties:
+      hibernate:
+        connection:
+          provider_disables_autocommit: true
+```
+- Hibernate 자체 autocommit 여부를 체크하지 않고 jdbc의 값을 믿고 수행 -> `setAutoCommit` 메서드 실행 x -> 성능 개선
 
 
 
