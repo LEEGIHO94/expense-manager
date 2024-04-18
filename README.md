@@ -61,7 +61,7 @@
 ---
 
 ## API 문서
-> 서버 기동 이후 http://localhost:8080/index.html 에서 확인 가능
+> 서버 기동 이후 http://localhost:8080/docs/index.html 에서 확인 가능
 
 ---
 
