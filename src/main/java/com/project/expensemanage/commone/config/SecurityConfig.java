@@ -27,12 +27,16 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
             authorize ->
                 authorize
+                    .requestMatchers("/docs/index.html")
+                    .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/users")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/reissue")
                     .permitAll()
+                    .requestMatchers(HttpMethod.GET,"/api/categories")
+                    .permitAll()
                     .anyRequest()
-                    .authenticated())
+                    .permitAll())
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .formLogin(AbstractHttpConfigurer::disable)
