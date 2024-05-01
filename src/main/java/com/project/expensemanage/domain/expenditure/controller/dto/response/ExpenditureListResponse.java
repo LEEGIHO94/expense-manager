@@ -13,13 +13,12 @@ import lombok.RequiredArgsConstructor;
 public class ExpenditureListResponse {
 
   private final List<ExpenditureCategory> expenditureList;
-
   @Builder
   @AllArgsConstructor
   @Getter
   public static class ExpenditureCategory {
 
-    private final Long budgetId;
+    private final Long expenditureId;
     private final LocalDate expendedDate;
     private final Long amount;
     private final CategoryByExpenditure category;

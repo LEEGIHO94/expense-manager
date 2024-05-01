@@ -62,7 +62,7 @@ public class ExpenditureMapper {
   }
 
   public ExpenditureListResponse toDto(
-      List<Expenditure> budgetList, List<TotalExpenditureByCategory> categoryList) {
+      List<Expenditure> expenditureList, List<TotalExpenditureByCategory> categoryList) {
     List<ExpenditureCategory> result = new ArrayList<>();
     HashMap<Long, TotalExpenditureByCategory> categoryMap = new HashMap<>();
 
@@ -70,20 +70,20 @@ public class ExpenditureMapper {
       categoryMap.put(category.categoryId(), category);
     }
 
-    for (int i = 0; i < budgetList.size(); i++) {
+    for (int i = 0; i < expenditureList.size(); i++) {
       result.add(
           createExpenditureCategory(
-              budgetList.get(i), categoryMap.get(budgetList.get(i).getCategory().getId())));
+              expenditureList.get(i), categoryMap.get(expenditureList.get(i).getCategory().getId())));
     }
     return new ExpenditureListResponse(result);
   }
 
   private ExpenditureCategory createExpenditureCategory(
-      Expenditure budget, TotalExpenditureByCategory category) {
+      Expenditure expenditure, TotalExpenditureByCategory category) {
     return ExpenditureCategory.builder()
-        .budgetId(budget.getId())
-        .expendedDate(budget.getExpendedDate())
-        .amount(budget.getPrice().getValue())
+        .expenditureId(expenditure.getId())
+        .expendedDate(expenditure.getExpendedDate())
+        .amount(expenditure.getPrice().getValue())
         .category(
             new CategoryByExpenditure(
                 category.categoryId(), category.categoryName(), category.amount()))

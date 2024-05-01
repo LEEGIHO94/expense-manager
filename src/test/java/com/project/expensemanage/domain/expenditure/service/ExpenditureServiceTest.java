@@ -177,7 +177,7 @@ class ExpenditureServiceTest {
     ExpenditureListResponse result = service.getExpenditureListByCondition(dto, 1L);
     // then
     Assertions.assertThat(result.getExpenditureList()).isNotEmpty();
-    Assertions.assertThat(result.getExpenditureList().get(0).getBudgetId()).isEqualTo(1L);
+    Assertions.assertThat(result.getExpenditureList().get(0).getExpenditureId()).isEqualTo(1L);
     Assertions.assertThat(result.getExpenditureList().get(0).getExpendedDate())
         .isEqualTo(LocalDate.now());
   }
