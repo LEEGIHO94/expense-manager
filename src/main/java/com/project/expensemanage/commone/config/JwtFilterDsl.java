@@ -43,4 +43,8 @@ public class JwtFilterDsl extends AbstractHttpConfigurer<JwtFilterDsl, HttpSecur
         .addFilter(jwtAuthenticationFilter)
         .addFilterBefore(jwtVerificationFilter, JwtAuthenticationFilter.class);
   }
+
+  public JwtFilterDsl build(){
+    return this;
+  }
 }

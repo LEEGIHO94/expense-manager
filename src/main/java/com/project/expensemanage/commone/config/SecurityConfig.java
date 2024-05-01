@@ -23,7 +23,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.apply(jwtFilterDsl);
+    http.with(jwtFilterDsl, JwtFilterDsl::build);
     http.authorizeHttpRequests(
             authorize ->
                 authorize
