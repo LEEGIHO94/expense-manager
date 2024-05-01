@@ -51,11 +51,11 @@ class DiscordEventListenerTest {
   @MockBean private RecommendationRepository recommendationRepository;
 
   private List<RecommendationExpenditure> recommendExpenditureStub() {
-    RecommendationExpenditure stub = new RecommendationExpenditure(1L, "test001", 1000L, 100000L);
+    RecommendationExpenditure stub = new RecommendationExpenditure(1L, "test001", 1000L, 100000L,1000L);
     RecommendationExpenditure stubTwo =
-        new RecommendationExpenditure(2L, "test002", 2000L, 200000L);
+        new RecommendationExpenditure(2L, "test002", 2000L, 200000L,1000L);
     RecommendationExpenditure stubThree =
-        new RecommendationExpenditure(3L, "test003", 3000L, 300000L);
+        new RecommendationExpenditure(3L, "test003", 3000L, 300000L,1000L);
 
     List<RecommendationExpenditure> mockExpenditureList = List.of(stub, stubTwo, stubThree);
     return mockExpenditureList;
@@ -111,8 +111,8 @@ class DiscordEventListenerTest {
 
   List<RecommendationExpenditure> getListStub() {
     return List.of(
-        new RecommendationExpenditure(1L, "카테고리이름1", 100000L, 100L),
-        new RecommendationExpenditure(1L, "카테고리이름2", 200000L, 200L),
-        new RecommendationExpenditure(1L, "카테고리이름3", 300000L, 300L));
+        new RecommendationExpenditure(1L, "카테고리이름1", 100000L, 100L,1000L),
+        new RecommendationExpenditure(1L, "카테고리이름2", 200000L, 200L,1000L),
+        new RecommendationExpenditure(1L, "카테고리이름3", 300000L, 300L,1000L));
   }
 }

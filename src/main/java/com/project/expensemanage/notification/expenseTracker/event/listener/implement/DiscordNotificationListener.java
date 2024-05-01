@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 public class DiscordNotificationListener implements TotalExpenditureNotificationEventListener {
+
   private final DiscordMapper mapper;
 
   @Override
@@ -17,9 +18,9 @@ public class DiscordNotificationListener implements TotalExpenditureNotification
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForEntity(
-        mapper.getBaseUrl()
-            + "/1179944667001917450/NqrHqNpt0RjWH-RRLryMVZ_JuWe2jlJryW9K2KVvs5nIYp6NboIL3iPDo1Mthdg-0aXN",
+        mapper.getBaseUrl() + event.user().getUrl(),
         discordBody,
         String.class);
   }
 }
+//+ "/1179944667001917450/NqrHqNpt0RjWH-RRLryMVZ_JuWe2jlJryW9K2KVvs5nIYp6NboIL3iPDo1Mthdg-0aXN"

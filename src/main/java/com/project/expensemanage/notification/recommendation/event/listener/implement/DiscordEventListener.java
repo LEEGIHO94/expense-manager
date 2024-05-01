@@ -23,8 +23,7 @@ public class DiscordEventListener implements ExpenditureRecommendationEventListe
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.postForEntity(
-        mapper.getBaseUrl()
-            + "/1179944667001917450/NqrHqNpt0RjWH-RRLryMVZ_JuWe2jlJryW9K2KVvs5nIYp6NboIL3iPDo1Mthdg-0aXN",
+        mapper.getBaseUrl() + event.user().getUrl(),
         discordBody,
         String.class);
   }

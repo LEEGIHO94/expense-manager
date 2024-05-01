@@ -8,6 +8,7 @@ import com.project.expensemanage.notification.discord.body.embed.DiscordEmbedFie
 import com.project.expensemanage.notification.discord.body.embed.DiscordEmbedFooter;
 import com.project.expensemanage.notification.discord.body.embed.DiscordEmbedThumbnail;
 import com.project.expensemanage.notification.recommendation.dto.RecommendationExpenditure;
+import com.project.expensemanage.notification.scheduler.ExpenditureAvgCache;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -114,7 +115,7 @@ public class DiscordMapper {
   private DiscordEmbedAuthor createAuthor() {
     return DiscordEmbedAuthor.builder()
         .iconUrl(properties.getAuthorIcon())
-        .name("TESTTTTT")
+        .name("Expense Manager")
         .build();
   }
 
@@ -153,19 +154,35 @@ public class DiscordMapper {
    * 1. 최소 금액을 설정은 사용자가 설정한 예산을 해당월로 나눈 값, 즉 1일 사용 예상 량으로 한다.
    * */
 
+//  private String createRecommendedExpenditure(
+//      RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
+//    long amount = Math.max(expenditure.budget() - expenditure.totalExpenditure(), 0) / restDay;
+//    long amountOfReference = expenditure.budget() / endOfMonth;
+//    return getMaxRecommendExpenditure(amount, amountOfReference);
+//  }
   private String createRecommendedExpenditure(
       RecommendationExpenditure expenditure, int restDay, int endOfMonth) {
     long amount = Math.max(expenditure.budget() - expenditure.totalExpenditure(), 0) / restDay;
     long amountOfReference = expenditure.budget() / endOfMonth;
-    return getMaxRecommendExpenditure(amount, amountOfReference);
+    return getMaxRecommendExpenditure(expenditure.categoryId(),amount, amountOfReference,expenditure.minExpenditure());
   }
 
-  private String getMaxRecommendExpenditure(Long amount, Long amountOfReference) {
-    return roundAmount(amount) >= roundAmount(amountOfReference)
-        ? roundAmount(amount) + " (**설정 예산 만족**)"
-        : roundAmount(amountOfReference) + " (**!!예산 초과 1일 사용 권장량 제공!!**)";
-  }
+//  private String getMaxRecommendExpenditure(Long amount, Long amountOfReference) {
+//    return roundAmount(amount) >= roundAmount(amountOfReference)
+//        ? roundAmount(amount) + " (**설정 예산 만족**)"
+//        : roundAmount(amountOfReference) + " (**!!예산 초과 1일 사용 권장량 제공!!**)";
+//  }
+  private String getMaxRecommendExpenditure(Long categoryId,Long amount, Long amountOfReference,Long minExpenditure) {
+    //설정한 예산보다 지출이 적다면 rmeofh qksghks
+    if (roundAmount(amount) >= roundAmount(amountOfReference))
+      return roundAmount(amount) + " (**설정 예산 만족**)";
+    else {
+      Long tmp = ExpenditureAvgCache.get(categoryId) == 0 ? Integer.MAX_VALUE : ExpenditureAvgCache.get(categoryId);
+      return Math.min(Math.min(roundAmount(amountOfReference), minExpenditure),tmp)
+          + " (**!!예산 초과 1일 사용 권장량 제공!!**)";
+    }
 
+  }
   private Long roundAmount(Long num) {
     if (num / 1000 != 0) {
       return num / 1000 * 1000;

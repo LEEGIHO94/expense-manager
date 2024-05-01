@@ -33,6 +33,7 @@ public class User extends BaseTime {
 
   private String email;
   private String password;
+  private String url;
 
   @Enumerated(EnumType.STRING)
   private UserRole userRole;
