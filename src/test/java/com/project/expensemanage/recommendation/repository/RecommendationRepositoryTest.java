@@ -37,8 +37,8 @@ class RecommendationRepositoryTest {
   @Test
   @DisplayName("조회가 성공 하는지 부터 테스트 해보자")
   void recommend_date_test() {
-    LocalDate startDate = LocalDate.of(2024, 01, 01);
-    LocalDate endDate = LocalDate.of(2024, 01, 01);
+    LocalDate startDate = LocalDate.of(2020, 01, 01);
+    LocalDate endDate = LocalDate.of(2020, 01, 01);
     long userId = 1L;
     List<RecommendationExpenditure> result =
         repository.findTotalExpenditureByCategoryAndDateAndId(startDate, endDate, userId);
